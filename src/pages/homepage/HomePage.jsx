@@ -145,7 +145,7 @@ const Home = () => {
         <div>
           <Link to="/NewCampaign">
             New Campaign
-            <PlusCircleOutlined style={{ fontSize: "3rem" }} />
+            <PlusCircleOutlined style={{ fontSize: "2rem" }} />
           </Link>
           <Link to="/NewCharacter">
             New Character
