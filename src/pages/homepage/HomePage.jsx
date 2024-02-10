@@ -16,7 +16,9 @@ const Home = () => {
     created: createdCampaignsFromUser,
     joined: joinedCampaignsFromUsers,
   } = useSelector((state) => state.userSliceReducer.user.campaigns);
-  const { isLoading } = useSelector((state) => state.uiSliceReducer);
+  const { isLoading, fetchedCampaigns } = useSelector(
+    (state) => state.uiSliceReducer
+  );
 
   useEffect(() => {
     if (createdCampaignsFromUser) {
@@ -138,7 +140,6 @@ const Home = () => {
     },
   ];
 
-  //TODO: loading icon when fetching the campaigns and characters and everything else
   return (
     <>
       <div>
@@ -153,38 +154,36 @@ const Home = () => {
           </Link>
         </div>
         <h2>Created Campaigns</h2>
-        {isLoading && <Spin />}
+        {isLoading && Object.keys(createdCampaigns).length === 0 && <Spin />}
         <ul>
-          {Object.keys(createdCampaigns).length !== 0 ? (
-            Object.values(createdCampaigns).map((campaign) => (
-              <CampaignListItem
-                key={campaign.id}
-                campaign={campaign}
-                type={campaign.type}
-              />
-            ))
-          ) : (
-            <p>
-              You haven't created any campaigns yet.{" "}
-              <Link to="/NewCampaign">Create one here.</Link>
-            </p>
-          )}
+          {Object.keys(createdCampaigns).length !== 0
+            ? Object.values(createdCampaigns).map((campaign) => (
+                <CampaignListItem
+                  key={campaign.id}
+                  campaign={campaign}
+                  type={campaign.type}
+                />
+              ))
+            : fetchedCampaigns && (
+                <p>
+                  You haven't created any campaigns yet.{" "}
+                  <Link to="/NewCampaign">Create one here.</Link>
+                </p>
+              )}
         </ul>
       </div>
       <div>
         <h2>Joined Campaigns</h2>
         <ul>
-          {Object.keys(joinedCampaigns).length !== 0 && !isLoading ? (
-            Object.values(joinedCampaigns).map((campaign) => (
-              <CampaignListItem
-                key={campaign.id}
-                campaign={campaign}
-                type={campaign.type}
-              />
-            ))
-          ) : (
-            <p>You haven't joined any campaigns yet. </p>
-          )}
+          {Object.keys(joinedCampaigns).length !== 0 && !isLoading
+            ? Object.values(joinedCampaigns).map((campaign) => (
+                <CampaignListItem
+                  key={campaign.id}
+                  campaign={campaign}
+                  type={campaign.type}
+                />
+              ))
+            : fetchedCampaigns && <p>You haven't joined any campaigns yet. </p>}
         </ul>
       </div>
       <div>

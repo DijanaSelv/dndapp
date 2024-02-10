@@ -65,6 +65,7 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
   return async (dispatch) => {
     const campaignsDataList = {};
     dispatch(uiSliceActions.changeLoading(true));
+
     try {
       let campaignId;
       for (campaignId of createdCampaignsIds) {
@@ -101,6 +102,7 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));
     }
     dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.changeFetchedCampaigns(true));
   };
 };
 
