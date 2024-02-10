@@ -83,7 +83,7 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
           };
           campaignsDataList[data.id] = campaign;
         } else {
-          console.log("snapshot doesnt exist");
+          console.log("snapshot doesnt exist!");
         }
       }
     } catch (error) {
