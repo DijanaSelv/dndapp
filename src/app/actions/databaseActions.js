@@ -45,8 +45,6 @@ export const createNewCampaign = (uid, newCampaignData) => {
           code: "new campaign created",
         })
       );
-      //fetch the updated list of campaigns
-      getCampaignsData();
     } catch (error) {
       dispatch(uiSliceActions.requestFailedIsTrue());
       dispatch(
