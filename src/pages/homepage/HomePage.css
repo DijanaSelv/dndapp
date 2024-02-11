@@ -1,0 +1,45 @@
+* {
+  box-sizing: border-box;
+}
+
+.content {
+  color: #333131;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.createdCampaignsSection {
+  margin: 20px;
+}
+
+.createdCampaignsHeader {
+  margin-right: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+a {
+  color: rgb(34, 40, 122);
+  align-self: center;
+}
+
+h2 {
+  margin-top: 0;
+}
+.createdCampaignsSection ul {
+  width: auto;
+  padding: 0;
+  display: inline-flex;
+  /* flex-direction: row; */
+  flex-wrap: wrap;
+  gap: 10px;
+  /* justify-content: flex-start; */
+}
+.ant-card {
+  width: 23% !important;
+
+  min-width: 200px;
+}
+.ant-card-actions li {
+  width: 28% !important;
+}

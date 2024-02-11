@@ -1,11 +1,22 @@
 import { Link } from "react-router-dom";
 import CampaignListItem from "../../components/CampaignListItem";
 import CharacterListItem from "../../components/CharacterListItem";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  EllipsisOutlined,
+  PlusCircleOutlined,
+  SettingOutlined,
+  CloseOutlined,
+  InfoCircleOutlined,
+  ArrowRightOutlined,
+} from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCampaignsData } from "../../app/actions/databaseActions";
-import { Spin } from "antd";
+import { Spin, Card } from "antd";
+
+import "./HomePage.css";
+import Meta from "antd/es/card/Meta";
 
 const Home = () => {
   const { createdCampaigns, joinedCampaigns } = useSelector(
@@ -140,28 +151,37 @@ const Home = () => {
 
   //TODO: loading icon when fetching the campaigns and characters and everything else
   return (
-    <>
-      <div>
-        <div>
+    <div className="content">
+      <div></div>
+      <div className="createdCampaignsSection">
+        <div className="createdCampaignsHeader">
+          {" "}
+          <h2>Created Campaigns</h2>
           <Link to="/NewCampaign">
-            New Campaign
-            <PlusCircleOutlined style={{ fontSize: "2rem" }} />
-          </Link>
-          <Link to="/NewCharacter">
-            New Character
-            <PlusCircleOutlined style={{ fontSize: "2rem", color: "green" }} />
+            Create a new campaign
+            <PlusCircleOutlined />
           </Link>
         </div>
-        <h2>Created Campaigns</h2>
         {isLoading && <Spin />}
         <ul>
           {Object.keys(createdCampaigns).length !== 0 ? (
             Object.values(createdCampaigns).map((campaign) => (
-              <CampaignListItem
-                key={campaign.id}
-                campaign={campaign}
-                type={campaign.type}
-              />
+              <Card
+                /* style={{ width: "25%" }} */
+                cover={<img alt="campaign image" src={campaign.image} />}
+                actions={[
+                  <InfoCircleOutlined key="setting" />,
+                  <ArrowRightOutlined key="setting" />,
+                  <CloseOutlined key="ellipsis" />,
+                ]}
+              >
+                <Meta
+                  title={campaign.title}
+                  description={`Players: ${
+                    campaign.players ? campaign.players.length : "0"
+                  }`}
+                />
+              </Card>
             ))
           ) : (
             <p>
@@ -189,13 +209,17 @@ const Home = () => {
       </div>
       <div>
         <h2>Characters</h2>
+        <Link to="/NewCharacter">
+          New Character
+          <PlusCircleOutlined style={{ fontSize: "2rem", color: "green" }} />
+        </Link>
         <ul>
           {/* {characters.map((character) => (
             <CharacterListItem character={character} />
           ))} */}
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 

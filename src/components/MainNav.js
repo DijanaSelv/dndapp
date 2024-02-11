@@ -22,33 +22,35 @@ const MainNav = () => {
   };
 
   return (
-    <div className="main_nav">
-      <div className="welcomeLogo">
-        <h1 className="title"> Di & Di </h1>
-        {firstName && <h3 className="welcomeName">Hello, {firstName}!</h3>}
-      </div>
+    <div className="background">
+      <div className="main_nav">
+        <div className="welcomeLogo">
+          <h1 className="title"> Di & Di </h1>
+          {firstName && <h3 className="welcomeName">Hello, {firstName}!</h3>}
+        </div>
 
-      <div className="secondRow">
-        <p>A web app for your RPG campaigns</p>
-        {uid && (
-          <div className="navLinks">
-            <Button href="/" className="navLink">
-              Home
-            </Button>
-            <Button to="/" className="navLink">
-              Announcements
-            </Button>
-            <Button to="/" className="navLink ">
-              My Account
-            </Button>
-            <Button
-              className="navLink logoutButton"
-              onClick={logoutClickHandler}
-            >
-              Log Out
-            </Button>
-          </div>
-        )}
+        <div className="secondRow">
+          <p>A web app for your RPG campaigns</p>
+          {uid && (
+            <div className="navLinks">
+              <Button href="/" className="navLink">
+                Home
+              </Button>
+              <Button to="/" className="navLink">
+                Announcements
+              </Button>
+              <Button to="/" className="navLink ">
+                My Account
+              </Button>
+              <Button
+                className="navLink logoutButton"
+                onClick={logoutClickHandler}
+              >
+                Log Out
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

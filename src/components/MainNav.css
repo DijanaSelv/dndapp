@@ -1,10 +1,15 @@
 * {
   margin-bottom: 0px;
 }
+.background {
+  background-color: #81b5c5;
+}
 
 .main_nav {
-  color: black;
-  background-color: #229abe;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333131;
   display: flex;
   flex-direction: column;
   padding-left: 10px;
@@ -45,6 +50,5 @@
 
 .navLink:hover {
   text-decoration: none;
-  color: black !important;
-  border-color: black !important;
+  color: #333131 !important;
 }
