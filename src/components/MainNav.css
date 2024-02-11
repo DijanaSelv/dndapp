@@ -1,0 +1,50 @@
+* {
+  margin-bottom: 0px;
+}
+
+.main_nav {
+  color: black;
+  background-color: #229abe;
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+}
+
+.welcomeLogo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.title {
+  padding-left: 20px;
+  font-size: 3rem;
+  margin-top: 0;
+}
+
+.welcomeName {
+  font-size: 1.5rem;
+  font-weight: 400;
+  padding-right: 20px;
+}
+
+.secondRow {
+  display: flex;
+  justify-content: space-between;
+}
+.secondRow p {
+  margin-top: 0px;
+  align-self: center;
+}
+
+.navLink {
+  border: none;
+  background: none;
+  color: white;
+}
+
+.navLink:hover {
+  text-decoration: none;
+  color: black !important;
+  border-color: black !important;
+}
