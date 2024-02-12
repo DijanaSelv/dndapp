@@ -1,20 +1,13 @@
 import { Link } from "react-router-dom";
 import CampaignListItem from "../../components/CampaignListItem";
 import CharacterListItem from "../../components/CharacterListItem";
-import {
-  PlusCircleOutlined,
-  CloseOutlined,
-  InfoCircleOutlined,
-  ArrowRightOutlined,
-} from "@ant-design/icons";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCampaignsData } from "../../app/actions/databaseActions";
-import { Spin, Card } from "antd";
-import { motion } from "framer-motion";
+import { Spin } from "antd";
 
 import "./HomePage.css";
-import Meta from "antd/es/card/Meta";
 
 const Home = () => {
   const { createdCampaigns, joinedCampaigns } = useSelector(
@@ -147,7 +140,6 @@ const Home = () => {
     },
   ];
 
-  //TODO: loading icon when fetching the campaigns and characters and everything else
   return (
     <div className="content">
       <div></div>
@@ -160,20 +152,20 @@ const Home = () => {
         </div>
         {isLoading && <Spin />}
         <ul>
-          {Object.keys(createdCampaigns).length !== 0 ? (
-            Object.values(createdCampaigns).map((campaign) => (
-              <CampaignListItem
-                key={campaign.id}
-                campaign={campaign}
-                type={campaign.type}
-              />
-            ))
-          ) : (
-            <p>
-              You haven't created any campaigns yet.{" "}
-              <Link to="/NewCampaign">Create one here.</Link>
-            </p>
-          )}
+          {Object.keys(createdCampaigns).length !== 0
+            ? Object.values(createdCampaigns).map((campaign) => (
+                <CampaignListItem
+                  key={campaign.id}
+                  campaign={campaign}
+                  type={campaign.type}
+                />
+              ))
+            : !isLoading && (
+                <p>
+                  You haven't created any campaigns yet.{" "}
+                  <Link to="/NewCampaign">Create one here.</Link>
+                </p>
+              )}
         </ul>
       </div>
       <div>

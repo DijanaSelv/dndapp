@@ -3,13 +3,29 @@ import {
   CloseOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
-import { Button, Card } from "antd";
+import { Button, Card, Modal } from "antd";
 import Meta from "antd/es/card/Meta";
 import { motion } from "framer-motion";
 
 import { Link } from "react-router-dom";
+import DeleteModal from "./DeleteModal";
+import { useState } from "react";
 
 const CampaignListItem = ({ campaign, type }) => {
+  const [showModal, setShowModal] = useState(false);
+  const deleteButtonHandler = () => {
+    setShowModal(true);
+  };
+
+  const handleOk = () => {
+    console.log("deleted");
+    setShowModal(false);
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -17,6 +33,22 @@ const CampaignListItem = ({ campaign, type }) => {
       transition={{ duration: 0.5 }}
       whileHover={{ scale: 1.05 }}
     >
+      {
+        <Modal
+          title={`Deleting "${campaign.title}"`}
+          centered
+          open={showModal}
+          onOk={handleOk}
+          okText="Delete"
+          okButtonProps={{
+            style: { backgroundColor: "red", borderColor: "red" },
+          }}
+          onCancel={handleCancel}
+        >
+          <p>Are you sure you want to permanently delete this campaign?</p>
+          <p style={{ fontWeight: "bold" }}></p>
+        </Modal>
+      }
       <Card
         cover={
           <div className="coverDiv">
@@ -30,9 +62,8 @@ const CampaignListItem = ({ campaign, type }) => {
           <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
             <ArrowRightOutlined key="play" />
           </Link>,
-          <Link>
-            <CloseOutlined key="delete" />
-          </Link>,
+
+          <CloseOutlined key="delete" onClick={deleteButtonHandler} />,
         ]}
       >
         <Meta
