@@ -17,7 +17,7 @@ import "./HomePage.css";
 import Meta from "antd/es/card/Meta";
 
 const Home = () => {
-  const { createdCampaigns, joinedCampaigns } = useSeslector(
+  const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSliceReducer
   );
   const dispatch = useDispatch();
