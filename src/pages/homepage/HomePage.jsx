@@ -2,10 +2,7 @@ import { Link } from "react-router-dom";
 import CampaignListItem from "../../components/CampaignListItem";
 import CharacterListItem from "../../components/CharacterListItem";
 import {
-  EditOutlined,
-  EllipsisOutlined,
   PlusCircleOutlined,
-  SettingOutlined,
   CloseOutlined,
   InfoCircleOutlined,
   ArrowRightOutlined,
@@ -14,12 +11,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCampaignsData } from "../../app/actions/databaseActions";
 import { Spin, Card } from "antd";
+import { motion } from "framer-motion";
 
 import "./HomePage.css";
 import Meta from "antd/es/card/Meta";
 
 const Home = () => {
-  const { createdCampaigns, joinedCampaigns } = useSelector(
+  const { createdCampaigns, joinedCampaigns } = useSeslector(
     (state) => state.campaignSliceReducer
   );
   const dispatch = useDispatch();
@@ -155,33 +153,20 @@ const Home = () => {
       <div></div>
       <div className="createdCampaignsSection">
         <div className="createdCampaignsHeader">
-          {" "}
           <h2>Created Campaigns</h2>
           <Link to="/NewCampaign">
-            Create a new campaign
-            <PlusCircleOutlined />
+            Create a new campaign <PlusCircleOutlined />
           </Link>
         </div>
         {isLoading && <Spin />}
         <ul>
           {Object.keys(createdCampaigns).length !== 0 ? (
             Object.values(createdCampaigns).map((campaign) => (
-              <Card
-                /* style={{ width: "25%" }} */
-                cover={<img alt="campaign image" src={campaign.image} />}
-                actions={[
-                  <InfoCircleOutlined key="setting" />,
-                  <ArrowRightOutlined key="setting" />,
-                  <CloseOutlined key="ellipsis" />,
-                ]}
-              >
-                <Meta
-                  title={campaign.title}
-                  description={`Players: ${
-                    campaign.players ? campaign.players.length : "0"
-                  }`}
-                />
-              </Card>
+              <CampaignListItem
+                key={campaign.id}
+                campaign={campaign}
+                type={campaign.type}
+              />
             ))
           ) : (
             <p>
