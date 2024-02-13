@@ -18,6 +18,7 @@ const CampaignListItem = ({ campaign, type }) => {
   };
 
   const handleOk = () => {
+    //dispatch a function to delete the campaign from the user and from the campaigns base.
     console.log("deleted");
     setShowModal(false);
   };
@@ -51,9 +52,11 @@ const CampaignListItem = ({ campaign, type }) => {
       }
       <Card
         cover={
-          <div className="coverDiv">
-            <img alt="campaign image" src={campaign.image} />
-          </div>
+          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
+            <div className="coverDiv">
+              <img alt="campaign image" src={campaign.image} />
+            </div>
+          </Link>
         }
         actions={[
           <Link to={`/Campaigns/${type}/${campaign.id}/info`}>

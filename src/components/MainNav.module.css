@@ -5,7 +5,7 @@
   background-color: #7cacbb;
 }
 
-.main_nav {
+.mainNav {
   max-width: 1300px;
   margin-left: auto;
   margin-right: auto;
@@ -27,10 +27,9 @@
   margin-top: 0;
 }
 
-.welcomeName {
-  font-size: 1.5rem;
-  font-weight: 400;
-  padding-right: 20px;
+.titleLink {
+  text-decoration: none;
+  color: #333131;
 }
 
 .secondRow {
@@ -43,13 +42,24 @@
   align-self: center;
 }
 
-.navLink {
-  border: none;
-  background: none;
-  color: white;
+.navLinks {
+  display: flex;
 }
 
-.navLink:hover {
+.navLink {
+  color: white;
+  margin: 0 20px 0 20px;
+  display: flex;
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  color: white !important;
+}
+.navLink:hover,
+button:hover {
   text-decoration: none;
   color: #333131 !important;
 }
