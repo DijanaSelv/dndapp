@@ -32,11 +32,12 @@ export const createNewCampaign = (uid, newCampaignData) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
       //new campaign info
+      const id = newCampaignData.id;
       await set(ref(db, "campaigns/" + newCampaignData.id), newCampaignData);
       //store the id in the user who created it
       await set(
-        push(ref(db, "users/" + uid + "/campaigns/created")),
-        newCampaignData.id
+        ref(db, "users/" + uid + "/campaigns/created/" + newCampaignData.id),
+        true
       );
       dispatch(uiSliceActions.requestSuccessIsTrue());
       dispatch(
@@ -48,6 +49,7 @@ export const createNewCampaign = (uid, newCampaignData) => {
       //fetch the updated list of campaigns
       getCampaignsData();
     } catch (error) {
+      console.error(error);
       dispatch(uiSliceActions.requestFailedIsTrue());
       dispatch(
         uiSliceActions.showNotification({
@@ -110,3 +112,27 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
       console.log(data, createdCampaignsIds);
       //dispatch(userSliceActions.setUserCampaigns(data));
      */
+
+//delete campaign from the user and from the campaign
+
+export const deleteCampaign = (campaignId) => {
+  return async (dispatch, getState) => {
+    //Remove the created campaign from the user list in state
+    const state = getState();
+    let newCreatedCampaignsList = {};
+    const stateCreatedCampaignsList =
+      state.userSliceReducer.user.campaigns.created;
+    for (const [key, value] of Object.entries(stateCreatedCampaignsList)) {
+      if (value !== campaignId) {
+        newCreatedCampaignsList[key] = value;
+      }
+    }
+    console.log(newCreatedCampaignsList);
+  };
+
+  //update the user created campaigns in the database
+};
+/*       await set(
+        push(ref(db, "users/" + uid + "/campaigns/created")),
+        newCampaignData.id
+      ); */
