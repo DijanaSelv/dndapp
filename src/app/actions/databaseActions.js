@@ -1,4 +1,4 @@
-import { ref, onValue, set, push, get } from "firebase/database";
+import { ref, onValue, set, push, get, child, update } from "firebase/database";
 import { userSliceActions } from "../userSlice";
 import { db } from "./base";
 import { uiSliceActions } from "../uiSlice";
@@ -115,24 +115,13 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
 
 //delete campaign from the user and from the campaign
 
-export const deleteCampaign = (campaignId) => {
+export const deleteCampaign = (campaignId, uid) => {
   return async (dispatch, getState) => {
-    //Remove the created campaign from the user list in state
-    const state = getState();
-    let newCreatedCampaignsList = {};
-    const stateCreatedCampaignsList =
-      state.userSliceReducer.user.campaigns.created;
-    for (const [key, value] of Object.entries(stateCreatedCampaignsList)) {
-      if (value !== campaignId) {
-        newCreatedCampaignsList[key] = value;
-      }
-    }
-    console.log(newCreatedCampaignsList);
-  };
+    const newPostKey = push(child(ref(db), "campaigns")).key;
+    const updates = {};
+    updates["users/" + uid + "/campaigns/created/" + campaignId] = null;
+    updates["campaigns/" + campaignId] = null;
 
-  //update the user created campaigns in the database
+    update(ref(db), updates);
+  };
 };
-/*       await set(
-        push(ref(db, "users/" + uid + "/campaigns/created")),
-        newCampaignData.id
-      ); */

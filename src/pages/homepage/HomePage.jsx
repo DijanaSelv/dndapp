@@ -14,10 +14,11 @@ const Home = () => {
     (state) => state.campaignSliceReducer
   );
   const dispatch = useDispatch();
+
   const {
     created: createdCampaignsFromUser,
     joined: joinedCampaignsFromUsers,
-  } = useSelector((state) => state.userSliceReducer.user.campaigns);
+  } = useSelector((state) => state.userSliceReducer.user.campaigns || {});
   const { isLoading } = useSelector((state) => state.uiSliceReducer);
 
   useEffect(() => {
