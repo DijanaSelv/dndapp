@@ -17,16 +17,6 @@ const CampaignListItem = ({ campaign, type }) => {
     setShowModal(true);
   };
 
-  const handleOk = () => {
-    //dispatch a function to delete the campaign from the user and from the campaigns base.
-    console.log("deleted");
-    setShowModal(false);
-  };
-
-  const handleCancel = () => {
-    setShowModal(false);
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -35,20 +25,11 @@ const CampaignListItem = ({ campaign, type }) => {
       whileHover={{ scale: 1.05 }}
     >
       {
-        <Modal
-          title={`Deleting "${campaign.title}"`}
-          centered
-          open={showModal}
-          onOk={handleOk}
-          okText="Delete"
-          okButtonProps={{
-            style: { backgroundColor: "red", borderColor: "red" },
-          }}
-          onCancel={handleCancel}
-        >
-          <p>Are you sure you want to permanently delete this campaign?</p>
-          <p style={{ fontWeight: "bold" }}></p>
-        </Modal>
+        <DeleteModal
+          campaign={campaign}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
       }
       <Card
         cover={

@@ -1,35 +1,32 @@
 import React, { useState } from "react";
 import { Button, Modal } from "antd";
 
-const DeleteModal = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
+const DeleteModal = ({ campaign, showModal, setShowModal }) => {
   const handleOk = () => {
-    setIsModalOpen(false);
+    //dispatch a function to delete the campaign from the user and from the campaigns base.
+    console.log("deleted");
+    setShowModal(false);
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setShowModal(false);
   };
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal
-      </Button>
       <Modal
-        title="Basic Modal"
-        open={isModalOpen}
+        title={`Deleting "${campaign.title}"`}
+        centered
+        open={showModal}
         onOk={handleOk}
+        okText="Delete"
+        okButtonProps={{
+          style: { backgroundColor: "red", borderColor: "red" },
+        }}
         onCancel={handleCancel}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <p>Are you sure you want to permanently delete this campaign?</p>
+        <p style={{ fontWeight: "bold" }}></p>
       </Modal>
     </>
   );
