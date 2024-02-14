@@ -2,6 +2,7 @@ import { Button } from "antd";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Link } from "react-router-dom";
 //TODO: add to clipboard functionality for the join code
 
 const CampaignInfoPage = () => {
@@ -22,7 +23,9 @@ const CampaignInfoPage = () => {
       <h1>{campaign.title}</h1>
       <div>{campaign.description}</div>
       <div>Share this code for players to join: ${campaign.joinCode}</div>
-      <Button type="primary">Play</Button>
+      <Link to={`/Campaigns/${params.type}/${campaign.id}/play`}>
+        <Button type="primary">Play</Button>
+      </Link>
     </div>
   );
 };

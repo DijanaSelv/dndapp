@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { getCampaignsData } from "../../app/actions/databaseActions";
 import { Spin } from "antd";
 
+import "./HomePage.css";
+
 const Home = () => {
   const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSliceReducer
@@ -138,37 +140,32 @@ const Home = () => {
     },
   ];
 
-  //TODO: loading icon when fetching the campaigns and characters and everything else
   return (
-    <>
-      <div>
-        <div>
+    <div className="content">
+      <div></div>
+      <div className="createdCampaignsSection">
+        <div className="createdCampaignsHeader">
+          <h2>Created Campaigns</h2>
           <Link to="/NewCampaign">
-            New Campaign
-            <PlusCircleOutlined style={{ fontSize: "2rem" }} />
-          </Link>
-          <Link to="/NewCharacter">
-            New Character
-            <PlusCircleOutlined style={{ fontSize: "2rem", color: "green" }} />
+            Create a new campaign <PlusCircleOutlined />
           </Link>
         </div>
-        <h2>Created Campaigns</h2>
         {isLoading && <Spin />}
         <ul>
-          {Object.keys(createdCampaigns).length !== 0 ? (
-            Object.values(createdCampaigns).map((campaign) => (
-              <CampaignListItem
-                key={campaign.id}
-                campaign={campaign}
-                type={campaign.type}
-              />
-            ))
-          ) : (
-            <p>
-              You haven't created any campaigns yet.{" "}
-              <Link to="/NewCampaign">Create one here.</Link>
-            </p>
-          )}
+          {Object.keys(createdCampaigns).length !== 0
+            ? Object.values(createdCampaigns).map((campaign) => (
+                <CampaignListItem
+                  key={campaign.id}
+                  campaign={campaign}
+                  type={campaign.type}
+                />
+              ))
+            : !isLoading && (
+                <p>
+                  You haven't created any campaigns yet.{" "}
+                  <Link to="/NewCampaign">Create one here.</Link>
+                </p>
+              )}
         </ul>
       </div>
       <div>
@@ -189,13 +186,17 @@ const Home = () => {
       </div>
       <div>
         <h2>Characters</h2>
+        <Link to="/NewCharacter">
+          New Character
+          <PlusCircleOutlined style={{ fontSize: "2rem", color: "green" }} />
+        </Link>
         <ul>
           {/* {characters.map((character) => (
             <CharacterListItem character={character} />
           ))} */}
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 
