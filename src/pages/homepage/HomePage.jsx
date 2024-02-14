@@ -7,26 +7,27 @@ import { useEffect } from "react";
 import { getCampaignsData } from "../../app/actions/databaseActions";
 import { Spin } from "antd";
 
+import "./HomePage.css";
+
 const Home = () => {
   const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSliceReducer
   );
   const dispatch = useDispatch();
+
   const {
     created: createdCampaignsFromUser,
     joined: joinedCampaignsFromUsers,
-  } = useSelector((state) => state.userSliceReducer.user.campaigns);
-  const { isLoading, fetchedCampaigns } = useSelector(
-    (state) => state.uiSliceReducer
-  );
+  } = useSelector((state) => state.userSliceReducer.user.campaigns || {});
+  const { isLoading } = useSelector((state) => state.uiSliceReducer);
 
   useEffect(() => {
     if (createdCampaignsFromUser) {
-      const createdCampaignsIds = Object.values(createdCampaignsFromUser);
+      const createdCampaignsIds = Object.keys(createdCampaignsFromUser);
       dispatch(getCampaignsData(createdCampaignsIds, "created"));
     }
     if (joinedCampaignsFromUsers) {
-      const joinedCampaignsIds = Object.values(joinedCampaignsFromUsers);
+      const joinedCampaignsIds = Object.keys(joinedCampaignsFromUsers);
       dispatch(getCampaignsData(joinedCampaignsIds, "joined"));
     }
   }, [createdCampaignsFromUser, joinedCampaignsFromUsers]);
@@ -141,35 +142,32 @@ const Home = () => {
   ];
 
   return (
-    <>
-      <div>
-        <div>
+    <div className="content">
+      <div></div>
+      <div className="createdCampaignsSection">
+        <div className="createdCampaignsHeader">
+          <h2>Created Campaigns</h2>
           <Link to="/NewCampaign">
-            New Campaign
-            <PlusCircleOutlined style={{ fontSize: "2rem" }} />
-          </Link>
-          <Link to="/NewCharacter">
-            New Character
-            <PlusCircleOutlined style={{ fontSize: "2rem", color: "green" }} />
+            Create a new campaign <PlusCircleOutlined />
           </Link>
         </div>
         <h2>Created Campaigns</h2>
-        {isLoading && Object.keys(createdCampaigns).length === 0 && <Spin />}
+        {isLoading && <Spin />}
         <ul>
-          {Object.keys(createdCampaigns).length !== 0
-            ? Object.values(createdCampaigns).map((campaign) => (
-                <CampaignListItem
-                  key={campaign.id}
-                  campaign={campaign}
-                  type={campaign.type}
-                />
-              ))
-            : fetchedCampaigns && (
-                <p>
-                  You haven't created any campaigns yet.{" "}
-                  <Link to="/NewCampaign">Create one here.</Link>
-                </p>
-              )}
+          {Object.keys(createdCampaigns).length !== 0 ? (
+            Object.values(createdCampaigns).map((campaign) => (
+              <CampaignListItem
+                key={campaign.id}
+                campaign={campaign}
+                type={campaign.type}
+              />
+            ))
+          ) : (
+            <p>
+              You haven't created any campaigns yet.{" "}
+              <Link to="/NewCampaign">Create one here.</Link>
+            </p>
+          )}
         </ul>
       </div>
       <div>
@@ -188,13 +186,17 @@ const Home = () => {
       </div>
       <div>
         <h2>Characters</h2>
+        <Link to="/NewCharacter">
+          New Character
+          <PlusCircleOutlined style={{ fontSize: "2rem", color: "green" }} />
+        </Link>
         <ul>
           {/* {characters.map((character) => (
             <CharacterListItem character={character} />
           ))} */}
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 

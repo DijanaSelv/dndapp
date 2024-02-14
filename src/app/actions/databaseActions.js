@@ -1,4 +1,4 @@
-import { ref, onValue, set, push, get } from "firebase/database";
+import { ref, onValue, set, push, get, child, update } from "firebase/database";
 import { userSliceActions } from "../userSlice";
 import { db } from "./base";
 import { uiSliceActions } from "../uiSlice";
@@ -32,11 +32,12 @@ export const createNewCampaign = (uid, newCampaignData) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
       //new campaign info
+      const id = newCampaignData.id;
       await set(ref(db, "campaigns/" + newCampaignData.id), newCampaignData);
       //store the id in the user who created it
       await set(
-        push(ref(db, "users/" + uid + "/campaigns/created")),
-        newCampaignData.id
+        ref(db, "users/" + uid + "/campaigns/created/" + newCampaignData.id),
+        true
       );
       dispatch(uiSliceActions.requestSuccessIsTrue());
       dispatch(
@@ -46,6 +47,7 @@ export const createNewCampaign = (uid, newCampaignData) => {
         })
       );
     } catch (error) {
+      console.error(error);
       dispatch(uiSliceActions.requestFailedIsTrue());
       dispatch(
         uiSliceActions.showNotification({
@@ -110,3 +112,16 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
       console.log(data, createdCampaignsIds);
       //dispatch(userSliceActions.setUserCampaigns(data));
      */
+
+//delete campaign from the user and from the campaign
+
+export const deleteCampaign = (campaignId, uid) => {
+  return async (dispatch, getState) => {
+    const newPostKey = push(child(ref(db), "campaigns")).key;
+    const updates = {};
+    updates["users/" + uid + "/campaigns/created/" + campaignId] = null;
+    updates["campaigns/" + campaignId] = null;
+
+    update(ref(db), updates);
+  };
+};
