@@ -17,6 +17,27 @@ const CampaignListItem = ({ campaign, type }) => {
     setShowModal(true);
   };
 
+  const actions =
+    type === "created"
+      ? [
+          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
+            <InfoCircleOutlined key="info" />
+          </Link>,
+          <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
+            <ArrowRightOutlined key="play" />
+          </Link>,
+
+          <CloseOutlined key="delete" onClick={deleteButtonHandler} />,
+        ]
+      : [
+          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
+            <InfoCircleOutlined key="info" />
+          </Link>,
+          <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
+            <ArrowRightOutlined key="play" />
+          </Link>,
+        ];
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -39,16 +60,7 @@ const CampaignListItem = ({ campaign, type }) => {
             </div>
           </Link>
         }
-        actions={[
-          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
-            <InfoCircleOutlined key="info" />
-          </Link>,
-          <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
-            <ArrowRightOutlined key="play" />
-          </Link>,
-
-          <CloseOutlined key="delete" onClick={deleteButtonHandler} />,
-        ]}
+        actions={actions}
       >
         <Meta
           title={campaign.title}

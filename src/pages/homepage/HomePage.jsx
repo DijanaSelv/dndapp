@@ -14,19 +14,20 @@ const Home = () => {
     (state) => state.campaignSliceReducer
   );
   const dispatch = useDispatch();
+
   const {
     created: createdCampaignsFromUser,
     joined: joinedCampaignsFromUsers,
-  } = useSelector((state) => state.userSliceReducer.user.campaigns);
+  } = useSelector((state) => state.userSliceReducer.user.campaigns || {});
   const { isLoading } = useSelector((state) => state.uiSliceReducer);
 
   useEffect(() => {
     if (createdCampaignsFromUser) {
-      const createdCampaignsIds = Object.values(createdCampaignsFromUser);
+      const createdCampaignsIds = Object.keys(createdCampaignsFromUser);
       dispatch(getCampaignsData(createdCampaignsIds, "created"));
     }
     if (joinedCampaignsFromUsers) {
-      const joinedCampaignsIds = Object.values(joinedCampaignsFromUsers);
+      const joinedCampaignsIds = Object.keys(joinedCampaignsFromUsers);
       dispatch(getCampaignsData(joinedCampaignsIds, "joined"));
     }
   }, [createdCampaignsFromUser, joinedCampaignsFromUsers]);
