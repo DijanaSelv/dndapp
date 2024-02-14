@@ -45,7 +45,7 @@ const campaignSlice = createSlice({
       if (action.payload === "joined") {
         return state.joinedCampaigns;
       }
-    },
+    }, */
   },
 });
 
