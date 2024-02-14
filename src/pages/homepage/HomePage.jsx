@@ -151,11 +151,29 @@ const Home = () => {
             Create a new campaign <PlusCircleOutlined />
           </Link>
         </div>
-        <h2>Created Campaigns</h2>
         {isLoading && <Spin />}
         <ul>
-          {Object.keys(createdCampaigns).length !== 0 ? (
-            Object.values(createdCampaigns).map((campaign) => (
+          {Object.keys(createdCampaigns).length !== 0
+            ? Object.values(createdCampaigns).map((campaign) => (
+                <CampaignListItem
+                  key={campaign.id}
+                  campaign={campaign}
+                  type={campaign.type}
+                />
+              ))
+            : !isLoading && (
+                <p>
+                  You haven't created any campaigns yet.{" "}
+                  <Link to="/NewCampaign">Create one here.</Link>
+                </p>
+              )}
+        </ul>
+      </div>
+      <div>
+        <h2>Joined Campaigns</h2>
+        <ul>
+          {Object.keys(joinedCampaigns).length !== 0 && !isLoading ? (
+            Object.values(joinedCampaigns).map((campaign) => (
               <CampaignListItem
                 key={campaign.id}
                 campaign={campaign}
@@ -163,25 +181,8 @@ const Home = () => {
               />
             ))
           ) : (
-            <p>
-              You haven't created any campaigns yet.{" "}
-              <Link to="/NewCampaign">Create one here.</Link>
-            </p>
+            <p>You haven't joined any campaigns yet. </p>
           )}
-        </ul>
-      </div>
-      <div>
-        <h2>Joined Campaigns</h2>
-        <ul>
-          {Object.keys(joinedCampaigns).length !== 0 && !isLoading
-            ? Object.values(joinedCampaigns).map((campaign) => (
-                <CampaignListItem
-                  key={campaign.id}
-                  campaign={campaign}
-                  type={campaign.type}
-                />
-              ))
-            : fetchedCampaigns && <p>You haven't joined any campaigns yet. </p>}
         </ul>
       </div>
       <div>
