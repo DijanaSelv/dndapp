@@ -10,6 +10,7 @@ import { Spin } from "antd";
 import "./HomePage.css";
 
 const Home = () => {
+  console.log("home");
   const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSliceReducer
   );

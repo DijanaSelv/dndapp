@@ -17,6 +17,7 @@ import { auth } from "./app/actions/base";
 import { userSliceActions } from "./app/userSlice";
 import { getUserData } from "./app/actions/databaseActions";
 import { onAuthStateChanged } from "firebase/auth";
+import LoggedInRoute from "./components/LoggedInRoute";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,14 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      { path: "/Login", element: <LoginPage /> },
+      {
+        path: "/Login",
+        element: (
+          <LoggedInRoute>
+            <LoginPage />
+          </LoggedInRoute>
+        ),
+      },
       { path: "/Signup", element: <SignupPage /> },
       {
         path: "/NewCampaign",
@@ -59,17 +67,15 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "Campaigns/:type/:campaignId/info",
+        path: "/Campaigns/:type/:campaignId/info",
         element: (
           <ProtectedRoute>
-            <ProtectedRoute>
-              <CampaignInfoPage />
-            </ProtectedRoute>
+            <CampaignInfoPage />
           </ProtectedRoute>
         ),
       },
       {
-        path: "Campaigns/:type/:campaignId/play",
+        path: "/Campaigns/:type/:campaignId/play",
         element: (
           <ProtectedRoute>
             <CampaignPlayPage />
@@ -82,8 +88,10 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch = useDispatch();
+  console.log("app component");
 
   useEffect(() => {
+    console.log("app effect");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(userSliceActions.setLoggedInUser(user.uid));

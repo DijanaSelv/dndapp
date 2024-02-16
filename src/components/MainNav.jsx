@@ -9,6 +9,7 @@ import classes from "./MainNav.module.css";
 import { LogoutOutlined } from "@ant-design/icons";
 
 const MainNav = () => {
+  console.log("mainnav");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
