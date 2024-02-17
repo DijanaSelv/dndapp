@@ -23,8 +23,16 @@ const Login = () => {
   useEffect(() => {
     console.log("use effect in login page");
 
-    //dispatch(uiSliceActions.resetRequestState());
-  }, []);
+    if (requestSuccess) {
+      console.log("request success");
+      dispatch(uiSliceActions.resetRequestState());
+    } else if (requestFailed) {
+      console.log("request failed");
+      emailResetInput();
+      passwordResetInput();
+      dispatch(uiSliceActions.resetRequestState());
+    }
+  }, [requestFailed, requestSuccess]);
 
   //FORM VALIDATION from useValidate HOOK
   const {

@@ -83,9 +83,14 @@ export const loginUserAction = (email, password) => {
         email,
         password
       );
-      const user = userCredential.user;
-
       dispatch(uiSliceActions.requestSuccessIsTrue());
+      const user = userCredential.user;
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "success",
+          code: "log in success",
+        })
+      );
       //dispatch(userSliceActions.setLoggedInUser(user.uid));
       //dispatch(getUserData(user.uid));
     } catch (error) {
@@ -101,12 +106,6 @@ export const loginUserAction = (email, password) => {
       dispatch(uiSliceActions.requestFailedIsTrue());
     }
     dispatch(uiSliceActions.changeLoading(false));
-    dispatch(
-      uiSliceActions.showNotification({
-        type: "success",
-        code: "log in success",
-      })
-    );
   };
 };
 
