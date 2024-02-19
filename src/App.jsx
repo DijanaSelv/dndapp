@@ -18,6 +18,9 @@ import { userSliceActions } from "./app/userSlice";
 import { getUserData } from "./app/actions/databaseActions";
 import { onAuthStateChanged } from "firebase/auth";
 import LoggedInRoute from "./components/LoggedInRoute";
+import CampaignShopsPage from "./pages/campaignshopspage/CampaignShopsPage";
+import ProtectedCampaignsRoute from "./components/ProtectedCampaignsRoute";
+import ShopPage from "./pages/shoppage/ShopPage";
 
 const router = createBrowserRouter([
   {
@@ -59,28 +62,32 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Campaigns",
-        element: (
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
-        ),
-      },
-      {
         path: "/Campaigns/:type/:campaignId/info",
         element: (
-          <ProtectedRoute>
+          <ProtectedCampaignsRoute>
             <CampaignInfoPage />
-          </ProtectedRoute>
+          </ProtectedCampaignsRoute>
         ),
       },
       {
         path: "/Campaigns/:type/:campaignId/play",
         element: (
-          <ProtectedRoute>
+          <ProtectedCampaignsRoute>
             <CampaignPlayPage />
-          </ProtectedRoute>
+          </ProtectedCampaignsRoute>
         ),
+      },
+      {
+        path: "/Campaigns/:type/:campaignId/play/shops",
+        element: (
+          <ProtectedCampaignsRoute>
+            <CampaignShopsPage />
+          </ProtectedCampaignsRoute>
+        ),
+      },
+      {
+        path: "/Campaigns/:type/:campaignId/play/shops/:shopId",
+        element: <ShopPage />,
       },
     ],
   },

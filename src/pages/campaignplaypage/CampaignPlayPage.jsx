@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const CampaignPlayPage = () => {
+  const params = useParams();
   return (
     <>
       <h1>Campaign title</h1>
-      <Link>
-        <div>Shop</div>
+      <Link to={`/Campaigns/${params.type}/${params.campaignId}/play/shops`}>
+        <div>Shops</div>
       </Link>
       <Link>
         <div>Combat</div>
