@@ -12,7 +12,7 @@ import CampaignPlayPage from "./pages/campaignplaypage/CampaignPlayPage";
 import NewCampaignPage from "./pages/newcampaignpage/NewCampaignPage";
 import NewCharacterPage from "./pages/newcharacterpage/NewCharacterPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { useDispatch } from "react-redux";
+import { useDispatch, Provider } from "react-redux";
 import { auth } from "./app/actions/base";
 import { userSliceActions } from "./app/userSlice";
 import { getUserData } from "./app/actions/databaseActions";
@@ -21,6 +21,12 @@ import LoggedInRoute from "./components/LoggedInRoute";
 import CampaignShopsPage from "./pages/campaignshopspage/CampaignShopsPage";
 import ProtectedCampaignsRoute from "./components/ProtectedCampaignsRoute";
 import ShopPage from "./pages/shoppage/ShopPage";
+
+//refresh state persistence
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+import { store } from "./app/store";
+const persistedStore = persistStore(store);
 
 const router = createBrowserRouter([
   {
@@ -109,7 +115,13 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  return <RouterProvider router={router}></RouterProvider>;
+  return <RouterProvider router={router}> </RouterProvider>;
 }
 
 export default App;
+
+/*    <Provider store={store}>
+    <PersistGate loading={null} persistor={persistedStore}>
+      <RouterProvider router={router} />
+    </PersistGate>
+  </Provider> */

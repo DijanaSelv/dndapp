@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router";
 
 const ProtectedRoute = ({ children }) => {
-  const { isLoggedIn } = useSelector((state) => state.userSliceReducer);
+  const { isLoggedIn } = useSelector((state) => state.userSlice);
   if (!isLoggedIn) {
     return <Navigate to="/Login" />;
   }

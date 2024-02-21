@@ -14,16 +14,16 @@ import { uiSliceActions } from "../../app/uiSlice";
 const Home = () => {
   console.log("home");
   const { createdCampaigns, joinedCampaigns } = useSelector(
-    (state) => state.campaignSliceReducer
+    (state) => state.campaignSlice
   );
-  const { notification } = useSelector((state) => state.uiSliceReducer);
+  const { notification } = useSelector((state) => state.uiSlice);
   const dispatch = useDispatch();
 
   const {
     created: createdCampaignsFromUser,
     joined: joinedCampaignsFromUsers,
-  } = useSelector((state) => state.userSliceReducer.user.campaigns || {});
-  const { isLoading } = useSelector((state) => state.uiSliceReducer);
+  } = useSelector((state) => state.userSlice.user.campaigns || {});
+  const { isLoading } = useSelector((state) => state.uiSlice);
 
   useEffect(() => {
     console.log("home page use effect");

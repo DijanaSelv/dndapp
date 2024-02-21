@@ -3,8 +3,8 @@ import { Navigate, useParams } from "react-router";
 
 const ProtectedCampaignsRoute = ({ children }) => {
   const params = useParams();
-  const { campaigns } = useSelector((state) => state.userSliceReducer.user);
-  const { isLoggedIn } = useSelector((state) => state.userSliceReducer);
+  const { campaigns } = useSelector((state) => state.userSlice.user);
+  const { isLoggedIn } = useSelector((state) => state.userSlice);
 
   if (!isLoggedIn) {
     return <Navigate to="/Login" />;

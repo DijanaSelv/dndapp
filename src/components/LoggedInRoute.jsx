@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router";
+import { Navigate } from "react-router";
 
 const LoggedInRoute = ({ children }) => {
-  const { isLoggedIn } = useSelector((state) => state.userSliceReducer);
+  const { isLoggedIn } = useSelector((state) => state.userSlice);
   if (isLoggedIn) {
     return <Navigate to="/" />;
   }

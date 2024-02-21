@@ -4,17 +4,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSliceReducer from "./userSlice";
 import uiSliceReducer from "./uiSlice";
 import campaignSliceReducer from "./campaignSlice";
-
-/* const rootReducer = {
-  counter: counterReducer,
-
-  userReducer,
-
-  // Add other reducers here if needed
-}; */
+import shopsSliceReducer from "./shopsSlice";
 
 export const store = configureStore({
-  reducer: { userSliceReducer, uiSliceReducer, campaignSliceReducer },
-
-  // Add middleware or other configuration options if needed
+  reducer: {
+    userSlice: userSliceReducer,
+    uiSlice: uiSliceReducer,
+    campaignSlice: campaignSliceReducer,
+    shopsSlice: shopsSliceReducer,
+  },
 });

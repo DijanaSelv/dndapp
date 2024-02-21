@@ -1,14 +1,33 @@
 import { useParams } from "react-router";
-import STATIC_SHOPS from "../../app/STATIC_SHOPS";
 import { Table } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getItem } from "../../app/actions/dndApiActions";
+import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 
 const ShopPage = () => {
   const params = useParams();
+  const [itemsData, setItemsData] = useState();
   const [clickedItem, setClickedItem] = useState();
+  const { shops } = useSelector((state) => state.shopsSlice);
+  const shop = shops[params.shopId];
 
-  const clickHandler = (id) => {
-    setClickedItem(id);
+  useEffect(() => {
+    let itemsList = [];
+    Object.keys(shop.items).map((itemKey) =>
+      itemsList.push({
+        id: itemKey,
+        name: shop.items[itemKey].name,
+        price: shop.items[itemKey].price,
+        amount: shop.items[itemKey].amount,
+      })
+    );
+    setItemsData(itemsList);
+  }, []);
+  const clickHandler = async (id) => {
+    const data = await getItem(`equipment/${id}`);
+    setClickedItem(data);
+    console.log(clickedItem);
   };
 
   const columns = [
@@ -41,16 +60,10 @@ const ShopPage = () => {
     },
   ];
 
-  const itemsData = [
-    { id: "padded-armor", name: "padded armor", price: "5", amount: 6 },
-    { id: "leather-armor", name: "leather armor", price: "10", amount: 3 },
-    { id: "studded-leather", name: "studded leather", price: "45" },
-  ];
-
   return (
     <div className="content">
       <div className="shopMenu">
-        <h3>{STATIC_SHOPS.jkWY3iLz8XqR.title}</h3>
+        <h3>{shop.title}</h3>
         <div style={{ width: "500px" }}>
           <Table
             columns={columns}
@@ -61,9 +74,8 @@ const ShopPage = () => {
           />
         </div>
       </div>
-
-      <img src={STATIC_SHOPS.jkWY3iLz8XqR.image} style={{ width: "200px" }} />
-      <div>{clickedItem || "Click an item to view more details."}</div>
+      <img src={shop.image} style={{ width: "200px" }} />
+      {clickedItem && <ItemDescriptionCard item={clickedItem} />}
     </div>
   );
 };

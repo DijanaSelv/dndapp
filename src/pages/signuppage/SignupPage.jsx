@@ -12,7 +12,7 @@ const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { notification, requestSuccess, requestFailed, isLoading } =
-    useSelector((state) => state.uiSliceReducer);
+    useSelector((state) => state.uiSlice);
 
   //on Signup redirect user to login page and reset notification and sign up state
   useEffect(() => {
