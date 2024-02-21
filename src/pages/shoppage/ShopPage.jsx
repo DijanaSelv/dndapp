@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getItem } from "../../app/actions/dndApiActions";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
+import classes from "./ShopPage.module.css";
 
 const ShopPage = () => {
   const params = useParams();
@@ -20,14 +21,14 @@ const ShopPage = () => {
         name: shop.items[itemKey].name,
         price: shop.items[itemKey].price,
         amount: shop.items[itemKey].amount,
+        url: shop.items[itemKey].url,
       })
     );
     setItemsData(itemsList);
   }, []);
-  const clickHandler = async (id) => {
-    const data = await getItem(`equipment/${id}`);
+  const clickHandler = async (url) => {
+    const data = await getItem(url);
     setClickedItem(data);
-    console.log(clickedItem);
   };
 
   const columns = [
@@ -35,7 +36,7 @@ const ShopPage = () => {
       title: "name",
       dataIndex: "name",
       render: (text, record) => (
-        <a onClick={() => clickHandler(record.id)}>{text}</a>
+        <a onClick={() => clickHandler(record.url)}>{text}</a>
       ),
       sorter: {
         compare: (a, b) => {
@@ -61,10 +62,10 @@ const ShopPage = () => {
   ];
 
   return (
-    <div className="content">
-      <div className="shopMenu">
-        <h3>{shop.title}</h3>
-        <div style={{ width: "500px" }}>
+    <div className={classes.content}>
+      <div className={classes.shopMenu}>
+        <h2>{shop.title}</h2>
+        <div className={classes.table}>
           <Table
             columns={columns}
             dataSource={itemsData}
@@ -74,8 +75,10 @@ const ShopPage = () => {
           />
         </div>
       </div>
-      <img src={shop.image} style={{ width: "200px" }} />
-      {clickedItem && <ItemDescriptionCard item={clickedItem} />}
+      <div className={classes.details}>
+        <img src={shop.image} style={{ width: "200px" }} />
+        {clickedItem && <ItemDescriptionCard item={clickedItem} />}
+      </div>
     </div>
   );
 };

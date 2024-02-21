@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
 import { useState } from "react";
 
+import classes from "../pages/campaignshopspage/CampaignShopPage.module.css";
+
 const ShopListItem = ({ shop, type }) => {
   const [showModal, setShowModal] = useState(false);
   const deleteButtonHandler = () => {
@@ -46,7 +48,7 @@ const ShopListItem = ({ shop, type }) => {
         }}
         cover={
           <Link to={`${shop.id}`}>
-            <div className="coverDiv">
+            <div className={classes.coverDiv}>
               <img alt="shop image" src={shop.image} />
             </div>
           </Link>

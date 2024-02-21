@@ -10,51 +10,63 @@ const STATIC_SHOPS = {
         name: "Padded Armor",
         price: "5",
         amount: 6,
+        url: "/api/equipment/padded-armor",
       },
       "leather-armor": {
         name: "Leather Armor",
         price: "10",
         amount: 3,
+        url: "/api/equipment/leather-armor",
       },
-      "studded-leather": {
+      "studded-leather-armor": {
         name: "Studded Leather Armor",
         price: "45",
+        url: "/api/equipment/studded-leather-armor",
       },
-      hide: {
+      "hide-armor": {
         name: "Hide Armor",
         price: "10",
+        url: "/api/equipment/hide-armor",
       },
       "chain-shirt": {
         name: "Chain Shirt",
         price: "50",
+        url: "/api/equipment/chain-shirt",
       },
       "scale-mail": {
         name: "Scale Mail",
         price: "50",
+        url: "/api/equipment/scale-mail",
       },
       breastplate: {
         name: "Breastplate",
         price: "400",
+        url: "/api/equipment/breastplate",
       },
-      "half-plate": {
+      "half-plate-armor": {
         name: "Half Plate",
         price: "750",
+        url: "/api/equipment/half-plate-armor",
       },
       "ring-mail": {
         name: "Ring Mail",
         price: "30",
+        url: "/api/equipment/ring-mail",
       },
       "chain-mail": {
         name: "Chain Mail",
         price: "75",
+        url: "/api/equipment/chain-mail",
       },
-      splint: {
+      "splint-armor": {
         name: "Splint",
         price: "200",
+        url: "/api/equipment/splint-armor",
       },
-      plate: {
+      "plate-armor": {
         name: "Plate",
         price: "1500",
+        url: "/api/equipment/plate-armor",
       },
     },
   },
@@ -69,56 +81,67 @@ const STATIC_SHOPS = {
         name: "Dagger",
         price: "2",
         amount: 5,
+        url: "/api/equipment/dagger",
       },
       shortsword: {
         name: "Shortsword",
         price: "10",
         amount: 3,
+        url: "/api/equipment/shortsword",
       },
       longsword: {
         name: "Longsword",
         price: "15",
         amount: 7,
+        url: "/api/equipment/longsword",
       },
       greatsword: {
         name: "Greatsword",
         price: "50",
         amount: 2,
+        url: "/api/equipment/greatsword",
       },
       battleaxe: {
         name: "Battleaxe",
         price: "10",
         amount: 4,
+        url: "/api/equipment/battleaxe",
       },
       warhammer: {
         name: "Warhammer",
         price: "15",
         amount: 6,
+        url: "/api/equipment/warhammer",
       },
       spear: {
         name: "Spear",
         price: "1",
         amount: 8,
+        url: "/api/equipment/spear",
       },
       halberd: {
         name: "Halberd",
         price: "20",
         amount: 3,
+        url: "/api/equipment/halberd",
       },
       rapier: {
         name: "Rapier",
         price: "25",
         amount: 2,
+        url: "/api/equipment/rapier",
       },
       shortbow: {
         name: "Shortbow",
         price: "25",
         amount: 5,
+        url: "/api/equipment/shortbow",
       },
       longbow: {
         name: "Longbow",
         price: "50",
         amount: 3,
+        url: "/api/equipment/longbow",
       },
     },
   },
@@ -134,86 +157,92 @@ const STATIC_SHOPS = {
         name: "Backpack",
         price: "2",
         amount: 15,
+        url: "/api/equipment/backpack",
       },
-      rope: {
+      "rope-hempen-50-feet": {
         name: "Rope",
         price: "1",
         amount: 10,
+        url: "/api/equipment/rope-hempen-50-feet",
       },
       torch: {
         name: "Torch",
         price: "0.1",
         amount: 50,
+        url: "/api/equipment/torch",
       },
-      healerKit: {
+      "healers-kit": {
         name: "Healer's Kit",
         price: "5",
         amount: 8,
+        url: "/api/equipment/healers-kit",
       },
-      grapplingHook: {
+      "grappling-hook": {
         name: "Grappling Hook",
         price: "2",
         amount: 5,
+        url: "/api/equipment/grappling-hook",
       },
-      potionOfHealing: {
+      "potion-of-healing-common": {
         name: "Potion of Healing",
         price: "50",
         amount: 3,
+        url: "/api/magic-items/potion-of-healing-common",
       },
-      potionOfGreaterHealing: {
+      "potion-of-healing-greater": {
         name: "Potion of Greater Healing",
         price: "100",
         amount: 2,
+        url: "/api/magic-items/potion-of-healing-greater",
       },
       crowbar: {
         name: "Crowbar",
         price: "2",
         amount: 3,
+        url: "/api/equipment/crowbar",
       },
-      holyWater: {
-        name: "Holy Water",
-        price: "25",
-        amount: 5,
-      },
-      thievesTools: {
+
+      "thieves-tools": {
         name: "Thieves' Tools",
         price: "25",
         amount: 5,
+        url: "/api/equipment/thieves-tools",
       },
-      flaskOfOil: {
+      "oil-flask": {
         name: "Flask of Oil",
         price: "1",
         amount: 10,
+        url: "/api/equipment/oil-flask",
       },
       tinderbox: {
         name: "Tinderbox",
         price: "5",
         amount: 8,
+        url: "/api/equipment/tinderbox",
       },
-      ironSpike: {
+      "spike-iron": {
         name: "Iron Spike",
         price: "0.5",
         amount: 20,
+        url: "/api/equipment/spike-iron",
       },
       shovel: {
         name: "Shovel",
         price: "2",
         amount: 5,
+        url: "/api/equipment/shovel",
       },
       hammer: {
         name: "Hammer",
         price: "1",
         amount: 8,
-      },
-      grapplingTongs: {
-        name: "Grappling Tongs",
-        price: "5",
-        amount: 3,
+        url: "/api/equipment/hammer",
       },
       vial: {
         name: "Vial",
         price: "0.1",
         amount: 15,
+        url: "/api/equipment/vial",
       },
     },
   },
