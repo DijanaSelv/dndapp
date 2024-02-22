@@ -24,9 +24,7 @@ import ShopPage from "./pages/shoppage/ShopPage";
 
 //refresh state persistence
 import { PersistGate } from "redux-persist/integration/react";
-import { persistStore } from "redux-persist";
-import { store } from "./app/store";
-const persistedStore = persistStore(store);
+import { store, persistor } from "./app/configureStore";
 
 const router = createBrowserRouter([
   {
@@ -115,7 +113,13 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  return <RouterProvider router={router}> </RouterProvider>;
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
+  );
 }
 
 export default App;
@@ -125,3 +129,5 @@ export default App;
       <RouterProvider router={router} />
     </PersistGate>
   </Provider> */
+
+/* This was before state refresh persistence with npm redux persist <RouterProvider router={router}> </RouterProvider> */
