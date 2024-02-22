@@ -1,6 +1,6 @@
 .content {
   color: #333131;
-  max-width: 1300px;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -21,13 +21,39 @@ h2 {
 .details {
   width: 40%;
   margin-top: 60px;
-  margin-left: 80px;
+
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 .details img,
 .itemDescription {
   margin-bottom: 50px;
-  width: 60%;
+  width: 65%;
   height: auto;
+}
+
+.itemDescription {
+  padding: 25px 30px 40px 30px;
+  background: url("https://as2.ftcdn.net/v2/jpg/01/01/72/17/1000_F_101721700_HE5ouiYmnmHljXfxTCYrNre4JgxXN64V.jpg")
+    center;
+  border: solid #7cacbb;
+}
+
+h3 {
+  margin-top: 0px;
+}
+
+.itemspecs {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.categoryDesc {
+  font-weight: 500;
+}
+
+.description {
+  font-style: italic;
 }

@@ -20,15 +20,30 @@ const ItemDescriptionCard = ({ item }) => {
     content = (
       <div className="item_description">
         <h4>{item.name}</h4>
-        <p>armor category: {item["armor_category"]}</p>
-        <p>AC: {item["armor_class"].base}</p>
-        <p>Weight: {item.weight}</p>
-        {item.properties.length !== 0 && (
-          <p>Properties: {propertyList.join(", ")}</p>
-        )}
-        {item.special.length !== 0 && <p>Special: {specialList.join(", ")}</p>}
+        <p className={classes.itemspecs}> {item["armor_category"]}</p>
         <p>
-          Price: {item.cost.quantity}
+          <span className={classes.categoryDesc}>AC: </span>{" "}
+          {item["armor_class"].base}
+        </p>
+
+        {item.properties.length !== 0 && (
+          <p>
+            <span className={classes.categoryDesc}>Properties: </span>{" "}
+            {propertyList.join(", ")}
+          </p>
+        )}
+        {item.special.length !== 0 && (
+          <p>
+            <span className={classes.categoryDesc}>Special: </span>{" "}
+            {specialList.join(", ")}
+          </p>
+        )}
+        <p>
+          <span className={classes.categoryDesc}>Weight: </span> {item.weight}
+        </p>
+        <p>
+          <span className={classes.categoryDesc}>Price: </span>{" "}
+          {item.cost.quantity}
           {item.cost.unit}
         </p>
       </div>
@@ -37,16 +52,19 @@ const ItemDescriptionCard = ({ item }) => {
   if (item["equipment_category"].index === "potion") {
     content = (
       <div className={classes.itemDescription}>
-        <h4>{item.name}</h4>
-        {item.desc.length !== 0 && <p>{item.desc[0]}</p>}
-        {item.desc.length !== 0 && <p>{item.desc[1]}</p>}
-        <p>rarity: {item.rarity.name}</p>
+        <h3>{item.name}</h3>
+        {item.desc.length !== 0 && (
+          <p className={classes.itemspecs}>{item.desc[0]}</p>
+        )}
+        {item.desc.length !== 0 && (
+          <p className={classes.description}>{item.desc[1]}</p>
+        )}
         {/* {item.properties.length !== 0 && (
           <p>Properties: {propertyList.join(", ")}</p>
         )}
         {item.special.length !== 0 && <p>Special: {specialList.join(", ")}</p>} */}
         <p>
-          Price:{" "}
+          <span className={classes.categoryDesc}>Price:</span>{" "}
           {item.cost?.quantity || item.rarity.name === "Common" ? "50" : "100"}
           {item.cost?.unit || "gp"}
         </p>
@@ -56,20 +74,35 @@ const ItemDescriptionCard = ({ item }) => {
     content = (
       <div className={classes.itemDescription}>
         <h3>{item.name}</h3>
-        <p>Category: {item["weapon_category"]}</p>
-        <p>Range: {item["weapon_range"]}</p>
-        <p>
-          Damage: {item.damage["damage_dice"]},{" "}
-          {item.damage["damage_type"].index}
-        </p>
         {item.properties.length !== 0 && (
-          <p>Properties: {propertyList.join(", ")}</p>
+          <p className={classes.itemspecs}>{propertyList.join(", ")}</p>
         )}
-        {item.special.length !== 0 && <p>Special: {specialList.join(", ")}</p>}
-
-        <p>Weight: {item.weight}</p>
         <p>
-          Price: {item.cost.quantity}
+          <span className={classes.categoryDesc}>Category: </span>
+          {item["weapon_category"]}
+        </p>
+        <p>
+          <span className={classes.categoryDesc}>Range: </span>{" "}
+          {item["weapon_range"]}
+        </p>
+        <p>
+          <span className={classes.categoryDesc}>Damage: </span>{" "}
+          {item.damage["damage_dice"]}, {item.damage["damage_type"].index}
+        </p>
+
+        {item.special.length !== 0 && (
+          <p>
+            <span className={classes.categoryDesc}>Special: </span>{" "}
+            {specialList.join(", ")}
+          </p>
+        )}
+
+        <p>
+          <span className={classes.categoryDesc}>Weight: </span> {item.weight}
+        </p>
+        <p>
+          <span className={classes.categoryDesc}>Price: </span>{" "}
+          {item.cost.quantity}
           {item.cost.unit}
         </p>
       </div>
@@ -79,16 +112,30 @@ const ItemDescriptionCard = ({ item }) => {
       <div className={classes.itemDescription}>
         <h3>{item.name}</h3>
         {item.properties.length !== 0 && (
-          <p>Properties: {propertyList.join(", ")}</p>
+          <p>
+            <span className={classes.categoryDesc}>Properties: </span>{" "}
+            {propertyList.join(", ")}
+          </p>
         )}
-        {item.special.length !== 0 && <p>Special: {specialList.join(", ")}</p>}
-        <p>Weight: {item.weight}</p>
+
+        {item.special.length !== 0 && (
+          <p>
+            <span className={classes.categoryDesc}>Special: </span>{" "}
+            {specialList.join(", ")}
+          </p>
+        )}
+        {item.desc.length !== 0 && (
+          <p className={classes.description}>{item.desc[0]}</p>
+        )}
         <p>
-          Price: {item.cost.quantity}
-          {item.cost.unit}
+          <span className={classes.categoryDesc}>Weight: </span> {item.weight}
         </p>
 
-        {item.desc.length !== 0 && <p>{item.desc[0]}</p>}
+        <p>
+          <span className={classes.categoryDesc}>Price: </span>{" "}
+          {item.cost.quantity}
+          {item.cost.unit}
+        </p>
       </div>
     );
   }
