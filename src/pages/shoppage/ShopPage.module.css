@@ -35,8 +35,8 @@ h2 {
 
 .itemDescription {
   padding: 25px 30px 40px 30px;
-  background: url("https://as2.ftcdn.net/v2/jpg/01/01/72/17/1000_F_101721700_HE5ouiYmnmHljXfxTCYrNre4JgxXN64V.jpg")
-    center;
+  /*   background: url("https://as2.ftcdn.net/v2/jpg/01/01/72/17/1000_F_101721700_HE5ouiYmnmHljXfxTCYrNre4JgxXN64V.jpg")
+    center; */
   border: solid #7cacbb;
 }
 
@@ -56,4 +56,13 @@ h3 {
 
 .description {
   font-style: italic;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.buttons button {
+  margin: 15px;
 }

@@ -25,6 +25,7 @@ import ShopPage from "./pages/shoppage/ShopPage";
 //refresh state persistence
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./app/configureStore";
+import EditShopPage from "./pages/editshoppage/EditShopPage";
 
 const router = createBrowserRouter([
   {
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
       {
         path: "/Campaigns/:type/:campaignId/play/shops/:shopId",
         element: <ShopPage />,
+      },
+      {
+        path: "/Campaigns/:type/:campaignId/play/shops/:shopId/edit",
+        element: <EditShopPage />,
       },
     ],
   },

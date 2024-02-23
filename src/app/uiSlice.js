@@ -37,6 +37,9 @@ const uiSlice = createSlice({
       } else if (action.payload.code === "new campaign created") {
         message = "Done";
         description = "Campaign created";
+      } else if (action.payload.code === "new shop created") {
+        message = "Done";
+        description = "Shop created";
       } else {
         message = "Error";
         description = "Request failed. Try again later.";

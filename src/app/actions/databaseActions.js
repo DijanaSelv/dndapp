@@ -157,3 +157,33 @@ export const getShopsData = (campaignId) => {
     dispatch(uiSliceActions.changeLoading(false));
   };
 };
+
+//update shop items
+export const updateShopItems = (newShopData, campaignId, shopId) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      console.log("started");
+      const shopRef = ref(db, "campaigns/" + campaignId + "/shops/" + shopId);
+      await update(shopRef, newShopData);
+      console.log("updated");
+      dispatch(uiSliceActions.requestSuccessIsTrue());
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "success",
+          code: "new shop created",
+        })
+      );
+      dispatch(getShopsData(campaignId));
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "error",
+          code: "error",
+        })
+      );
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+  };
+};

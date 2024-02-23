@@ -1,10 +1,12 @@
 import { useParams } from "react-router";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getItem } from "../../app/actions/dndApiActions";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 import classes from "./ShopPage.module.css";
+import { Link } from "react-router-dom";
+import { LeftSquareOutlined } from "@ant-design/icons";
 
 const ShopPage = () => {
   const params = useParams();
@@ -25,7 +27,7 @@ const ShopPage = () => {
       })
     );
     setItemsData(itemsList);
-  }, []);
+  }, [shop]);
   const clickHandler = async (url) => {
     const data = await getItem(url);
     setClickedItem(data);
@@ -51,6 +53,7 @@ const ShopPage = () => {
       sorter: {
         compare: (a, b) => a.amount - b.amount,
       },
+      render: (text, record) => (text > 0 ? text : "∞"),
     },
     {
       title: "price (gp)",
@@ -58,13 +61,18 @@ const ShopPage = () => {
       sorter: {
         compare: (a, b) => a.price - b.price,
       },
+      render: (text, record) => (text > 0 ? text : "/"),
     },
   ];
 
   return (
     <div className={classes.content}>
       <div className={classes.shopMenu}>
+        <Link to={-1}>
+          <LeftSquareOutlined /> Back to shoppes
+        </Link>
         <h2>{shop.title}</h2>
+        <p>{shop.description}</p>
         <div className={classes.table}>
           <Table
             columns={columns}
@@ -73,6 +81,14 @@ const ShopPage = () => {
             size={"small"}
             rowKey="id"
           />
+          <div className={classes.buttons}>
+            <Link to="edit">
+              <Button style={{ borderColor: "#7cacbb" }}>Edit Shop</Button>
+            </Link>
+            <Button type="primary" danger>
+              Delete Shop
+            </Button>
+          </div>
         </div>
       </div>
       <div className={classes.details}>
