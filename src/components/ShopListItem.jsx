@@ -55,7 +55,11 @@ const ShopListItem = ({ shop, type }) => {
         }
         actions={actions}
       >
-        <Meta title={shop.title} description={shop.description || ""} />
+        <Meta
+          className={classes.shopDescription}
+          title={shop.title}
+          description={shop.description || ""}
+        />
       </Card>
     </motion.div>
   );
