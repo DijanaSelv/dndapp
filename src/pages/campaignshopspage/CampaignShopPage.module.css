@@ -1,0 +1,35 @@
+.content {
+  color: #333131;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.h2 {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.shopCards {
+  width: auto;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+/* TO MAINTAIN IMAGE RATIO 3:2 */
+.coverDiv {
+  padding-bottom: 70%;
+  position: relative;
+}
+.coverDiv img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shopDescription {
+  height: 75px;
+}

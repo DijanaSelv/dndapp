@@ -1,17 +1,15 @@
-import {
-  ArrowRightOutlined,
-  CloseOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { Card } from "antd";
+import { ArrowRightOutlined, CloseOutlined } from "@ant-design/icons";
+import { Button, Card, Modal } from "antd";
 import Meta from "antd/es/card/Meta";
 import { motion } from "framer-motion";
 
 import { Link } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
 import { useState } from "react";
-import classes from "../pages/homepage/HomePage.module.css";
-const CampaignListItem = ({ campaign, type }) => {
+
+import classes from "../pages/campaignshopspage/CampaignShopPage.module.css";
+
+const ShopListItem = ({ shop, type }) => {
   const [showModal, setShowModal] = useState(false);
   const deleteButtonHandler = () => {
     setShowModal(true);
@@ -20,20 +18,14 @@ const CampaignListItem = ({ campaign, type }) => {
   const actions =
     type === "created"
       ? [
-          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
-            <InfoCircleOutlined key="info" />
-          </Link>,
-          <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
+          <Link to={`${shop.id}`}>
             <ArrowRightOutlined key="play" />
           </Link>,
 
           <CloseOutlined key="delete" onClick={deleteButtonHandler} />,
         ]
       : [
-          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
-            <InfoCircleOutlined key="info" />
-          </Link>,
-          <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
+          <Link to={`${shop.id}`}>
             <ArrowRightOutlined key="play" />
           </Link>,
         ];
@@ -45,36 +37,36 @@ const CampaignListItem = ({ campaign, type }) => {
       transition={{ duration: 0.5 }}
       whileHover={{ scale: 1.05 }}
     >
-      {
-        <DeleteModal
+      {/*         <DeleteModal
           campaign={campaign}
           showModal={showModal}
           setShowModal={setShowModal}
-        />
-      }
+        /> */}
       <Card
+        style={{
+          width: 300,
+        }}
         cover={
-          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
+          <Link to={`${shop.id}`}>
             <div className={classes.coverDiv}>
-              <img alt="campaign image" src={campaign.image} />
+              <img alt="shop image" src={shop.image} />
             </div>
           </Link>
         }
         actions={actions}
       >
         <Meta
-          title={campaign.title}
-          description={`Players: ${
-            campaign.players ? campaign.players.length : "0"
-          }`}
+          className={classes.shopDescription}
+          title={shop.title}
+          description={shop.description || ""}
         />
       </Card>
     </motion.div>
   );
 };
 
-export default CampaignListItem;
+export default ShopListItem;
 
 /*       <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
-        <Button type="primary">Play</Button>
-      </Link> */
+          <Button type="primary">Play</Button>
+        </Link> */

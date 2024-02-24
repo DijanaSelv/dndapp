@@ -17,8 +17,8 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   const { notification, isLoading, requestSuccess, requestFailed } =
-    useSelector((state) => state.uiSliceReducer);
-  const { isLoggedIn } = useSelector((state) => state.userSliceReducer);
+    useSelector((state) => state.uiSlice);
+  const { isLoggedIn } = useSelector((state) => state.userSlice);
 
   useEffect(() => {
     console.log("use effect in login page");

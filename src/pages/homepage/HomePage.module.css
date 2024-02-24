@@ -27,7 +27,7 @@ h2 {
   margin-top: 0;
 }
 
-.createdCampaignsSection ul {
+.createdCampaignsSection > ul {
   width: auto;
   padding: 0;
   display: flex;
@@ -35,14 +35,9 @@ h2 {
   gap: 10px;
   justify-content: flex-start;
 }
-
 ul > div {
   width: 24%;
   min-width: 200px;
-}
-
-.ant-card-actions li {
-  width: 28% !important;
 }
 
 /* TO MAINTAIN IMAGE RATIO 3:2 */
@@ -50,7 +45,6 @@ ul > div {
   padding-bottom: 70%;
   position: relative;
 }
-
 .coverDiv img {
   position: absolute;
   width: 100%;

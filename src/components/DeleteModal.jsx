@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteCampaign } from "../app/actions/databaseActions";
 
 const DeleteModal = ({ campaign, showModal, setShowModal }) => {
-  const { uid } = useSelector((state) => state.userSliceReducer.user);
+  const { uid } = useSelector((state) => state.userSlice.user);
 
   const dispatch = useDispatch();
   const handleOk = () => {

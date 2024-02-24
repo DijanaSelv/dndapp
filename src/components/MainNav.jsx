@@ -1,8 +1,7 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "antd";
 import { useNavigate } from "react-router";
-import { loggedInUser, signOutUser } from "../app/actions/userActions";
+import { signOutUser } from "../app/actions/userActions";
 import { Link, NavLink } from "react-router-dom";
 
 import classes from "./MainNav.module.css";
@@ -13,9 +12,7 @@ const MainNav = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { uid, firstName } = useSelector(
-    (state) => state.userSliceReducer.user
-  );
+  const { uid, firstName } = useSelector((state) => state.userSlice.user);
 
   const logoutClickHandler = (e) => {
     e.preventDefault();

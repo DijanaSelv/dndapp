@@ -1,20 +1,30 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers } from "@reduxjs/toolkit";
 
 //reducers
 import userSliceReducer from "./userSlice";
 import uiSliceReducer from "./uiSlice";
 import campaignSliceReducer from "./campaignSlice";
+import shopsSliceReducer from "./shopsSlice";
 
-/* const rootReducer = {
-  counter: counterReducer,
-
-  userReducer,
-
-  // Add other reducers here if needed
-}; */
-
-export const store = configureStore({
-  reducer: { userSliceReducer, uiSliceReducer, campaignSliceReducer },
-
-  // Add middleware or other configuration options if needed
+export const rootReducer = combineReducers({
+  userSlice: userSliceReducer,
+  uiSlice: uiSliceReducer,
+  campaignSlice: campaignSliceReducer,
+  shopsSlice: shopsSliceReducer,
 });
+
+/* export const store = createStore(rootReducer); */
+
+/* export const store = configureStore({
+  reducer: {
+    userSlice: userSliceReducer,
+    uiSlice: uiSliceReducer,
+    campaignSlice: campaignSliceReducer,
+    shopsSlice: shopsSliceReducer,
+  },
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
+}); */

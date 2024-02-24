@@ -9,7 +9,7 @@ const CampaignInfoPage = () => {
   const params = useParams();
 
   const { createdCampaigns, joinedCampaigns } = useSelector(
-    (state) => state.campaignSliceReducer
+    (state) => state.campaignSlice
   );
 
   const campaign =

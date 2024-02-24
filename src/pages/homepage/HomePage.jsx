@@ -6,24 +6,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCampaignsData } from "../../app/actions/databaseActions";
 import { Spin } from "antd";
-
-import "./HomePage.css";
+import classes from "./HomePage.module.css";
 import NotificationBox from "../../components/NotificationBox";
 import { uiSliceActions } from "../../app/uiSlice";
 
 const Home = () => {
   console.log("home");
   const { createdCampaigns, joinedCampaigns } = useSelector(
-    (state) => state.campaignSliceReducer
+    (state) => state.campaignSlice
   );
-  const { notification } = useSelector((state) => state.uiSliceReducer);
+  const { notification } = useSelector((state) => state.uiSlice);
   const dispatch = useDispatch();
 
   const {
     created: createdCampaignsFromUser,
     joined: joinedCampaignsFromUsers,
-  } = useSelector((state) => state.userSliceReducer.user.campaigns || {});
-  const { isLoading } = useSelector((state) => state.uiSliceReducer);
+  } = useSelector((state) => state.userSlice.user.campaigns || {});
+  const { isLoading } = useSelector((state) => state.uiSlice);
 
   useEffect(() => {
     console.log("home page use effect");
@@ -39,10 +38,10 @@ const Home = () => {
   }, [createdCampaignsFromUser, joinedCampaignsFromUsers]);
 
   return (
-    <div className="content">
+    <div className={classes.content}>
       {notification && <NotificationBox />}
-      <div className="createdCampaignsSection">
-        <div className="createdCampaignsHeader">
+      <div className={classes.createdCampaignsSection}>
+        <div className={classes.createdCampaignsHeader}>
           <h2>Created Campaigns</h2>
           <Link to="/NewCampaign">
             Create a new campaign <PlusCircleOutlined />

@@ -12,12 +12,20 @@ import CampaignPlayPage from "./pages/campaignplaypage/CampaignPlayPage";
 import NewCampaignPage from "./pages/newcampaignpage/NewCampaignPage";
 import NewCharacterPage from "./pages/newcharacterpage/NewCharacterPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { useDispatch } from "react-redux";
+import { useDispatch, Provider } from "react-redux";
 import { auth } from "./app/actions/base";
 import { userSliceActions } from "./app/userSlice";
 import { getUserData } from "./app/actions/databaseActions";
 import { onAuthStateChanged } from "firebase/auth";
 import LoggedInRoute from "./components/LoggedInRoute";
+import CampaignShopsPage from "./pages/campaignshopspage/CampaignShopsPage";
+import ProtectedCampaignsRoute from "./components/ProtectedCampaignsRoute";
+import ShopPage from "./pages/shoppage/ShopPage";
+
+//refresh state persistence
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./app/configureStore";
+import EditShopPage from "./pages/editshoppage/EditShopPage";
 
 const router = createBrowserRouter([
   {
@@ -59,28 +67,36 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Campaigns",
-        element: (
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
-        ),
-      },
-      {
         path: "/Campaigns/:type/:campaignId/info",
         element: (
-          <ProtectedRoute>
+          <ProtectedCampaignsRoute>
             <CampaignInfoPage />
-          </ProtectedRoute>
+          </ProtectedCampaignsRoute>
         ),
       },
       {
         path: "/Campaigns/:type/:campaignId/play",
         element: (
-          <ProtectedRoute>
+          <ProtectedCampaignsRoute>
             <CampaignPlayPage />
-          </ProtectedRoute>
+          </ProtectedCampaignsRoute>
         ),
+      },
+      {
+        path: "/Campaigns/:type/:campaignId/play/shops",
+        element: (
+          <ProtectedCampaignsRoute>
+            <CampaignShopsPage />
+          </ProtectedCampaignsRoute>
+        ),
+      },
+      {
+        path: "/Campaigns/:type/:campaignId/play/shops/:shopId",
+        element: <ShopPage />,
+      },
+      {
+        path: "/Campaigns/:type/:campaignId/play/shops/:shopId/edit",
+        element: <EditShopPage />,
       },
     ],
   },
@@ -102,7 +118,21 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
+  );
 }
 
 export default App;
+
+/*    <Provider store={store}>
+    <PersistGate loading={null} persistor={persistedStore}>
+      <RouterProvider router={router} />
+    </PersistGate>
+  </Provider> */
+
+/* This was before state refresh persistence with npm redux persist <RouterProvider router={router}> </RouterProvider> */
