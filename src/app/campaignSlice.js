@@ -37,6 +37,14 @@ const campaignSlice = createSlice({
     },
     /*     resetCampaignSlice(state, action) {
       state = initialState;
+    },
+    provideCampaignList(state, action) {
+      if (action.payload === "created") {
+        return state.createdCampaigns;
+      }
+      if (action.payload === "joined") {
+        return state.joinedCampaigns;
+      }
     }, */
   },
 });
