@@ -7,34 +7,13 @@ import { loginUserAction } from "../../app/actions/userActions";
 import { useValidate } from "../../app/hooks/useValidate";
 import { useEffect } from "react";
 import { uiSliceActions } from "../../app/uiSlice";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { persistenceChange } from "../../app/actions/userActions";
 
-const Login = () => {
-  console.log("login page");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const Login = () => {  
   const [rememberMe, setRememberMe] = useState(false);
 
-  const { notification, isLoading, requestSuccess, requestFailed } =
-    useSelector((state) => state.uiSlice);
-  const { isLoggedIn } = useSelector((state) => state.userSlice);
-
-  useEffect(() => {
-    console.log("use effect in login page");
-
-    if (requestSuccess) {
-      console.log("request success");
-      dispatch(uiSliceActions.resetRequestState());
-    } else if (requestFailed) {
-      console.log("request failed");
-      emailResetInput();
-      passwordResetInput();
-      dispatch(uiSliceActions.resetRequestState());
-    }
-  }, [requestFailed, requestSuccess]);
-
-  //FORM VALIDATION from useValidate HOOK
+  // **FORM VALIDATION from useValidate HOOK
   const {
     inputValue: email,
     isValid: emailIsValid,
@@ -53,13 +32,28 @@ const Login = () => {
     valueChangeHandler: passwordValueChangeHandler,
   } = useValidate((value) => value.length >= 6);
 
-  let formIsValid = false;
+  // **Redux hooks**
+  const { notification, isLoading, requestSuccess, requestFailed } =
+    useSelector((state) => state.uiSlice);
+  const dispatch = useDispatch();
 
-  if (emailIsValid && passwordIsValid) {
-    formIsValid = true;
-  }
+  const navigate = useNavigate(); // ! remove if not used
+  const { isLoggedIn } = useSelector((state) => state.userSlice); // !remove if not used
 
-  //Login user
+// **Computed Values (Memoization)**
+// $ useMemo hook
+// # Not using the useMemo hook, the formIsValid calculation will be re-executed on every render cycle, regardless of whether emailIsValid or passwordIsValid have changed or not.
+  // let formIsValid = false;
+  
+  // if (emailIsValid && passwordIsValid) {
+  //   formIsValid = true;
+  // }
+  const formIsValid = useMemo(() => emailIsValid && passwordIsValid, [emailIsValid, passwordIsValid]);
+// $ useMemo ^
+
+// **Event handlers**
+
+  // Login user
   const loginHandler = (e) => {
     e.preventDefault();
     dispatch(persistenceChange(rememberMe));
@@ -67,10 +61,27 @@ const Login = () => {
     dispatch(loginUserAction(email, password));
   };
 
-  //change sign in persistence
+  // Change sign in persistence
   const rememberMeHandler = (e) => {
     setRememberMe(e.target.checked);
   };
+
+  // Side effects
+  // $ Moved useEffect at the end, before the return statement
+  // # The component's primary logic is executed first, followed by any side effects. (useEffect is a side effect in this case)
+  useEffect(() => {
+    if (requestSuccess) {
+      console.log("request success");
+      dispatch(uiSliceActions.resetRequestState());
+    } else if (requestFailed) {
+      console.log("request failed");
+      emailResetInput();
+      passwordResetInput();
+      dispatch(uiSliceActions.resetRequestState());
+    }
+
+  }, [requestFailed, requestSuccess]);
+  // $ moved useEffect ^
 
   return (
     <>
