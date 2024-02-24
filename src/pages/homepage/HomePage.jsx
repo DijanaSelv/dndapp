@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import CampaignListItem from "../../components/CampaignListItem";
-import CharacterListItem from "../../components/CharacterListItem";
+import CharacterListItem from "../../components/CharacterListItem"; // ! remove if not used
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -11,21 +11,15 @@ import NotificationBox from "../../components/NotificationBox";
 import { uiSliceActions } from "../../app/uiSlice";
 
 const Home = () => {
-  console.log("home");
-  const { createdCampaigns, joinedCampaigns } = useSelector(
-    (state) => state.campaignSlice
-  );
+  
+  const { createdCampaigns, joinedCampaigns } = useSelector((state) => state.campaignSlice);
   const { notification } = useSelector((state) => state.uiSlice);
-  const dispatch = useDispatch();
-
-  const {
-    created: createdCampaignsFromUser,
-    joined: joinedCampaignsFromUsers,
-  } = useSelector((state) => state.userSlice.user.campaigns || {});
+  const { created: createdCampaignsFromUser, joined: joinedCampaignsFromUsers} = useSelector((state) => state.userSlice.user.campaigns || {});
   const { isLoading } = useSelector((state) => state.uiSlice);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    console.log("home page use effect");
     if (createdCampaignsFromUser) {
       const createdCampaignsIds = Object.keys(createdCampaignsFromUser);
       dispatch(getCampaignsData(createdCampaignsIds, "created"));
@@ -36,6 +30,7 @@ const Home = () => {
     }
     dispatch(uiSliceActions.resetRequestState());
   }, [createdCampaignsFromUser, joinedCampaignsFromUsers]);
+
 
   return (
     <div className={classes.content}>
