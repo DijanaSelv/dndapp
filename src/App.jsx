@@ -21,11 +21,11 @@ import LoggedInRoute from "./components/LoggedInRoute";
 import CampaignShopsPage from "./pages/campaignshopspage/CampaignShopsPage";
 import ProtectedCampaignsRoute from "./components/ProtectedCampaignsRoute";
 import ShopPage from "./pages/shoppage/ShopPage";
+import EditShopPage from "./pages/editshoppage/EditShopPage";
 
 //refresh state persistence
-import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "./app/configureStore";
-import EditShopPage from "./pages/editshoppage/EditShopPage";
+/* import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./app/configureStore"; */
 
 const router = createBrowserRouter([
   {
@@ -104,10 +104,8 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch = useDispatch();
-  console.log("app component");
 
   useEffect(() => {
-    console.log("app effect");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(userSliceActions.setLoggedInUser(user.uid));
@@ -119,20 +117,16 @@ function App() {
   }, []);
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router} />
-      </PersistGate>
-    </Provider>
+    <RouterProvider router={router}> </RouterProvider>
   );
 }
 
 export default App;
 
 /*    <Provider store={store}>
-    <PersistGate loading={null} persistor={persistedStore}>
-      <RouterProvider router={router} />
-    </PersistGate>
-  </Provider> */
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider> */
 
 /* This was before state refresh persistence with npm redux persist <RouterProvider router={router}> </RouterProvider> */

@@ -1,18 +1,14 @@
-* {
-  margin-bottom: 0px;
-}
+
 .background {
-  background-color: #7cacbb;
+  /* background-color: #7cacbb; */
+  background-color: #373d49f9;
 }
 
 .mainNav {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333131;
+  color: #f3f3f3;
   display: flex;
   flex-direction: column;
-  padding-left: 10px;
+  margin: 0 100px;
 }
 
 .welcomeLogo {
@@ -22,21 +18,26 @@
 }
 
 .title {
-  padding-left: 20px;
-  font-size: 3rem;
-  margin-top: 0;
+  font-family: "MedievalSharp", cursive;
+  font-size: 48px;
+  margin: 0;
+}
+
+.subtitle {
+  padding: 0;
 }
 
 .titleLink {
   text-decoration: none;
-  color: #333131;
+  color: #f3f3f3;
 }
 
 .secondRow {
   display: flex;
   justify-content: space-between;
-  height: 33px;
+  padding: 5px 0;
 }
+
 .secondRow p {
   margin-top: 0px;
   align-self: center;
@@ -48,18 +49,26 @@
 
 .navLink {
   color: white;
-  margin: 0 20px 0 20px;
   display: flex;
+  text-decoration: none;
+  padding: 10px 8px;
+  border: 1px solid transparent;
+  border-radius: 5px;
 }
 
-.button {
+/* .button {
   background-color: transparent;
   border: none;
   font-size: 16px;
   color: white !important;
-}
+} */
+
 .navLink:hover,
 button:hover {
   text-decoration: none;
-  color: #333131 !important;
+  color: #f3f3f3;
+  transition: color 0.3s;    
+  border: 1px solid #646e81f9;  
+  transition: border 0.5s;
+  border-radius: 5px;
 }

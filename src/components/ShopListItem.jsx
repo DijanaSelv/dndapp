@@ -43,9 +43,7 @@ const ShopListItem = ({ shop, type }) => {
           setShowModal={setShowModal}
         /> */}
       <Card
-        style={{
-          width: 300,
-        }}
+        
         cover={
           <Link to={`${shop.id}`}>
             <div className={classes.coverDiv}>

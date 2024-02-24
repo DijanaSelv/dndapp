@@ -62,7 +62,8 @@ const EditShopPage = () => {
         <Input
           type="number"
           value={text > 0 ? text : ""}
-          onChange={(e) => handleChange(e, e.target.value, record.id, "amount")}
+          // onChange={(e) => handleChange(e, e.target.value, record.id, "amount")}
+          onChange={(e) => handleItemChange(record.id, "amount", e.target.value)}
         ></Input>
       ),
       sorter: {
@@ -76,7 +77,8 @@ const EditShopPage = () => {
         <Input
           type="number"
           value={text > 0 ? text : ""}
-          onChange={(e) => handleChange(e, e.target.value, record.id, "price")}
+          // onChange={(e) => handleChange(e, e.target.value, record.id, "price")}
+          onChange={(e) => handleItemChange(record.id, "price", e.target.value)}
         ></Input>
       ),
       sorter: {
@@ -95,29 +97,56 @@ const EditShopPage = () => {
   ];
 
   //EDITS
-  const handleChange = (e, value, itemId, field) => {
-    if (field === "title") {
-      setShopTitle(value);
-    } else if (field === "image") {
-      if (e) {
-        e.preventDefault();
-        const imageInput = e.target.elements["image"].value;
-        setImageUrl(imageInput ? imageInput : shop.image);
-      } else {
-        setImageUrl(shop.image);
-      }
-    } else if (field === "description") {
-      setShopDescription(value);
-    } else {
-      setItemsData((prevItems) =>
-        prevItems.map((item) =>
-          item.id === itemId
-            ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
-            : item
-        )
-      );
-    }
+  const handleTitleChange = (e) => {
+    setShopTitle(e.target.value);
   };
+
+  const handleDescriptionChange = (e) => {
+    setShopDescription(e.target.value);
+  };
+
+  const handleImageChange = (e) => {
+    const imageUrl = e.target.value;
+    setImageUrl(imageUrl);
+  };
+
+  const handleItemChange = (itemId, field, value) => {
+    setItemsData((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId
+          ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
+          : item
+      )
+    );
+  };
+
+  const handleResetChange = () => {    
+    setImageUrl(shop.image);
+  }
+
+  // const handleChange = (e, value, itemId, field) => {
+  //   if (field === "title") {
+  //     setShopTitle(value);
+  //   } else if (field === "image") {
+  //     if (e) {
+  //       e.preventDefault();
+  //       const imageInput = e.target.elements["image"].value;
+  //       setImageUrl(imageInput ? imageInput : shop.image);
+  //     } else {
+  //       setImageUrl(shop.image);
+  //     }
+  //   } else if (field === "description") {
+  //     setShopDescription(value);
+  //   } else {
+  //     setItemsData((prevItems) =>
+  //       prevItems.map((item) =>
+  //         item.id === itemId
+  //           ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
+  //           : item
+  //       )
+  //     );
+  //   }
+  // };
 
   const saveChangesHandler = () => {
     const updatedItems = {};
@@ -170,30 +199,42 @@ const EditShopPage = () => {
       children: "Content of Tab Pane 2",
     },
   ];
+
   return (
     <div className={classes.content}>
       <div className={classes.shopMenu}>
         <h3>Title</h3>
         <Input
           value={shopTitle}
-          onChange={(e) => handleChange(e, e.target.value, null, "title")}
+          // onChange={(e) => handleChange(e, e.target.value, null, "title")}
+          // onChange={(e) => handleTitleChange(e)} // $ mozhi i vaka msm ama poubo e dolnoto ko sho e, oti mozhi vaka rerender da napraj 
+          onChange={handleTitleChange}
         ></Input>
         <h4>Description</h4>
         <TextArea
           value={shopDescription}
-          onChange={(e) => handleChange(e, e.target.value, null, "description")}
+          // onChange={(e) => handleChange(e, e.target.value, null, "description")}
+          onChange={handleDescriptionChange}
         ></TextArea>
         <Tabs defaultActiveKey="1" items={tabs}></Tabs>
       </div>
       <div className={classes.details}>
         <p>Image URL:</p>
-        <form onSubmit={(e) => handleChange(e, null, null, "image")}>
-          <Input name="image"></Input>{" "}
+        {/* <form onSubmit={(e) => handleChange(e, null, null, "image")}> */}
+
+          {/* <Input name="image"></Input>{" "} */}
+          
+          <Input
+            name="image"
+            value={imageUrl}
+            onChange={handleImageChange}
+          />
+
           <Button htmlType="submit">Apply Image</Button>
-          <Button onClick={(e) => handleChange(null, null, null, "image")}>
+          <Button onClick={(e) => handleResetChange(null, null, null)}>
             Reset Image
           </Button>
-        </form>
+        {/* </form> */}
         <img src={imageUrl} style={{ width: "200px" }} />
         {clickedItem && <ItemDescriptionCard item={clickedItem} />}
       </div>
