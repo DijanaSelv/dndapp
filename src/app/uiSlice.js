@@ -5,6 +5,7 @@ const initialState = {
   requestSuccess: false,
   requestFailed: false,
   isLoading: false,
+  fetchedCampaigns: false,
 };
 
 const uiSlice = createSlice({
@@ -67,10 +68,14 @@ const uiSlice = createSlice({
       state.notification = null;
       state.requestSuccess = false;
       state.requestFailed = false;
+      state.fetchedCampaigns = false;
     },
 
     changeLoading(state, action) {
       state.isLoading = action.payload;
+    },
+    changeFetchedCampaigns(state, action) {
+      state.fetchedCampaigns = action.payload;
     },
   },
 });

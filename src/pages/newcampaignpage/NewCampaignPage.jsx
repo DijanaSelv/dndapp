@@ -6,8 +6,11 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { uiSliceActions } from "../../app/uiSlice";
 import NotificationBox from "../../components/NotificationBox";
-import { createNewCampaign } from "../../app/actions/databaseActions";
 import STATIC_SHOPS from "../../app/STATIC_SHOPS";
+import {
+  createNewCampaign,
+  getCampaignsData,
+} from "../../app/actions/databaseActions";
 
 const NewCampaignPage = () => {
   const navigate = useNavigate();
@@ -61,7 +64,7 @@ const NewCampaignPage = () => {
     formIsValid = true;
   }
 
-  const createCampaignHandler = (e) => {
+  const createCampaignHandler = async (e) => {
     e.preventDefault();
     const newCampaignData = {
       id: nanoid(9),
@@ -77,8 +80,9 @@ const NewCampaignPage = () => {
     };
 
     //action that sends the data to database
+    const newCampaignId = [newCampaignData.id];
     dispatch(createNewCampaign(uid, newCampaignData));
-    //navigate(`/Campaigns/created/${newCampaignData.id}/info`);
+    navigate(`/Campaigns/created/${newCampaignData.id}/info`);
     //redirect to campaign info
   };
 
