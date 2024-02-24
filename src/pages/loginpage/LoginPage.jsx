@@ -11,6 +11,7 @@ import { useState } from "react";
 import { persistenceChange } from "../../app/actions/userActions";
 
 const Login = () => {
+  console.log("login page");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
@@ -20,20 +21,18 @@ const Login = () => {
   const { isLoggedIn } = useSelector((state) => state.userSliceReducer);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/");
-    }
+    console.log("use effect in login page");
 
-    if (requestFailed) {
+    if (requestSuccess) {
+      console.log("request success");
+      dispatch(uiSliceActions.resetRequestState());
+    } else if (requestFailed) {
+      console.log("request failed");
       emailResetInput();
       passwordResetInput();
       dispatch(uiSliceActions.resetRequestState());
     }
-    if (requestSuccess) {
-      navigate("/Campaigns");
-      dispatch(uiSliceActions.resetRequestState());
-    }
-  }, [requestFailed, requestSuccess, isLoggedIn]);
+  }, [requestFailed, requestSuccess]);
 
   //FORM VALIDATION from useValidate HOOK
   const {
@@ -64,6 +63,7 @@ const Login = () => {
   const loginHandler = (e) => {
     e.preventDefault();
     dispatch(persistenceChange(rememberMe));
+
     dispatch(loginUserAction(email, password));
   };
 

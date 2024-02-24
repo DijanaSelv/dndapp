@@ -83,6 +83,7 @@ export const loginUserAction = (email, password) => {
         email,
         password
       );
+      dispatch(uiSliceActions.requestSuccessIsTrue());
       const user = userCredential.user;
       dispatch(
         uiSliceActions.showNotification({
@@ -90,7 +91,6 @@ export const loginUserAction = (email, password) => {
           code: "log in success",
         })
       );
-      dispatch(uiSliceActions.requestSuccessIsTrue());
       //dispatch(userSliceActions.setLoggedInUser(user.uid));
       //dispatch(getUserData(user.uid));
     } catch (error) {
@@ -129,6 +129,6 @@ export const persistenceChange = (rememberMe) => {
       auth,
       rememberMe ? browserLocalPersistence : browserSessionPersistence
     );
-    console.log("persistence changed", auth);
+    // console.log("persistence changed", auth);
   };
 };
