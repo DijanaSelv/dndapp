@@ -1,6 +1,5 @@
 .content {
   color: #333131;
-  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -9,7 +8,7 @@
 }
 
 h2 {
-  margin: 50px;
+  margin: 50px 0;
 }
 
 .table {

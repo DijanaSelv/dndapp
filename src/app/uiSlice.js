@@ -16,6 +16,7 @@ const uiSlice = createSlice({
       let message;
       let description;
 
+      // TODO use switch case instead
       //add more if needed for sign in primer or other scenarios
       if (action.payload.code === "auth/email-already-in-use") {
         message = "Error";

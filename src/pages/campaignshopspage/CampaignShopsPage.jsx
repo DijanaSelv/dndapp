@@ -10,9 +10,10 @@ const CampaignShopsPage = () => {
   const { shops } = useSelector((state) => state.shopsSlice);
   const dispatch = useDispatch();
 
+
   useEffect(() => {
-    dispatch(getShopsData(params.campaignId));
-  }, []);
+    if (!Object.keys(shops).length)  {dispatch(getShopsData(params.campaignId))};
+  }, [shops]);
 
   return (
     <div className={classes.content}>

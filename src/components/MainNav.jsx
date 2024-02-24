@@ -26,14 +26,15 @@ const MainNav = () => {
         <div className={classes.welcomeLogo}>
           <Link className={classes.titleLink}>
             <h1 className={classes.title}> Di & Di </h1>
+            <p className={classes.subtitle}>A web app for your RPG campaigns</p>
           </Link>
-          {firstName && <h3>Hello, {firstName}!</h3>}
+         
         </div>
 
         <div className={classes.secondRow}>
-          <p>A web app for your RPG campaigns</p>
+          
           {uid && (
-            <div className={classes.navLink}>
+            <div className={classes.navLinks}>
               {/* <NavLink href="/" className={classes.navLink}> */}
               <NavLink to="/" className={classes.navLink}>    {/* //! Use 'to="url"' instead of 'href' */}
               {/* // $ using 'href' instead of 'to', might make the whole page reload. Also, 'to' is provided from the react router therefore it is a better approach to use it instead. */}
@@ -47,6 +48,8 @@ const MainNav = () => {
               </NavLink>
             </div>
           )}
+
+          {firstName && <h3>Hello, {firstName}!</h3>}
           {uid && (
             <Button className={classes.button} onClick={logoutClickHandler}>
               <LogoutOutlined /> Log Out

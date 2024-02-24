@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import CampaignListItem from "../../components/CampaignListItem";
-import CharacterListItem from "../../components/CharacterListItem"; 
+import CharacterListItem from "../../components/CharacterListItem"; // ! remove if not used
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -38,8 +38,8 @@ const Home = () => {
       <div className={classes.createdCampaignsSection}>
         <div className={classes.createdCampaignsHeader}>
           <h2>Created Campaigns</h2>
-          <Link to="/NewCampaign">
-            Create a new campaign <PlusCircleOutlined />
+          <Link className={classes.createdCampaignsLink} to="/NewCampaign">
+            Create <PlusCircleOutlined   />
           </Link>
         </div>
         {isLoading && <Spin />}
