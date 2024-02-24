@@ -27,7 +27,7 @@ const userSlice = createSlice({
       state.user.email = action.payload.email;
       state.user.campaigns = action.payload.campaigns;
     },
-    setSignOutUser(state) {
+    setSignOutUser(state) { // ! remove the state since its not used
       return initialState;
     },
   },

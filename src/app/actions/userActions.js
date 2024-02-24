@@ -124,7 +124,7 @@ export const signOutUser = () => {
 
 //set persistence before login
 export const persistenceChange = (rememberMe) => {
-  return async (dispatch) => {
+  return async (dispatch) => { // !remove dipatch if we dont use it
     setPersistence(
       auth,
       rememberMe ? browserLocalPersistence : browserSessionPersistence

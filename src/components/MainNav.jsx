@@ -34,7 +34,9 @@ const MainNav = () => {
           <p>A web app for your RPG campaigns</p>
           {uid && (
             <div className={classes.navLink}>
-              <NavLink href="/" className={classes.navLink}>
+              {/* <NavLink href="/" className={classes.navLink}> */}
+              <NavLink to="/" className={classes.navLink}>    {/* //! Use 'to="url"' instead of 'href' */}
+              {/* // $ using 'href' instead of 'to', might make the whole page reload. Also, 'to' is provided from the react router therefore it is a better approach to use it instead. */}
                 Home
               </NavLink>
               <NavLink to="/" className={classes.navLink}>
