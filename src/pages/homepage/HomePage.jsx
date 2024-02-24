@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import CampaignListItem from "../../components/CampaignListItem";
-import CharacterListItem from "../../components/CharacterListItem"; // ! remove if not used
+import CharacterListItem from "../../components/CharacterListItem"; 
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
