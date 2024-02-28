@@ -1,7 +1,5 @@
 .content {
   color: #333131;
-  margin-left: auto;
-  margin-right: auto;
   display: flex;
   flex-direction: row;
   gap: 20px;
@@ -15,12 +13,11 @@ h2 {
   margin: 25px;
 }
 .shopMenu {
-  width: 50%;
+  width: 45%;
 }
 .details {
   width: 40%;
   margin-top: 60px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,6 +36,10 @@ h2 {
   border: solid #7cacbb;
 }
 
+.itemDescription > * {
+  padding: 5px;
+}
+
 h3 {
   margin-top: 0px;
 }
@@ -50,7 +51,7 @@ h3 {
 }
 
 .categoryDesc {
-  font-weight: 500;
+  font-weight: bold;
 }
 
 .description {
