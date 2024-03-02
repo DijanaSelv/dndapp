@@ -1,4 +1,4 @@
-export const getItem = async (searchedItemUrl) => {
+export const getItems = async (searchedItemUrl) => {
   try {
     const response = await fetch("https://www.dnd5eapi.co" + searchedItemUrl);
     if (!response.ok) {

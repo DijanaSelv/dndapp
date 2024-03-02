@@ -9,9 +9,26 @@ h2 {
   margin: 50px 0;
 }
 
-.table {
+.tableDiv {
   margin: 25px;
 }
+
+.tableDiv:hover {
+  cursor: pointer;
+}
+
+.tableOfItems td a {
+  font-size: 1.25rem;
+  display: flex;
+  justify-content: center;
+}
+
+.tableOfItems th span,
+.tableOfItems th div span {
+  display: flex;
+  justify-content: center;
+}
+
 .shopMenu {
   width: 45%;
 }

@@ -163,10 +163,8 @@ export const updateShopItems = (newShopData, campaignId, shopId) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
-      console.log("started");
       const shopRef = ref(db, "campaigns/" + campaignId + "/shops/" + shopId);
       await update(shopRef, newShopData);
-      console.log("updated");
       dispatch(uiSliceActions.requestSuccessIsTrue());
       dispatch(
         uiSliceActions.showNotification({

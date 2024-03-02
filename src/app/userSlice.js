@@ -21,13 +21,13 @@ const userSlice = createSlice({
       state.user.uid = action.payload;
     },
     setUserData(state, action) {
-      console.log("set user data");
       state.user.firstName = action.payload.firstName;
       state.user.lastName = action.payload.lastName;
       state.user.email = action.payload.email;
       state.user.campaigns = action.payload.campaigns;
     },
-    setSignOutUser(state) { // ! remove the state since its not used
+    setSignOutUser(state) {
+      // ! remove the state since its not used
       return initialState;
     },
   },

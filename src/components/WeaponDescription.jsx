@@ -11,7 +11,7 @@ const WeaponDescription = ({ item }) => {
     weight,
     cost,
   } = item;
-  console.log(properties);
+
   const propertyList = item.properties.map((property) => property.index);
   const specialList = item.special.map((special) => special.index);
 
