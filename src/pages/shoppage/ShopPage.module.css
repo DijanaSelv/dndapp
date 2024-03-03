@@ -83,3 +83,10 @@ h3 {
 .buttons button {
   margin: 15px;
 }
+
+.removeIcon {
+  color: red;
+}
+.addIcon {
+  color: green;
+}

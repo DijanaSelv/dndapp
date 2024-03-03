@@ -2,7 +2,10 @@ import { useNavigate, useParams } from "react-router";
 import { Button, Input, Select, Table, Tabs } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getItems } from "../../app/actions/dndApiActions";
+import {
+  createItemObjectForShop,
+  getItems,
+} from "../../app/actions/dndApiActions";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 import classes from "../shoppage/ShopPage.module.css";
 import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
@@ -10,6 +13,8 @@ import { Link } from "react-router-dom";
 import { updateShopItems } from "../../app/actions/databaseActions";
 import { getShopsData } from "../../app/actions/databaseActions";
 import AddOrRemoveItems from "../../components/AddOrRemoveItems";
+import CancelModal from "../../components/CancelModal";
+import { shopsSliceActions } from "../../app/shopsSlice";
 
 const EditShopPage = () => {
   const dispatch = useDispatch();
@@ -18,14 +23,16 @@ const EditShopPage = () => {
   const params = useParams();
 
   const { shops } = useSelector((state) => state.shopsSlice);
+  const { isLoading } = useSelector((state) => state.uiSlice);
   const shop = shops[params.shopId];
   const [shopItemsData, setShopItemsData] = useState([]);
   const [imageUrl, setImageUrl] = useState();
   const [shopTitle, setShopTitle] = useState();
   const [clickedItem, setClickedItem] = useState();
   const [shopDescription, setShopDescription] = useState();
+  const [showModal, setShowModal] = useState(false);
 
-  //add items tab
+  //fetch items in Add Items tab
   const [selectedCategoryPath, setSelectedCategoryPath] =
     useState("adventuring-gear");
   const [displayItemsToAdd, setDisplayItemsToAdd] = useState();
@@ -33,25 +40,6 @@ const EditShopPage = () => {
 
   const selectHandler = (value) => {
     setSelectedCategoryPath(value);
-  };
-
-  const getShop = () => {
-    dispatch(getShopsData(params.campaignId));
-  };
-
-  const populateAddItemsTable = async () => {
-    let displayshopItemsData = [];
-    const displayData = await getItems(
-      `/api/equipment-categories/${selectedCategoryPath}`
-    );
-    for (const element of displayData.equipment) {
-      displayshopItemsData.push({
-        id: element.index,
-        name: element.name,
-        url: element.url,
-      });
-    }
-    setDisplayItemsToAdd(displayshopItemsData);
   };
 
   const setCategories = async () => {
@@ -68,8 +56,12 @@ const EditShopPage = () => {
     setClickedItem(data);
   };
 
-  //populate items that are already in the shop
-  useEffect(() => {
+  //populate items that are already in the shop on render, refresh
+  const getShop = () => {
+    dispatch(getShopsData(params.campaignId));
+  };
+
+  const populateItemsInShop = () => {
     const initialshopItemsData = Object.keys(shop.items).map((itemKey) => ({
       id: itemKey,
       name: shop.items[itemKey].name,
@@ -78,10 +70,49 @@ const EditShopPage = () => {
       url: shop.items[itemKey].url,
     }));
     setShopItemsData(initialshopItemsData);
-    setImageUrl(shop.image);
-    setShopTitle(shop.title);
-    setShopDescription(shop.description);
+  };
+
+  useEffect(() => {
+    getShop();
   }, []);
+
+  //when shop data is fetched populate the items from store
+  useEffect(() => {
+    if (shop) {
+      populateItemsInShop();
+      setImageUrl(shop.image);
+      setShopTitle(shop.title);
+      setShopDescription(shop.description);
+    }
+  }, [shop]);
+
+  //update the added items on add item from the state
+  useEffect(() => {
+    if (shop) {
+      populateItemsInShop();
+    }
+  }, [shop?.items]);
+
+  //populate the items from dnd api
+
+  const populateAddItemsTable = async () => {
+    let displayshopItemsData = [];
+    const displayData = await getItems(
+      `/api/equipment-categories/${selectedCategoryPath}`
+    );
+    for (const element of displayData.equipment) {
+      displayshopItemsData.push({
+        id: element.index,
+        name: element.name,
+        url: element.url,
+      });
+    }
+    setDisplayItemsToAdd(displayshopItemsData);
+  };
+
+  useEffect(() => {
+    populateAddItemsTable();
+  }, [selectedCategoryPath]);
 
   // get all the categories from dnd api
   useEffect(() => {
@@ -95,11 +126,7 @@ const EditShopPage = () => {
     [selectCategories]
   );
 
-  //check if the state has the shop, get it and populate the items from dnd api
-  useEffect(() => {
-    !shop ? getShop() : populateAddItemsTable();
-  }, [shop, selectedCategoryPath]);
-
+  //TABLE COLUMNS
   const columnsForEdit = [
     {
       title: "name",
@@ -147,9 +174,7 @@ const EditShopPage = () => {
       title: "remove",
       dataIndex: "actions",
       render: (_, record) => (
-        <a>
-          <MinusCircleOutlined />
-        </a>
+        <AddOrRemoveItems itemToEdit={record} shop={shop} />
       ),
     },
   ];
@@ -169,7 +194,7 @@ const EditShopPage = () => {
       title: <span>add/remove</span>,
       dataIndex: "actions",
       render: (_, record) => (
-        <AddOrRemoveItems itemId={record.id} shopItems={shop.items} />
+        <AddOrRemoveItems itemToEdit={record} shop={shop} />
       ),
     },
   ];
@@ -188,6 +213,7 @@ const EditShopPage = () => {
     setImageUrl(imageUrl);
   };
 
+  // Update the item that is edited in input
   const handleItemChange = (itemId, field, value) => {
     setShopItemsData((prevItems) =>
       prevItems.map((item) =>
@@ -216,6 +242,18 @@ const EditShopPage = () => {
     navigate(-1);
   };
 
+  const addAllItemsHandler = async (shop) => {
+    for (const itemToAdd of displayItemsToAdd) {
+      const itemData = await getItems(itemToAdd.url);
+      const newItem = createItemObjectForShop(itemData);
+      const payload = {
+        item: newItem,
+        shopId: shop.id,
+      };
+      dispatch(shopsSliceActions.addItemToShop(payload));
+    }
+  };
+
   const tabs = [
     {
       key: "1",
@@ -223,6 +261,7 @@ const EditShopPage = () => {
       children: (
         <div className={classes.tableDiv}>
           <Table
+            loading={isLoading}
             columns={columnsForEdit}
             dataSource={shopItemsData}
             pagination={false}
@@ -242,9 +281,16 @@ const EditShopPage = () => {
             >
               Save
             </Button>
-            <Link to={-1}>
-              <Button danger>Cancel</Button>
-            </Link>
+
+            <Button
+              danger
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              Cancel
+            </Button>
+
             <Button type="primary" danger>
               Delete Shop
             </Button>
@@ -263,12 +309,13 @@ const EditShopPage = () => {
             style={{ width: "250px" }}
             onSelect={(value) => selectHandler(value)}
           />
-          <Button>
+          <Button onClick={() => addAllItemsHandler(shop)}>
             {" "}
             <PlusCircleOutlined />
             Add All{" "}
           </Button>
           <Table
+            loading={isLoading}
             columns={columnsForAdd}
             dataSource={displayItemsToAdd}
             size={"small"}
@@ -290,9 +337,11 @@ const EditShopPage = () => {
             >
               Save
             </Button>
-            <Link to={-1}>
-              <Button danger>Cancel</Button>
-            </Link>
+
+            <Button danger onClick={() => setShowModal(true)}>
+              Cancel
+            </Button>
+
             <Button type="primary" danger>
               Delete Shop
             </Button>
@@ -304,6 +353,7 @@ const EditShopPage = () => {
 
   return (
     <div className={classes.content}>
+      <CancelModal showModal={showModal} setShowModal={setShowModal} />
       <div className={classes.shopMenu}>
         <h3>Title</h3>
         <Input value={shopTitle} onChange={handleTitleChange}></Input>

@@ -6,7 +6,7 @@ import { getItems } from "../../app/actions/dndApiActions";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 import classes from "./ShopPage.module.css";
 import { Link } from "react-router-dom";
-import { LeftSquareOutlined } from "@ant-design/icons";
+import { LeftSquareOutlined, LoadingOutlined } from "@ant-design/icons";
 import { getShopsData } from "../../app/actions/databaseActions";
 
 const ShopPage = () => {
@@ -20,7 +20,8 @@ const ShopPage = () => {
 
   let itemsList = [];
 
-  const getShop = () => {
+  //POPULATE THE SHOP ITEMS in shop
+  const getShop = async () => {
     dispatch(getShopsData(params.campaignId));
   };
 
@@ -38,14 +39,23 @@ const ShopPage = () => {
   };
 
   useEffect(() => {
-    !shop ? getShop() : setShop();
+    getShop();
+  }, []);
+
+  useEffect(() => {
+    if (shop) {
+      setShop();
+    }
   }, [shop]);
+
+  //show item specs on click
 
   const clickHandler = async (url) => {
     const data = await getItems(url);
     setClickedItem(data);
   };
 
+  //define the columns of the table
   const columns = [
     {
       title: "name",
@@ -78,7 +88,7 @@ const ShopPage = () => {
 
   return (
     <>
-      {itemsData && (
+      {shop ? (
         <div className={classes.content}>
           <div className={classes.shopMenu}>
             <Link to={-1}>
@@ -116,6 +126,8 @@ const ShopPage = () => {
             {clickedItem && <ItemDescriptionCard item={clickedItem} />}
           </div>
         </div>
+      ) : (
+        <LoadingOutlined style={{ fontSize: "5rem" }} />
       )}
     </>
   );

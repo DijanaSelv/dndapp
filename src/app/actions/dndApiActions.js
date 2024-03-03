@@ -11,3 +11,15 @@ export const getItems = async (searchedItemUrl) => {
     console.error(error.message);
   }
 };
+
+export const createItemObjectForShop = (itemData) => {
+  const item = {
+    amount: "",
+    id: itemData.index,
+    name: itemData.name,
+    price: itemData.cost?.quantity || "N/A",
+    url: itemData.url,
+  };
+
+  return item;
+};
