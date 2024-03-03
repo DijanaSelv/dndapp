@@ -8,8 +8,7 @@ import {
 } from "../../app/actions/dndApiActions";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 import classes from "../shoppage/ShopPage.module.css";
-import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { updateShopItems } from "../../app/actions/databaseActions";
 import { getShopsData } from "../../app/actions/databaseActions";
 import AddOrRemoveItems from "../../components/AddOrRemoveItems";
@@ -26,7 +25,8 @@ const EditShopPage = () => {
   const { isLoading } = useSelector((state) => state.uiSlice);
   const shop = shops[params.shopId];
   const [shopItemsData, setShopItemsData] = useState([]);
-  const [imageUrl, setImageUrl] = useState();
+  const [imageUrl, setImageUrl] = useState("");
+  const [originalImageUrl, setOriginalImageUrl] = useState("");
   const [shopTitle, setShopTitle] = useState();
   const [clickedItem, setClickedItem] = useState();
   const [shopDescription, setShopDescription] = useState();
@@ -77,21 +77,27 @@ const EditShopPage = () => {
   }, []);
 
   //when shop data is fetched populate the items from store
-  useEffect(() => {
+  /*   useEffect(() => {
     if (shop) {
       populateItemsInShop();
       setImageUrl(shop.image);
       setShopTitle(shop.title);
       setShopDescription(shop.description);
     }
-  }, [shop]);
+  }, []); */
 
   //update the added items on add item from the state
   useEffect(() => {
     if (shop) {
       populateItemsInShop();
+      setImageUrl(shop.image);
+      setShopTitle(shop.title);
+      setShopDescription(shop.description);
+      if (!originalImageUrl) {
+        setOriginalImageUrl(shop.image);
+      }
     }
-  }, [shop?.items]);
+  }, [shop, originalImageUrl]);
 
   //populate the items from dnd api
 
@@ -202,15 +208,44 @@ const EditShopPage = () => {
   //USER EDIT INPUT
   const handleTitleChange = (e) => {
     setShopTitle(e.target.value);
+    const payload = {
+      shopId: shop.id,
+      title: e.target.value,
+    };
+    dispatch(shopsSliceActions.changeTitleOfShop(payload));
   };
 
   const handleDescriptionChange = (e) => {
     setShopDescription(e.target.value);
+    const payload = {
+      shopId: shop.id,
+      description: e.target.value,
+    };
+    dispatch(shopsSliceActions.changeDescriptionOfShop(payload));
   };
 
+  const selectAllUrlHandler = (e) => {
+    e.target.select();
+  };
   const handleImageChange = (e) => {
-    const imageUrl = e.target.value;
-    setImageUrl(imageUrl);
+    setImageUrl(e.target.value);
+  };
+
+  const handleApplyChange = (e) => {
+    const payload = {
+      shopId: shop.id,
+      image: imageUrl,
+    };
+    dispatch(shopsSliceActions.changeImageOfShop(payload));
+  };
+
+  const handleResetChange = (e) => {
+    setImageUrl(originalImageUrl);
+    const payload = {
+      shopId: shop.id,
+      image: originalImageUrl,
+    };
+    dispatch(shopsSliceActions.changeImageOfShop(payload));
   };
 
   // Update the item that is edited in input
@@ -222,10 +257,6 @@ const EditShopPage = () => {
           : item
       )
     );
-  };
-
-  const handleResetChange = () => {
-    setImageUrl(shop.image);
   };
 
   const saveChangesHandler = () => {
@@ -254,13 +285,25 @@ const EditShopPage = () => {
     }
   };
 
+  const removeAllItemsHandler = () => {
+    dispatch(shopsSliceActions.clearItemsFromShop(shop.id));
+  };
+
   const tabs = [
     {
       key: "1",
       label: "Edit Items",
       children: (
         <div className={classes.tableDiv}>
+          <Button onClick={removeAllItemsHandler}>
+            <DeleteOutlined />
+            Remove all items
+          </Button>
           <Table
+            locale={{
+              emptyText:
+                "The shop is currently empty. Add items in the next tab.",
+            }}
             loading={isLoading}
             columns={columnsForEdit}
             dataSource={shopItemsData}
@@ -366,13 +409,16 @@ const EditShopPage = () => {
       </div>
       <div className={classes.details}>
         <p>Image URL:</p>
-        <Input name="image" value={imageUrl} onChange={handleImageChange} />
+        <Input
+          name="image"
+          value={imageUrl}
+          onChange={handleImageChange}
+          onFocus={selectAllUrlHandler}
+        />
 
-        <Button htmlType="submit">Apply Image</Button>
-        <Button onClick={(e) => handleResetChange(null, null, null)}>
-          Reset Image
-        </Button>
-        <img src={imageUrl} style={{ width: "200px" }} />
+        <Button onClick={handleApplyChange}>Apply Image</Button>
+        <Button onClick={handleResetChange}>Reset Image</Button>
+        {shop?.image && <img src={shop.image} style={{ width: "200px" }} />}
         {clickedItem && <ItemDescriptionCard item={clickedItem} />}
       </div>
     </div>

@@ -20,10 +20,23 @@ const shopsSlice = createSlice({
       };
       state.shops[shopId].items = updatedItems;
     },
+    changeTitleOfShop(state, action) {
+      state.shops[action.payload.shopId].title = action.payload.title;
+    },
+    changeDescriptionOfShop(state, action) {
+      state.shops[action.payload.shopId].description =
+        action.payload.description;
+    },
+    changeImageOfShop(state, action) {
+      state.shops[action.payload.shopId].image = action.payload.image;
+    },
     removeItemFromShop(state, action) {
       const { shopId, itemId } = action.payload;
 
       delete state.shops[shopId].items[itemId];
+    },
+    clearItemsFromShop(state, action) {
+      state.shops[action.payload].items = {};
     },
   },
 });

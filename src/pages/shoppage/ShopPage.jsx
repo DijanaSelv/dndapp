@@ -98,6 +98,9 @@ const ShopPage = () => {
             <p>{shop.description}</p>
             <div className={classes.tableDiv}>
               <Table
+                locale={{
+                  emptyText: "The shop is currently empty.",
+                }}
                 loading={isLoading}
                 columns={columns}
                 dataSource={itemsData}
