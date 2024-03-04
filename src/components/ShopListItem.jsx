@@ -1,16 +1,19 @@
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+
+import DeleteModal from "./DeleteModal";
+
 import { ArrowRightOutlined, CloseOutlined } from "@ant-design/icons";
-import { Button, Card, Modal } from "antd";
+import { Card } from "antd";
 import Meta from "antd/es/card/Meta";
 import { motion } from "framer-motion";
-
-import { Link } from "react-router-dom";
-import DeleteModal from "./DeleteModal";
-import { useState } from "react";
 
 import classes from "../pages/campaignshopspage/CampaignShopPage.module.css";
 
 const ShopListItem = ({ shop, type }) => {
+  const params = useParams();
   const [showModal, setShowModal] = useState(false);
+
   const deleteButtonHandler = () => {
     setShowModal(true);
   };
@@ -37,13 +40,17 @@ const ShopListItem = ({ shop, type }) => {
       transition={{ duration: 0.5 }}
       whileHover={{ scale: 1.05 }}
     >
-      {/*         <DeleteModal
-          campaign={campaign}
+      {
+        <DeleteModal
+          type="shop"
+          campaignId={params.campaignId}
           showModal={showModal}
           setShowModal={setShowModal}
-        /> */}
+          shopId={shop.id}
+          shopTitle={shop.title}
+        />
+      }
       <Card
-        
         cover={
           <Link to={`${shop.id}`}>
             <div className={classes.coverDiv}>
@@ -64,7 +71,3 @@ const ShopListItem = ({ shop, type }) => {
 };
 
 export default ShopListItem;
-
-/*       <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
-          <Button type="primary">Play</Button>
-        </Link> */

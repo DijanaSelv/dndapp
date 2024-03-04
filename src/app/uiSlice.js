@@ -42,6 +42,15 @@ const uiSlice = createSlice({
       } else if (action.payload.code === "new shop created") {
         message = "Done";
         description = "Shop created";
+      } else if (action.payload.code === "campaign deleted") {
+        message = "Done";
+        description = "Campaign deleted";
+      } else if (action.payload.code === "shop deleted") {
+        message = "Done";
+        description = "Shop deleted";
+      } else if (action.payload.code === "shop updated") {
+        message = "Done";
+        description = "Shop updated!";
       } else {
         message = "Error";
         description = "Request failed. Try again later.";

@@ -2,51 +2,58 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useValidate } from "../../app/hooks/useValidate";
 import {
   createItemObjectForShop,
   getItems,
 } from "../../app/actions/dndApiActions";
-import {
-  getShopsData,
-  updateShopItems,
-} from "../../app/actions/databaseActions";
+import { uiSliceActions } from "../../app/uiSlice";
+import { createShopsData } from "../../app/actions/databaseActions";
+
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
-import AddOrRemoveItems from "../../components/AddOrRemoveItems";
 import CancelModal from "../../components/CancelModal";
-import { shopsSliceActions } from "../../app/shopsSlice";
+import NotificationBox from "../../components/NotificationBox";
+
+import { nanoid } from "nanoid";
 
 import { Button, Input, Select, Table, Tabs } from "antd";
-import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  MinusCircleOutlined,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 import classes from "../shoppage/ShopPage.module.css";
 
-const EditShopPage = () => {
+const NewShopPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { TextArea } = Input;
   const params = useParams();
+  const campaignId = params.campaignId;
 
   const { isLoading } = useSelector((state) => state.uiSlice);
-  const { shops } = useSelector((state) => state.shopsSlice);
-  const shop = shops[params.shopId];
+  const { requestSuccess, requestFailed, notification } = useSelector(
+    (state) => state.uiSlice
+  );
 
-  //STATES TODO: should refactor into one state
-  const [shopItemsData, setShopItemsData] = useState([]);
-  const [imageUrl, setImageUrl] = useState("");
-  const [originalImageUrl, setOriginalImageUrl] = useState("");
-  const [shopTitle, setShopTitle] = useState();
   const [clickedItem, setClickedItem] = useState();
-  const [shopDescription, setShopDescription] = useState();
   const [showModal, setShowModal] = useState(false);
-  //fetch items in Add Items tab
   const [selectedCategoryPath, setSelectedCategoryPath] =
     useState("adventuring-gear");
   const [displayItemsToAdd, setDisplayItemsToAdd] = useState();
   const [selectCategories, setSelectCategories] = useState();
 
-  const selectHandler = (value) => {
-    setSelectedCategoryPath(value);
-  };
+  //On save shop, handle the sucess of the request and redirect
+  useEffect(() => {
+    if (requestSuccess) {
+      navigate(-1);
+    }
+    if (requestFailed) {
+    }
+    dispatch(uiSliceActions.resetRequestState());
+  }, [requestSuccess, requestFailed]);
 
+  //ADD ITEMS TAB
   const setCategories = async () => {
     const categoriesArray = [];
     const categories = await getItems("/api/equipment-categories");
@@ -56,45 +63,19 @@ const EditShopPage = () => {
     setSelectCategories(categoriesArray);
   };
 
-  const clickHandler = async (url) => {
-    const data = await getItems(url);
-    setClickedItem(data);
-  };
-
-  //------------------Populating and fetching shop data
-  const getShop = () => {
-    dispatch(getShopsData(params.campaignId));
-  };
-
-  const populateItemsInShop = () => {
-    const initialshopItemsData = Object.keys(shop.items).map((itemKey) => ({
-      id: itemKey,
-      name: shop.items[itemKey].name,
-      price: shop.items[itemKey].price,
-      amount: shop.items[itemKey].amount,
-      url: shop.items[itemKey].url,
-    }));
-    setShopItemsData(initialshopItemsData);
-  };
-
+  // get all the categories from dnd api
   useEffect(() => {
-    getShop();
+    if (!selectCategories) {
+      setCategories();
+    }
   }, []);
 
-  //update the added items on add item from the state and on render
-  useEffect(() => {
-    if (shop) {
-      shop.items ? populateItemsInShop() : setShopItemsData([]);
-      setImageUrl(shop.image);
-      setShopTitle(shop.title);
-      setShopDescription(shop.description);
-      if (!originalImageUrl) {
-        setOriginalImageUrl(shop.image);
-      }
-    }
-  }, [shop, originalImageUrl]);
+  const memoizedCategories = useMemo(
+    () => selectCategories,
+    [selectCategories]
+  );
 
-  //populate the items from dnd api
+  // populate the items from dnd api
   const populateAddItemsTable = async () => {
     let displayshopItemsData = [];
     const displayData = await getItems(
@@ -114,17 +95,56 @@ const EditShopPage = () => {
     populateAddItemsTable();
   }, [selectedCategoryPath]);
 
-  // get all the categories from dnd api
-  useEffect(() => {
-    if (!selectCategories) {
-      setCategories();
-    }
-  }, []);
+  // INPUT
 
-  const memoizedCategories = useMemo(
-    () => selectCategories,
-    [selectCategories]
-  );
+  const {
+    inputValue: title,
+    isValid: titleIsValid,
+    isError: titleIsError,
+    inputBlurHandler: titleBlurHandler,
+    valueChangeHandler: titleChangeHandler,
+  } = useValidate((value) => value.trim() !== "");
+
+  const {
+    inputValue: description,
+    inputBlurHandler: descriptionBlurHandler,
+    valueChangeHandler: descriptionChangeHandler,
+  } = useValidate((value) => true);
+
+  const {
+    inputValue: imageUrl,
+    inputBlurHandler: imageUrlBlurHandler,
+    valueChangeHandler: imageUrlChangeHandler,
+  } = useValidate((value) => true);
+
+  const handleItemChange = (itemId, field, value) => {
+    setItemsList((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId
+          ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
+          : item
+      )
+    );
+  };
+
+  //Manage added items
+  const [itemsList, setItemsList] = useState([]);
+
+  const addItemToShopHandler = async (record) => {
+    const itemData = await getItems(record.url);
+    const itemObj = createItemObjectForShop(itemData);
+    console.log(itemObj);
+    setItemsList((prevState) => [...prevState, itemObj]);
+    //console.log(itemsList);
+  };
+  const removeItemFromShopHandler = async (record) => {
+    console.log(record);
+    setItemsList((prevState) =>
+      prevState.filter((obj) => {
+        return obj.id !== record.id;
+      })
+    );
+  };
 
   //TABLE COLUMNS
   const columnsForEdit = [
@@ -172,7 +192,9 @@ const EditShopPage = () => {
       title: "remove",
       dataIndex: "actions",
       render: (_, record) => (
-        <AddOrRemoveItems itemToEdit={record} shop={shop} />
+        <a onClick={() => removeItemFromShopHandler(record)}>
+          <MinusCircleOutlined className={classes.removeIcon} />
+        </a>
       ),
     },
   ];
@@ -191,95 +213,53 @@ const EditShopPage = () => {
     {
       title: <span>add/remove</span>,
       dataIndex: "actions",
-      render: (_, record) => (
-        <AddOrRemoveItems itemToEdit={record} shop={shop} />
-      ),
+      render: (_, record) =>
+        itemsList.some((e) => e.id === record.id) ? (
+          <a onClick={() => removeItemFromShopHandler(record)}>
+            <MinusCircleOutlined className={classes.removeIcon} />
+          </a>
+        ) : (
+          <a onClick={() => addItemToShopHandler(record)}>
+            <PlusCircleOutlined className={classes.addIcon} />
+          </a>
+        ),
     },
   ];
 
-  //USER EDIT INPUT
-  const handleTitleChange = (e) => {
-    setShopTitle(e.target.value);
-    const payload = {
-      shopId: shop.id,
-      title: e.target.value,
+  //EVENT HANDLERS
+  const saveChangesHandler = () => {
+    console.log(title, imageUrl, description, itemsList);
+    const itemsDataObject = {};
+    itemsList.map((item) => (itemsDataObject[item.id] = { ...item }));
+    const shopData = {
+      title,
+      description,
+      id: nanoid(12),
+      image:
+        imageUrl ||
+        "https://cdn.pixabay.com/photo/2021/11/04/21/45/bag-6769430_1280.png",
+      items: itemsList,
     };
-    dispatch(shopsSliceActions.changeTitleOfShop(payload));
+
+    //dispatch create shop
+    dispatch(createShopsData(campaignId, shopData));
   };
 
-  const handleDescriptionChange = (e) => {
-    setShopDescription(e.target.value);
-    const payload = {
-      shopId: shop.id,
-      description: e.target.value,
-    };
-    dispatch(shopsSliceActions.changeDescriptionOfShop(payload));
+  const addAllItemsHandler = async () => {};
+
+  const removeAllItemsHandler = () => {};
+
+  const selectHandler = (value) => {
+    setSelectedCategoryPath(value);
+  };
+
+  const clickHandler = async (url) => {
+    const data = await getItems(url);
+    setClickedItem(data);
   };
 
   const selectAllUrlHandler = (e) => {
     e.target.select();
-  };
-
-  const handleImageChange = (e) => {
-    setImageUrl(e.target.value);
-  };
-
-  const handleApplyChange = (e) => {
-    const payload = {
-      shopId: shop.id,
-      image: imageUrl,
-    };
-    dispatch(shopsSliceActions.changeImageOfShop(payload));
-  };
-
-  const handleResetChange = (e) => {
-    setImageUrl(originalImageUrl);
-    const payload = {
-      shopId: shop.id,
-      image: originalImageUrl,
-    };
-    dispatch(shopsSliceActions.changeImageOfShop(payload));
-  };
-
-  // Update the item that is edited in input for price and amount
-  const handleItemChange = (itemId, field, value) => {
-    setShopItemsData((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId
-          ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
-          : item
-      )
-    );
-  };
-
-  const saveChangesHandler = () => {
-    const updatedItems = {};
-    shopItemsData.map((item) => (updatedItems[item.id] = { ...item }));
-    const newShopData = {
-      title: shopTitle,
-      description: shopDescription,
-      id: shop.id,
-      image: imageUrl,
-      items: updatedItems,
-    };
-    dispatch(updateShopItems(newShopData, params.campaignId, shop.id));
-    navigate(-1);
-  };
-
-  const addAllItemsHandler = async (shop) => {
-    for (const itemToAdd of displayItemsToAdd) {
-      const itemData = await getItems(itemToAdd.url);
-      const newItem = createItemObjectForShop(itemData);
-      const payload = {
-        item: newItem,
-        shopId: shop.id,
-      };
-      dispatch(shopsSliceActions.addItemToShop(payload));
-    }
-  };
-
-  const removeAllItemsHandler = () => {
-    dispatch(shopsSliceActions.clearItemsFromShop(shop.id));
   };
 
   const tabs = [
@@ -299,7 +279,7 @@ const EditShopPage = () => {
             }}
             loading={isLoading}
             columns={columnsForEdit}
-            dataSource={shopItemsData}
+            dataSource={itemsList}
             pagination={false}
             size={"small"}
             rowKey="id"
@@ -326,10 +306,6 @@ const EditShopPage = () => {
             >
               Cancel
             </Button>
-
-            <Button type="primary" danger>
-              Delete Shop
-            </Button>
           </div>
         </div>
       ),
@@ -345,7 +321,7 @@ const EditShopPage = () => {
             style={{ width: "250px" }}
             onSelect={(value) => selectHandler(value)}
           />
-          <Button onClick={() => addAllItemsHandler(shop)}>
+          <Button onClick={addAllItemsHandler()}>
             {" "}
             <PlusCircleOutlined />
             Add All{" "}
@@ -389,14 +365,24 @@ const EditShopPage = () => {
 
   return (
     <div className={classes.content}>
+      {notification && <NotificationBox />}
       <CancelModal showModal={showModal} setShowModal={setShowModal} />
       <div className={classes.shopMenu}>
         <h3>Title</h3>
-        <Input value={shopTitle} onChange={handleTitleChange}></Input>
+        <Input
+          placeholder={
+            titleIsError ? "Title is requred" : "The name of your shop"
+          }
+          value={title}
+          onBlur={titleBlurHandler}
+          onChange={titleChangeHandler}
+        ></Input>
         <h4>Description</h4>
         <TextArea
-          value={shopDescription}
-          onChange={handleDescriptionChange}
+          placeholder={"A blurb for your shop"}
+          value={description}
+          onBlur={descriptionBlurHandler}
+          onChange={descriptionChangeHandler}
         ></TextArea>
         <Tabs defaultActiveKey="1" items={tabs}></Tabs>
       </div>
@@ -405,16 +391,14 @@ const EditShopPage = () => {
         <Input
           name="image"
           value={imageUrl}
-          onChange={handleImageChange}
+          onBlur={imageUrlBlurHandler}
+          onChange={imageUrlChangeHandler}
           onFocus={selectAllUrlHandler}
         />
-
-        <Button onClick={handleApplyChange}>Apply Image</Button>
-        <Button onClick={handleResetChange}>Reset Image</Button>
-        {shop?.image && <img src={shop.image} style={{ width: "200px" }} />}
+        {<img src={imageUrl || null} style={{ width: "200px" }} />}
         {clickedItem && <ItemDescriptionCard item={clickedItem} />}
       </div>
     </div>
   );
 };
-export default EditShopPage;
+export default NewShopPage;

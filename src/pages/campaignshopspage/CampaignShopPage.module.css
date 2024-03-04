@@ -1,10 +1,5 @@
 .content {
   color: #333131;
-
-}
-.h2 {
-  margin-top: 20px;
-  margin-bottom: 40px;
 }
 
 .shopCards {
@@ -30,4 +25,33 @@
 
 .shopDescription {
   height: 75px;
+}
+.shopsHeader {
+  display: flex;
+  justify-content: space-between;
+}
+.createShopLink {
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border: 2px solid #cecece;
+  padding: 10px;
+  border-radius: 5px;
+}
+.createShopLink > span {
+  color: #cecece;
+}
+.createShopLink:hover > span {
+  color: #3a9fd6;
+  transition: color 0.5s;
+}
+
+.createShopLink:hover {
+  border: 2px solid #3a9fd6;
+  border-radius: 5px;
+
+  transition: all 0.5s;
 }

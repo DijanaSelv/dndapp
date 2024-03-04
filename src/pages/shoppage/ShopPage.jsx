@@ -1,22 +1,26 @@
-import { useParams } from "react-router";
-import { Button, Table } from "antd";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import { getItems } from "../../app/actions/dndApiActions";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
-import classes from "./ShopPage.module.css";
-import { Link } from "react-router-dom";
-import { LeftSquareOutlined, LoadingOutlined } from "@ant-design/icons";
 import { getShopsData } from "../../app/actions/databaseActions";
+
+import { LeftSquareOutlined } from "@ant-design/icons";
+import { Button, Table, Spin } from "antd";
+import classes from "./ShopPage.module.css";
 
 const ShopPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
-  const [itemsData, setItemsData] = useState();
-  const [clickedItem, setClickedItem] = useState();
+
   const { isLoading } = useSelector((state) => state.uiSlice);
   const { shops } = useSelector((state) => state.shopsSlice);
   const shop = shops[params.shopId];
+
+  const [itemsData, setItemsData] = useState();
+  const [clickedItem, setClickedItem] = useState();
 
   let itemsList = [];
 
@@ -44,12 +48,12 @@ const ShopPage = () => {
 
   useEffect(() => {
     if (shop) {
-      setShop();
+      //if there are no items on shop pass an empty items array.
+      shop.items ? setShop() : setItemsData([]);
     }
   }, [shop]);
 
   //show item specs on click
-
   const clickHandler = async (url) => {
     const data = await getItems(url);
     setClickedItem(data);
@@ -74,7 +78,7 @@ const ShopPage = () => {
       sorter: {
         compare: (a, b) => a.amount - b.amount,
       },
-      render: (text, record) => (text > 0 ? text : "∞"),
+      render: (text) => (text > 0 ? text : "∞"),
     },
     {
       title: "price (gp)",
@@ -82,7 +86,7 @@ const ShopPage = () => {
       sorter: {
         compare: (a, b) => a.price - b.price,
       },
-      render: (text, record) => (text > 0 ? text : "/"),
+      render: (text) => (text > 0 ? text : "/"),
     },
   ];
 
@@ -130,7 +134,7 @@ const ShopPage = () => {
           </div>
         </div>
       ) : (
-        <LoadingOutlined style={{ fontSize: "5rem" }} />
+        <Spin style={{ fontSize: "5rem" }} />
       )}
     </>
   );

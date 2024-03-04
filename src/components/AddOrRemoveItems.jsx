@@ -1,12 +1,15 @@
-import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import classes from "../pages/shoppage/ShopPage.module.css";
+import { useDispatch } from "react-redux";
+
 import {
   createItemObjectForShop,
   getItems,
 } from "../app/actions/dndApiActions";
-import { useDispatch } from "react-redux";
 import { shopsSliceActions } from "../app/shopsSlice";
+
 import { AnimatePresence, motion } from "framer-motion";
+import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+
+import classes from "../pages/shoppage/ShopPage.module.css";
 
 const AddOrRemoveItems = ({ itemToEdit, shop }) => {
   const dispatch = useDispatch();
@@ -33,7 +36,7 @@ const AddOrRemoveItems = ({ itemToEdit, shop }) => {
   const content = (
     <AnimatePresence mode="wait">
       {" "}
-      {Object.keys(shop.items).includes(itemToEdit.id) ? (
+      {shop.items && Object.keys(shop.items).includes(itemToEdit.id) ? (
         <motion.div
           key="remove"
           initial={{ scale: 1.5 }}

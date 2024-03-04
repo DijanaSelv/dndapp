@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import { Button, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCampaign } from "../app/actions/databaseActions";
+import { deleteCampaign, deleteShop } from "../app/actions/databaseActions";
+import { Modal } from "antd";
 
-const DeleteModal = ({ campaign, showModal, setShowModal }) => {
-  const { uid } = useSelector((state) => state.userSlice.user);
-
+const DeleteModal = (props) => {
   const dispatch = useDispatch();
-  const handleOk = () => {
-    //dispatch a function to delete the campaign from the user and from the campaigns base.
-    dispatch(deleteCampaign(campaign.id, uid));
-    setShowModal(false);
-  };
+  const { uid } = useSelector((state) => state.userSlice.user);
+  let content;
 
-  const handleCancel = () => {
-    setShowModal(false);
-  };
+  //DELETE CAMPAIGN
+  if (props.type === "campaign") {
+    const { campaign, showModal, setShowModal } = props;
+    const handleOk = () => {
+      dispatch(deleteCampaign(campaign.id, uid));
+      setShowModal(false);
+    };
+    const handleCancel = () => {
+      setShowModal(false);
+    };
 
-  return (
-    <>
+    content = (
       <Modal
         title={`Deleting "${campaign.title}"`}
         centered
@@ -33,8 +33,40 @@ const DeleteModal = ({ campaign, showModal, setShowModal }) => {
         <p>Are you sure you want to permanently delete this campaign?</p>
         <p style={{ fontWeight: "bold" }}></p>
       </Modal>
-    </>
-  );
+    );
+  }
+
+  //DELETE SHOP
+  if (props.type === "shop") {
+    const { campaignId, shopId, shopTitle, showModal, setShowModal } = props;
+
+    const handleOk = () => {
+      dispatch(deleteShop(campaignId, shopId));
+      setShowModal(false);
+    };
+    const handleCancel = () => {
+      setShowModal(false);
+    };
+
+    content = (
+      <Modal
+        title={`Deleting shop "${shopTitle}"`}
+        centered
+        open={showModal}
+        onOk={handleOk}
+        okText="Delete"
+        okButtonProps={{
+          style: { backgroundColor: "red", borderColor: "red" },
+        }}
+        onCancel={handleCancel}
+      >
+        <p>Are you sure you want to permanently delete this shop?</p>
+        <p style={{ fontWeight: "bold" }}></p>
+      </Modal>
+    );
+  }
+
+  return content;
 };
 
 export default DeleteModal;

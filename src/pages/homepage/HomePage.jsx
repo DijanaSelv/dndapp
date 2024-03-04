@@ -1,20 +1,25 @@
-import { Link } from "react-router-dom";
-import CampaignListItem from "../../components/CampaignListItem";
-import CharacterListItem from "../../components/CharacterListItem"; // ! remove if not used
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import CampaignListItem from "../../components/CampaignListItem";
 import { getCampaignsData } from "../../app/actions/databaseActions";
-import { Spin } from "antd";
-import classes from "./HomePage.module.css";
 import NotificationBox from "../../components/NotificationBox";
 import { uiSliceActions } from "../../app/uiSlice";
 
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
+import classes from "./HomePage.module.css";
+
 const Home = () => {
-  
-  const { createdCampaigns, joinedCampaigns } = useSelector((state) => state.campaignSlice);
+  const { createdCampaigns, joinedCampaigns } = useSelector(
+    (state) => state.campaignSlice
+  );
   const { notification } = useSelector((state) => state.uiSlice);
-  const { created: createdCampaignsFromUser, joined: joinedCampaignsFromUsers} = useSelector((state) => state.userSlice.user.campaigns || {});
+  const {
+    created: createdCampaignsFromUser,
+    joined: joinedCampaignsFromUsers,
+  } = useSelector((state) => state.userSlice.user.campaigns || {});
   const { isLoading } = useSelector((state) => state.uiSlice);
 
   const dispatch = useDispatch();
@@ -31,7 +36,6 @@ const Home = () => {
     dispatch(uiSliceActions.resetRequestState());
   }, [createdCampaignsFromUser, joinedCampaignsFromUsers]);
 
-
   return (
     <div className={classes.content}>
       {notification && <NotificationBox />}
@@ -39,7 +43,7 @@ const Home = () => {
         <div className={classes.createdCampaignsHeader}>
           <h2>Created Campaigns</h2>
           <Link className={classes.createdCampaignsLink} to="/NewCampaign">
-            Create <PlusCircleOutlined   />
+            Create <PlusCircleOutlined />
           </Link>
         </div>
         {isLoading && <Spin />}

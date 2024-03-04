@@ -1,18 +1,21 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+import DeleteModal from "./DeleteModal";
+import classes from "../pages/homepage/HomePage.module.css";
+
+import { Card } from "antd";
+import Meta from "antd/es/card/Meta";
+import { motion } from "framer-motion";
 import {
   ArrowRightOutlined,
   CloseOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
-import { Card } from "antd";
-import Meta from "antd/es/card/Meta";
-import { motion } from "framer-motion";
 
-import { Link } from "react-router-dom";
-import DeleteModal from "./DeleteModal";
-import { useState } from "react";
-import classes from "../pages/homepage/HomePage.module.css";
 const CampaignListItem = ({ campaign, type }) => {
   const [showModal, setShowModal] = useState(false);
+
   const deleteButtonHandler = () => {
     setShowModal(true);
   };
@@ -47,6 +50,7 @@ const CampaignListItem = ({ campaign, type }) => {
     >
       {
         <DeleteModal
+          type="campaign"
           campaign={campaign}
           showModal={showModal}
           setShowModal={setShowModal}
@@ -74,7 +78,3 @@ const CampaignListItem = ({ campaign, type }) => {
 };
 
 export default CampaignListItem;
-
-/*       <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
-        <Button type="primary">Play</Button>
-      </Link> */
