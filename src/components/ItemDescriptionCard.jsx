@@ -1,8 +1,8 @@
 // import classes from "../pages/shoppage/ShopPage.module.css";
-import ArmorDescription from "./ArmorDescription";
-import PotionDescription from "./PotionDescription";
-import WeaponDescription from "./WeaponDescription";
-import GeneralItemDescription from "./GeneralItemDescription";
+import ArmorDescription from "./ItemDescriptionCards/ArmorDescription";
+import PotionDescription from "./ItemDescriptionCards/PotionDescription";
+import WeaponDescription from "./ItemDescriptionCards/WeaponDescription";
+import GeneralItemDescription from "./ItemDescriptionCards/GeneralItemDescription";
 
 const ItemDescriptionCard = ({ item }) => {
   let content;
@@ -26,7 +26,6 @@ const ItemDescriptionCard = ({ item }) => {
 };
 
 export default ItemDescriptionCard;
-
 
 // if (item["equipment_category"].index === "armor") {
 //   content = (
@@ -82,7 +81,7 @@ export default ItemDescriptionCard;
 //       </p>
 //     </div>
 //   );
-// } 
+// }
 
 // else if (item["equipment_category"].index === "weapon") {
 //   content = (
@@ -153,7 +152,6 @@ export default ItemDescriptionCard;
 //     </div>
 //   );
 // }
-
 
 /* 
 EQUIPMENT CATEGORIES:

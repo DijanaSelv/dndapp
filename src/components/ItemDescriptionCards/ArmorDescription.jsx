@@ -1,4 +1,4 @@
-import classes from "../pages/shoppage/ShopPage.module.css";
+import classes from "../../pages/shoppage/ShopPage.module.css";
 
 const ArmorDescription = ({ item }) => {
   const propertyList = item.properties?.map((property) => property.index) || [];
@@ -24,16 +24,22 @@ const ArmorDescription = ({ item }) => {
           {item.armor_class?.base}
         </p>
       )}
+      {item.rarity && (
+        <p>
+          <span className={classes.categoryDesc}>Rarity: </span>{" "}
+          {item.rarity.name}
+        </p>
+      )}
       {propertyList?.length > 0 && (
         <p>
           <span className={classes.categoryDesc}>Properties: </span>{" "}
-          {propertyList.join(", ")}
+          <span className={classes.properties}>{propertyList.join(", ")}</span>
         </p>
       )}
       {specialList.length > 0 && (
         <p>
           <span className={classes.categoryDesc}>Special: </span>{" "}
-          {specialList.join(", ")}
+          <p className={classes.properties}>{specialList.join(", ")}</p>
         </p>
       )}
       {showDescription()}
@@ -45,8 +51,7 @@ const ArmorDescription = ({ item }) => {
       {item.cost && (
         <p>
           <span className={classes.categoryDesc}>Price: </span>{" "}
-          {item.cost.quantity}
-          {item.cost.unit}
+          {item.cost.quantity} {item.cost.unit}
         </p>
       )}
     </div>

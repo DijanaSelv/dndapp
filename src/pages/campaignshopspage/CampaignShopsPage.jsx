@@ -7,7 +7,7 @@ import { getShopsData } from "../../app/actions/databaseActions";
 import { Spin } from "antd";
 import NotificationBox from "../../components/NotificationBox";
 
-import classes from "./CampaignShopPage.module.css";
+import classes from "./CampaignShopsPage.module.css";
 import { Link } from "react-router-dom";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { uiSliceActions } from "../../app/uiSlice";

@@ -1,8 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCampaign, deleteShop } from "../app/actions/databaseActions";
 import { Modal } from "antd";
+import { useNavigate } from "react-router";
 
 const DeleteModal = (props) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { uid } = useSelector((state) => state.userSlice.user);
   let content;
@@ -38,11 +40,19 @@ const DeleteModal = (props) => {
 
   //DELETE SHOP
   if (props.type === "shop") {
-    const { campaignId, shopId, shopTitle, showModal, setShowModal } = props;
+    const {
+      campaignId,
+      shopId,
+      shopTitle,
+      showModal,
+      setShowModal,
+      navigatePath,
+    } = props;
 
     const handleOk = () => {
       dispatch(deleteShop(campaignId, shopId));
       setShowModal(false);
+      navigatePath && navigate(navigatePath);
     };
     const handleCancel = () => {
       setShowModal(false);

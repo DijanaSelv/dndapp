@@ -57,6 +57,10 @@ h2 {
   padding: 5px;
 }
 
+.description {
+  font-style: italic;
+}
+
 h3 {
   margin-top: 0px;
 }
@@ -68,7 +72,7 @@ h3 {
 }
 
 .categoryDesc {
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .description {

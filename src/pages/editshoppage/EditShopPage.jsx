@@ -15,9 +15,10 @@ import AddOrRemoveItems from "../../components/AddOrRemoveItems";
 import CancelModal from "../../components/CancelModal";
 import { shopsSliceActions } from "../../app/shopsSlice";
 
-import { Button, Input, Select, Table, Tabs } from "antd";
+import { Button, Input, Select, Spin, Table, Tabs } from "antd";
 import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import classes from "../shoppage/ShopPage.module.css";
+import DeleteModal from "../../components/DeleteModal";
 
 const EditShopPage = () => {
   const dispatch = useDispatch();
@@ -36,12 +37,19 @@ const EditShopPage = () => {
   const [shopTitle, setShopTitle] = useState();
   const [clickedItem, setClickedItem] = useState();
   const [shopDescription, setShopDescription] = useState();
-  const [showModal, setShowModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [addingItemsLoading, setAddingItemsLoading] = useState(false);
   //fetch items in Add Items tab
   const [selectedCategoryPath, setSelectedCategoryPath] =
     useState("adventuring-gear");
   const [displayItemsToAdd, setDisplayItemsToAdd] = useState();
   const [selectCategories, setSelectCategories] = useState();
+
+  const deleteButtonHandler = () => {
+    console.log("delete");
+    setShowDeleteModal(true);
+  };
 
   const selectHandler = (value) => {
     setSelectedCategoryPath(value);
@@ -58,6 +66,7 @@ const EditShopPage = () => {
 
   const clickHandler = async (url) => {
     const data = await getItems(url);
+    console.log(data);
     setClickedItem(data);
   };
 
@@ -101,11 +110,14 @@ const EditShopPage = () => {
       `/api/equipment-categories/${selectedCategoryPath}`
     );
     for (const element of displayData.equipment) {
-      displayshopItemsData.push({
-        id: element.index,
-        name: element.name,
-        url: element.url,
-      });
+      //the api has double entries for some items and causes error in the table rendering (same kay for more items) this is to filter in case it happens
+      if (!displayshopItemsData.some((item) => item.id === element.index)) {
+        displayshopItemsData.push({
+          id: element.index,
+          name: element.name,
+          url: element.url,
+        });
+      }
     }
     setDisplayItemsToAdd(displayshopItemsData);
   };
@@ -267,15 +279,21 @@ const EditShopPage = () => {
   };
 
   const addAllItemsHandler = async (shop) => {
+    setAddingItemsLoading(true);
+    let items = {};
+    let payload;
     for (const itemToAdd of displayItemsToAdd) {
       const itemData = await getItems(itemToAdd.url);
       const newItem = createItemObjectForShop(itemData);
-      const payload = {
-        item: newItem,
+      items[newItem.id] = newItem;
+      payload = {
+        items,
         shopId: shop.id,
+        type: "addAll",
       };
-      dispatch(shopsSliceActions.addItemToShop(payload));
     }
+    dispatch(shopsSliceActions.addItemToShop(payload));
+    setAddingItemsLoading(false);
   };
 
   const removeAllItemsHandler = () => {
@@ -310,27 +328,6 @@ const EditShopPage = () => {
             }}
             className={classes.tableOfItems}
           />
-          <div className={classes.buttons}>
-            <Button
-              style={{ borderColor: "#7cacbb" }}
-              onClick={saveChangesHandler}
-            >
-              Save
-            </Button>
-
-            <Button
-              danger
-              onClick={() => {
-                setShowModal(true);
-              }}
-            >
-              Cancel
-            </Button>
-
-            <Button type="primary" danger>
-              Delete Shop
-            </Button>
-          </div>
         </div>
       ),
     },
@@ -351,7 +348,7 @@ const EditShopPage = () => {
             Add All{" "}
           </Button>
           <Table
-            loading={isLoading}
+            loading={isLoading || addingItemsLoading}
             columns={columnsForAdd}
             dataSource={displayItemsToAdd}
             size={"small"}
@@ -366,55 +363,73 @@ const EditShopPage = () => {
             }}
             className={classes.tableOfItems}
           />
-          <div className={classes.buttons}>
-            <Button
-              style={{ borderColor: "#7cacbb" }}
-              onClick={saveChangesHandler}
-            >
-              Save
-            </Button>
-
-            <Button danger onClick={() => setShowModal(true)}>
-              Cancel
-            </Button>
-
-            <Button type="primary" danger>
-              Delete Shop
-            </Button>
-          </div>
         </div>
       ),
     },
   ];
 
   return (
-    <div className={classes.content}>
-      <CancelModal showModal={showModal} setShowModal={setShowModal} />
-      <div className={classes.shopMenu}>
-        <h3>Title</h3>
-        <Input value={shopTitle} onChange={handleTitleChange}></Input>
-        <h4>Description</h4>
-        <TextArea
-          value={shopDescription}
-          onChange={handleDescriptionChange}
-        ></TextArea>
-        <Tabs defaultActiveKey="1" items={tabs}></Tabs>
-      </div>
-      <div className={classes.details}>
-        <p>Image URL:</p>
-        <Input
-          name="image"
-          value={imageUrl}
-          onChange={handleImageChange}
-          onFocus={selectAllUrlHandler}
-        />
+    <>
+      {shop ? (
+        <div className={classes.content}>
+          <CancelModal
+            showModal={showCancelModal}
+            setShowModal={setShowCancelModal}
+          />
+          <DeleteModal
+            type="shop"
+            campaignId={params.campaignId}
+            showModal={showDeleteModal}
+            setShowModal={setShowDeleteModal}
+            shopId={shop.id}
+            shopTitle={shop.title}
+            navigatePath={-2}
+          />
+          <div className={classes.shopMenu}>
+            <h3>Title</h3>
+            <Input value={shopTitle} onChange={handleTitleChange}></Input>
+            <h4>Description</h4>
+            <TextArea
+              value={shopDescription}
+              onChange={handleDescriptionChange}
+            ></TextArea>
+            <Tabs defaultActiveKey="1" items={tabs}></Tabs>
+            <div className={classes.buttons}>
+              <Button
+                style={{ borderColor: "#7cacbb" }}
+                onClick={saveChangesHandler}
+              >
+                Save
+              </Button>
 
-        <Button onClick={handleApplyChange}>Apply Image</Button>
-        <Button onClick={handleResetChange}>Reset Image</Button>
-        {shop?.image && <img src={shop.image} style={{ width: "200px" }} />}
-        {clickedItem && <ItemDescriptionCard item={clickedItem} />}
-      </div>
-    </div>
+              <Button danger onClick={() => setShowCancelModal(true)}>
+                Cancel
+              </Button>
+
+              <Button type="primary" danger onClick={deleteButtonHandler}>
+                Delete Shop
+              </Button>
+            </div>
+          </div>
+          <div className={classes.details}>
+            <p>Image URL:</p>
+            <Input
+              name="image"
+              value={imageUrl}
+              onChange={handleImageChange}
+              onFocus={selectAllUrlHandler}
+            />
+
+            <Button onClick={handleApplyChange}>Apply Image</Button>
+            <Button onClick={handleResetChange}>Reset Image</Button>
+            {shop?.image && <img src={shop.image} style={{ width: "200px" }} />}
+            {clickedItem && <ItemDescriptionCard item={clickedItem} />}
+          </div>
+        </div>
+      ) : (
+        <Spin style={{ fontSize: "5rem" }} />
+      )}
+    </>
   );
 };
 export default EditShopPage;

@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "../pages/shoppage/ShopPage.module.css";
+import classes from "../../pages/shoppage/ShopPage.module.css";
 
 const GeneralItemDescription = ({ item }) => {
   const showDescription = () => {
@@ -15,26 +15,35 @@ const GeneralItemDescription = ({ item }) => {
   return (
     <div className={classes.itemDescription}>
       <h3>{item.name}</h3>
-      {item.properties.length !== 0 && (
+      {item.properties && item.properties.length !== 0 && (
         <p>
           <span className={classes.categoryDesc}>Properties: </span>{" "}
-          {item.properties.join(", ")}
+          {item.properties?.join(", ")}
         </p>
       )}
-      {item.special.length !== 0 && (
+      {item["vehicle_category"] && (
+        <p className={classes.itemspecs}>{item["vehicle_category"]}</p>
+      )}
+      {item.special && item.special?.length !== 0 && (
         <p>
           <span className={classes.categoryDesc}>Special: </span>{" "}
-          {item.special.join(", ")}
+          {item.special?.join(", ")}
         </p>
       )}
       {showDescription()}
+      {item.speed && (
+        <p>
+          <span className={classes.categoryDesc}>Speed: </span>
+          {item.speed.quantity} {item.speed.unit}
+        </p>
+      )}
       <p>
-        <span className={classes.categoryDesc}>Weight: </span> {item.weight}
+        <span className={classes.categoryDesc}>Weight: </span>{" "}
+        {item.weight || 0}
       </p>
       <p>
         <span className={classes.categoryDesc}>Price: </span>{" "}
-        {item.cost.quantity}
-        {item.cost.unit}
+        {item.cost?.quantity || "/"} {item.cost?.unit}
       </p>
     </div>
   );

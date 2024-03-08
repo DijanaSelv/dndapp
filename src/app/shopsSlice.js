@@ -13,11 +13,19 @@ const shopsSlice = createSlice({
     },
     addItemToShop(state, action) {
       const { shopId, item } = action.payload;
+      let updatedItems;
 
-      const updatedItems = {
-        ...state.shops[shopId].items,
-        [item.id]: { ...item },
-      };
+      if (action.payload.type === "addAll") {
+        updatedItems = {
+          ...state.shops[shopId].items,
+          ...action.payload.items,
+        };
+      } else {
+        updatedItems = {
+          ...state.shops[shopId].items,
+          [item.id]: { ...item },
+        };
+      }
       state.shops[shopId].items = updatedItems;
     },
     changeTitleOfShop(state, action) {

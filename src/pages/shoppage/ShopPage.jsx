@@ -10,6 +10,7 @@ import { getShopsData } from "../../app/actions/databaseActions";
 import { LeftSquareOutlined } from "@ant-design/icons";
 import { Button, Table, Spin } from "antd";
 import classes from "./ShopPage.module.css";
+import DeleteModal from "../../components/DeleteModal";
 
 const ShopPage = () => {
   const params = useParams();
@@ -21,7 +22,11 @@ const ShopPage = () => {
 
   const [itemsData, setItemsData] = useState();
   const [clickedItem, setClickedItem] = useState();
+  const [showModal, setShowModal] = useState(false);
 
+  const deleteButtonHandler = () => {
+    setShowModal(true);
+  };
   let itemsList = [];
 
   //POPULATE THE SHOP ITEMS in shop
@@ -94,6 +99,15 @@ const ShopPage = () => {
     <>
       {shop ? (
         <div className={classes.content}>
+          <DeleteModal
+            type="shop"
+            campaignId={params.campaignId}
+            showModal={showModal}
+            setShowModal={setShowModal}
+            shopId={shop.id}
+            shopTitle={shop.title}
+            navigatePath={-1}
+          />
           <div className={classes.shopMenu}>
             <Link to={-1}>
               <LeftSquareOutlined /> Back to shoppes
@@ -122,7 +136,7 @@ const ShopPage = () => {
                 <Link to="edit">
                   <Button style={{ borderColor: "#7cacbb" }}>Edit Shop</Button>
                 </Link>
-                <Button type="primary" danger>
+                <Button type="primary" danger onClick={deleteButtonHandler}>
                   Delete Shop
                 </Button>
               </div>

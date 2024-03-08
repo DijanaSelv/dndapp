@@ -23,6 +23,7 @@ import {
   PlusCircleOutlined,
 } from "@ant-design/icons";
 import classes from "../shoppage/ShopPage.module.css";
+import DeleteModal from "../../components/DeleteModal";
 
 const NewShopPage = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const NewShopPage = () => {
     useState("adventuring-gear");
   const [displayItemsToAdd, setDisplayItemsToAdd] = useState();
   const [selectCategories, setSelectCategories] = useState();
+  const [addingItemsLoading, setAddingItemsLoading] = useState();
 
   //On save shop, handle the sucess of the request and redirect
   useEffect(() => {
@@ -146,6 +148,12 @@ const NewShopPage = () => {
     );
   };
 
+  let formIsValid = false;
+
+  if (title && itemsList.length) {
+    formIsValid = true;
+  }
+
   //TABLE COLUMNS
   const columnsForEdit = [
     {
@@ -228,7 +236,6 @@ const NewShopPage = () => {
 
   //EVENT HANDLERS
   const saveChangesHandler = () => {
-    console.log(title, imageUrl, description, itemsList);
     const itemsDataObject = {};
     itemsList.map((item) => (itemsDataObject[item.id] = { ...item }));
     const shopData = {
@@ -245,9 +252,27 @@ const NewShopPage = () => {
     dispatch(createShopsData(campaignId, shopData));
   };
 
-  const addAllItemsHandler = async () => {};
+  const addAllItemsHandler = async (shop) => {
+    setAddingItemsLoading(true);
+    let items = [];
+    let payload;
+    for (const itemToAdd of displayItemsToAdd) {
+      const itemData = await getItems(itemToAdd.url);
+      const newItem = createItemObjectForShop(itemData);
+      items.push(newItem);
+      // payload = {
+      //   items,
+      //   shopId: shop.id,
+      //   type: "addAll",
+      // };
+    }
+    setItemsList((prevState) => [...prevState, ...items]);
+    setAddingItemsLoading(false);
+  };
 
-  const removeAllItemsHandler = () => {};
+  const removeAllItemsHandler = () => {
+    setItemsList([]);
+  };
 
   const selectHandler = (value) => {
     setSelectedCategoryPath(value);
@@ -290,23 +315,6 @@ const NewShopPage = () => {
             }}
             className={classes.tableOfItems}
           />
-          <div className={classes.buttons}>
-            <Button
-              style={{ borderColor: "#7cacbb" }}
-              onClick={saveChangesHandler}
-            >
-              Save
-            </Button>
-
-            <Button
-              danger
-              onClick={() => {
-                setShowModal(true);
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
         </div>
       ),
     },
@@ -321,13 +329,13 @@ const NewShopPage = () => {
             style={{ width: "250px" }}
             onSelect={(value) => selectHandler(value)}
           />
-          <Button onClick={addAllItemsHandler()}>
+          <Button onClick={addAllItemsHandler}>
             {" "}
             <PlusCircleOutlined />
             Add All{" "}
           </Button>
           <Table
-            loading={isLoading}
+            loading={isLoading || addingItemsLoading}
             columns={columnsForAdd}
             dataSource={displayItemsToAdd}
             size={"small"}
@@ -342,22 +350,6 @@ const NewShopPage = () => {
             }}
             className={classes.tableOfItems}
           />
-          <div className={classes.buttons}>
-            <Button
-              style={{ borderColor: "#7cacbb" }}
-              onClick={saveChangesHandler}
-            >
-              Save
-            </Button>
-
-            <Button danger onClick={() => setShowModal(true)}>
-              Cancel
-            </Button>
-
-            <Button type="primary" danger>
-              Delete Shop
-            </Button>
-          </div>
         </div>
       ),
     },
@@ -366,6 +358,7 @@ const NewShopPage = () => {
   return (
     <div className={classes.content}>
       {notification && <NotificationBox />}
+      <DeleteModal />
       <CancelModal showModal={showModal} setShowModal={setShowModal} />
       <div className={classes.shopMenu}>
         <h3>Title</h3>
@@ -373,6 +366,7 @@ const NewShopPage = () => {
           placeholder={
             titleIsError ? "Title is requred" : "The name of your shop"
           }
+          status={titleIsError ? "error" : ""}
           value={title}
           onBlur={titleBlurHandler}
           onChange={titleChangeHandler}
@@ -385,6 +379,19 @@ const NewShopPage = () => {
           onChange={descriptionChangeHandler}
         ></TextArea>
         <Tabs defaultActiveKey="1" items={tabs}></Tabs>
+        <div className={classes.buttons}>
+          <Button
+            style={{ borderColor: "#7cacbb" }}
+            onClick={saveChangesHandler}
+            disabled={!formIsValid}
+          >
+            Save
+          </Button>
+
+          <Button danger onClick={() => setShowModal(true)}>
+            Cancel
+          </Button>
+        </div>
       </div>
       <div className={classes.details}>
         <p>Image URL:</p>

@@ -1,4 +1,4 @@
-import classes from "../pages/shoppage/ShopPage.module.css";
+import classes from "../../pages/shoppage/ShopPage.module.css";
 
 const PotionDescription = ({ item }) => {
   const { name, cost, rarity } = item;
@@ -19,8 +19,8 @@ const PotionDescription = ({ item }) => {
 
       <p>
         <span className={classes.categoryDesc}>Price:</span>{" "}
-        {cost?.quantity || (rarity.name === "Common" ? "50" : "100")}
-        {cost?.unit || "gp"}
+        {cost?.quantity || "/"}
+        {cost?.unit}
       </p>
     </div>
   );

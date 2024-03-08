@@ -8,7 +8,7 @@ import { Card } from "antd";
 import Meta from "antd/es/card/Meta";
 import { motion } from "framer-motion";
 
-import classes from "../pages/campaignshopspage/CampaignShopPage.module.css";
+import classes from "../pages/campaignshopspage/CampaignShopsPage.module.css";
 
 const ShopListItem = ({ shop, type }) => {
   const params = useParams();
