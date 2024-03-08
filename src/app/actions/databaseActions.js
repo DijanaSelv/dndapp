@@ -98,7 +98,10 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
       );
     }
     if (type === "created") {
-      dispatch(campaignSliceActions.setCreatedCampaigns(campaignsDataList));
+      createdCampaignsIds.length === 1 &&
+        dispatch(campaignSliceActions.addCreatedCampaign(campaignsDataList));
+      createdCampaignsIds.length > 1 &&
+        dispatch(campaignSliceActions.setCreatedCampaigns(campaignsDataList));
     }
     if (type === "joined") {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));

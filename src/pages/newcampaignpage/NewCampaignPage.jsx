@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import { useValidate } from "../../app/hooks/useValidate";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { uiSliceActions } from "../../app/uiSlice";
 import NotificationBox from "../../components/NotificationBox";
@@ -11,26 +11,33 @@ import {
   createNewCampaign,
   getCampaignsData,
 } from "../../app/actions/databaseActions";
+import CancelModal from "../../components/CancelModal";
 
 const NewCampaignPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { TextArea } = Input;
   const { isLoading } = useSelector((state) => state.uiSlice);
+  const { createdCampaigns } = useSelector((state) => state.campaignSlice);
   const { uid } = useSelector((state) => state.userSlice.user);
-  const { requestSuccess, requestFailed, notification } = useSelector(
-    (state) => state.uiSlice
-  );
+  const { requestSuccess, requestFailed, notification, fetchedCampaigns } =
+    useSelector((state) => state.uiSlice);
+
+  const [showModal, setShowModal] = useState(false);
+  const [newCampaingId, setNewCampaignId] = useState();
+
+  useEffect(() => {
+    newCampaingId && navigate(`/Campaigns/created/${newCampaingId}/info`);
+  }, [createdCampaigns]);
 
   useEffect(() => {
     if (requestSuccess) {
-      //TODO: how do i navigate to the new campaign?
-      navigate(`/`);
+      dispatch(getCampaignsData([newCampaingId], "created"));
     }
     if (requestFailed) {
     }
     dispatch(uiSliceActions.resetRequestState());
-  }, [requestSuccess, requestFailed]);
+  }, [requestSuccess, requestFailed, fetchedCampaigns]);
 
   const {
     inputValue: title,
@@ -80,15 +87,24 @@ const NewCampaignPage = () => {
     };
 
     //action that sends the data to database
-    const newCampaignId = [newCampaignData.id];
+    setNewCampaignId(newCampaignData.id);
     dispatch(createNewCampaign(uid, newCampaignData));
-    navigate(`/Campaigns/created/${newCampaignData.id}/info`);
+    //navigate(`/Campaigns/created/${newCampaignData.id}/info`);
     //redirect to campaign info
+  };
+
+  const cancelPageHandler = () => {
+    if (title || image || location || description) {
+      setShowModal(true);
+    } else {
+      navigate(-1);
+    }
   };
 
   return (
     <>
       {notification && <NotificationBox />}
+      <CancelModal showModal={showModal} setShowModal={setShowModal} />
       <h3>Create new campaign</h3>
       <Form>
         <Input
@@ -141,6 +157,9 @@ const NewCampaignPage = () => {
           loading={isLoading}
         >
           Submit
+        </Button>
+        <Button type="primary" danger onClick={cancelPageHandler}>
+          Cancel
         </Button>
       </Form>
     </>

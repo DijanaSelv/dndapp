@@ -112,7 +112,7 @@ const ShopPage = () => {
             <Link to={-1}>
               <LeftSquareOutlined /> Back to shoppes
             </Link>
-            <h2>{shop.title}</h2>
+            <h2 className={classes.title}>{shop.title}</h2>
             <p>{shop.description}</p>
             <div className={classes.tableDiv}>
               <Table
