@@ -8,7 +8,6 @@ import classes from "./MainNav.module.css";
 import { LogoutOutlined } from "@ant-design/icons";
 
 const MainNav = () => {
-  console.log("mainnav");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,16 +27,16 @@ const MainNav = () => {
             <h1 className={classes.title}> Di & Di </h1>
             <p className={classes.subtitle}>A web app for your RPG campaigns</p>
           </Link>
-         
         </div>
 
         <div className={classes.secondRow}>
-          
           {uid && (
             <div className={classes.navLinks}>
               {/* <NavLink href="/" className={classes.navLink}> */}
-              <NavLink to="/" className={classes.navLink}>    {/* //! Use 'to="url"' instead of 'href' */}
-              {/* // $ using 'href' instead of 'to', might make the whole page reload. Also, 'to' is provided from the react router therefore it is a better approach to use it instead. */}
+              <NavLink to="/" className={classes.navLink}>
+                {" "}
+                {/* //! Use 'to="url"' instead of 'href' */}
+                {/* // $ using 'href' instead of 'to', might make the whole page reload. Also, 'to' is provided from the react router therefore it is a better approach to use it instead. */}
                 Home
               </NavLink>
               <NavLink to="/" className={classes.navLink}>

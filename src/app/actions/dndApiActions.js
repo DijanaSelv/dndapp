@@ -1,4 +1,4 @@
-export const getItem = async (searchedItemUrl) => {
+export const getItems = async (searchedItemUrl) => {
   try {
     const response = await fetch("https://www.dnd5eapi.co" + searchedItemUrl);
     if (!response.ok) {
@@ -10,4 +10,16 @@ export const getItem = async (searchedItemUrl) => {
   } catch (error) {
     console.error(error.message);
   }
+};
+
+export const createItemObjectForShop = (itemData) => {
+  const item = {
+    amount: "",
+    id: itemData.index,
+    name: itemData.name,
+    price: itemData.cost?.quantity || "N/A",
+    url: itemData.url,
+  };
+
+  return item;
 };

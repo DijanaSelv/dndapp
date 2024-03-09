@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const NotificationBox = () => {
-  console.log("notification box");
   const notificationData = useSelector((state) => state.uiSlice.notification);
 
   const { type, message, description } = notificationData;

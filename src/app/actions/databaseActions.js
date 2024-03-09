@@ -125,12 +125,41 @@ export const deleteCampaign = (campaignId, uid) => {
     updates["campaigns/" + campaignId] = null;
 
     update(ref(db), updates);
+    dispatch(
+      uiSliceActions.showNotification({
+        type: "info",
+        code: "campaign deleted",
+      })
+    );
   };
 };
 
 //--------------------SHOPS
 export const createShopsData = (campaignId, shopData) => {
-  //create the shop in campaign, shops.
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const shopRef = ref(db, "campaigns/" + campaignId + "/shops/");
+      await update(shopRef, { [shopData.id]: { ...shopData } });
+      dispatch(uiSliceActions.requestSuccessIsTrue());
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "success",
+          code: "new shop created",
+        })
+      );
+      dispatch(getShopsData(campaignId));
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "error",
+          code: "error",
+        })
+      );
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+  };
 };
 
 export const getShopsData = (campaignId) => {
@@ -144,7 +173,7 @@ export const getShopsData = (campaignId) => {
         const shopsData = snapshot.val();
         dispatch(shopsSliceActions.setShopsData(shopsData));
       } else {
-        console.log("snapshot doesnt exist!");
+        dispatch(shopsSliceActions.setShopsData(""));
       }
     } catch (error) {
       dispatch(
@@ -163,15 +192,42 @@ export const updateShopItems = (newShopData, campaignId, shopId) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
-      console.log("started");
       const shopRef = ref(db, "campaigns/" + campaignId + "/shops/" + shopId);
       await update(shopRef, newShopData);
-      console.log("updated");
       dispatch(uiSliceActions.requestSuccessIsTrue());
       dispatch(
         uiSliceActions.showNotification({
           type: "success",
-          code: "new shop created",
+          code: "shop updated",
+        })
+      );
+      dispatch(getShopsData(campaignId));
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "error",
+          code: "error",
+        })
+      );
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+  };
+};
+
+//delete shop
+export const deleteShop = (campaignId, shopId) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const shopRef = ref(db, "campaigns/" + campaignId + "/shops/");
+      console.log(shopRef);
+      await update(shopRef, { [shopId]: null });
+      dispatch(uiSliceActions.requestSuccessIsTrue());
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "info",
+          code: "shop deleted",
         })
       );
       dispatch(getShopsData(campaignId));

@@ -22,6 +22,7 @@ import CampaignShopsPage from "./pages/campaignshopspage/CampaignShopsPage";
 import ProtectedCampaignsRoute from "./components/ProtectedCampaignsRoute";
 import ShopPage from "./pages/shoppage/ShopPage";
 import EditShopPage from "./pages/editshoppage/EditShopPage";
+import NewShopPage from "./pages/newshoppage/NewShopPage";
 
 //refresh state persistence
 /* import { PersistGate } from "redux-persist/integration/react";
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
         path: "/Campaigns/:type/:campaignId/play/shops/:shopId/edit",
         element: <EditShopPage />,
       },
+      {
+        path: "/Campaigns/:type/:campaignId/play/shops/NewShop",
+        element: <NewShopPage />,
+      },
     ],
   },
 ]);
@@ -116,9 +121,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  return (
-    <RouterProvider router={router}> </RouterProvider>
-  );
+  return <RouterProvider router={router}> </RouterProvider>;
 }
 
 export default App;

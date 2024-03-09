@@ -1,53 +1,148 @@
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { Button, Input, Table, Tabs } from "antd";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getItem } from "../../app/actions/dndApiActions";
+
+import {
+  createItemObjectForShop,
+  getItems,
+} from "../../app/actions/dndApiActions";
+import {
+  getShopsData,
+  updateShopItems,
+} from "../../app/actions/databaseActions";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
+import AddOrRemoveItems from "../../components/AddOrRemoveItems";
+import CancelModal from "../../components/CancelModal";
+import { shopsSliceActions } from "../../app/shopsSlice";
+
+import { Button, Input, Select, Spin, Table, Tabs } from "antd";
+import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import classes from "../shoppage/ShopPage.module.css";
-import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import { updateShopItems } from "../../app/actions/databaseActions";
+import DeleteModal from "../../components/DeleteModal";
 
 const EditShopPage = () => {
-  const { TextArea } = Input;
-  const params = useParams();
-  const [itemsData, setItemsData] = useState([]);
-  const [imageUrl, setImageUrl] = useState();
-  const [shopTitle, setShopTitle] = useState();
-  const [shopDescription, setShopDescription] = useState();
-  const [clickedItem, setClickedItem] = useState();
-  const { shops } = useSelector((state) => state.shopsSlice);
-  const shop = shops[params.shopId];
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { TextArea } = Input;
+  const params = useParams();
 
-  useEffect(() => {
-    const initialItemsData = Object.keys(shop.items).map((itemKey) => ({
+  const { isLoading } = useSelector((state) => state.uiSlice);
+  const { shops } = useSelector((state) => state.shopsSlice);
+  const shop = shops[params.shopId];
+
+  //STATES TODO: should refactor into one state
+  const [shopItemsData, setShopItemsData] = useState([]);
+  const [imageUrl, setImageUrl] = useState("");
+  const [originalImageUrl, setOriginalImageUrl] = useState("");
+  const [shopTitle, setShopTitle] = useState();
+  const [clickedItem, setClickedItem] = useState();
+  const [shopDescription, setShopDescription] = useState();
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [addingItemsLoading, setAddingItemsLoading] = useState(false);
+  //fetch items in Add Items tab
+  const [selectedCategoryPath, setSelectedCategoryPath] =
+    useState("adventuring-gear");
+  const [displayItemsToAdd, setDisplayItemsToAdd] = useState();
+  const [selectCategories, setSelectCategories] = useState();
+
+  const deleteButtonHandler = () => {
+    console.log("delete");
+    setShowDeleteModal(true);
+  };
+
+  const selectHandler = (value) => {
+    setSelectedCategoryPath(value);
+  };
+
+  const setCategories = async () => {
+    const categoriesArray = [];
+    const categories = await getItems("/api/equipment-categories");
+    for (const category of categories.results) {
+      categoriesArray.push({ value: category.index, label: category.name });
+    }
+    setSelectCategories(categoriesArray);
+  };
+
+  const clickHandler = async (url) => {
+    const data = await getItems(url);
+    console.log(data);
+    setClickedItem(data);
+  };
+
+  //------------------Populating and fetching shop data
+  const getShop = () => {
+    dispatch(getShopsData(params.campaignId));
+  };
+
+  const populateItemsInShop = () => {
+    const initialshopItemsData = Object.keys(shop.items).map((itemKey) => ({
       id: itemKey,
       name: shop.items[itemKey].name,
       price: shop.items[itemKey].price,
       amount: shop.items[itemKey].amount,
       url: shop.items[itemKey].url,
     }));
-    setItemsData(initialItemsData);
-    setImageUrl(shop.image);
-    setShopTitle(shop.title);
-    setShopDescription(shop.description);
-  }, []);
-
-  const clickHandler = async (url) => {
-    const data = await getItem(url);
-    setClickedItem(data);
+    setShopItemsData(initialshopItemsData);
   };
 
-  const columns = [
+  useEffect(() => {
+    getShop();
+  }, []);
+
+  //update the added items on add item from the state and on render
+  useEffect(() => {
+    if (shop) {
+      shop.items ? populateItemsInShop() : setShopItemsData([]);
+      setImageUrl(shop.image);
+      setShopTitle(shop.title);
+      setShopDescription(shop.description);
+      if (!originalImageUrl) {
+        setOriginalImageUrl(shop.image);
+      }
+    }
+  }, [shop, originalImageUrl]);
+
+  //populate the items from dnd api
+  const populateAddItemsTable = async () => {
+    let displayshopItemsData = [];
+    const displayData = await getItems(
+      `/api/equipment-categories/${selectedCategoryPath}`
+    );
+    for (const element of displayData.equipment) {
+      //the api has double entries for some items and causes error in the table rendering (same kay for more items) this is to filter in case it happens
+      if (!displayshopItemsData.some((item) => item.id === element.index)) {
+        displayshopItemsData.push({
+          id: element.index,
+          name: element.name,
+          url: element.url,
+        });
+      }
+    }
+    setDisplayItemsToAdd(displayshopItemsData);
+  };
+
+  useEffect(() => {
+    populateAddItemsTable();
+  }, [selectedCategoryPath]);
+
+  // get all the categories from dnd api
+  useEffect(() => {
+    if (!selectCategories) {
+      setCategories();
+    }
+  }, []);
+
+  const memoizedCategories = useMemo(
+    () => selectCategories,
+    [selectCategories]
+  );
+
+  //TABLE COLUMNS
+  const columnsForEdit = [
     {
       title: "name",
       dataIndex: "name",
-      render: (text, record) => (
-        <a onClick={() => clickHandler(record.url)}>{text}</a>
-      ),
       sorter: {
         compare: (a, b) => {
           if (a.name === b.name) return 0;
@@ -62,8 +157,9 @@ const EditShopPage = () => {
         <Input
           type="number"
           value={text > 0 ? text : ""}
-          // onChange={(e) => handleChange(e, e.target.value, record.id, "amount")}
-          onChange={(e) => handleItemChange(record.id, "amount", e.target.value)}
+          onChange={(e) =>
+            handleItemChange(record.id, "amount", e.target.value)
+          }
         ></Input>
       ),
       sorter: {
@@ -77,7 +173,6 @@ const EditShopPage = () => {
         <Input
           type="number"
           value={text > 0 ? text : ""}
-          // onChange={(e) => handleChange(e, e.target.value, record.id, "price")}
           onChange={(e) => handleItemChange(record.id, "price", e.target.value)}
         ></Input>
       ),
@@ -89,29 +184,78 @@ const EditShopPage = () => {
       title: "remove",
       dataIndex: "actions",
       render: (_, record) => (
-        <a>
-          <MinusCircleOutlined />
-        </a>
+        <AddOrRemoveItems itemToEdit={record} shop={shop} />
       ),
     },
   ];
 
-  //EDITS
+  const columnsForAdd = [
+    {
+      title: "name",
+      dataIndex: "name",
+      sorter: {
+        compare: (a, b) => {
+          if (a.name === b.name) return 0;
+          return a.name > b.name ? 1 : -1;
+        },
+      },
+    },
+    {
+      title: <span>add/remove</span>,
+      dataIndex: "actions",
+      render: (_, record) => (
+        <AddOrRemoveItems itemToEdit={record} shop={shop} />
+      ),
+    },
+  ];
+
+  //USER EDIT INPUT
   const handleTitleChange = (e) => {
     setShopTitle(e.target.value);
+    const payload = {
+      shopId: shop.id,
+      title: e.target.value,
+    };
+    dispatch(shopsSliceActions.changeTitleOfShop(payload));
   };
 
   const handleDescriptionChange = (e) => {
     setShopDescription(e.target.value);
+    const payload = {
+      shopId: shop.id,
+      description: e.target.value,
+    };
+    dispatch(shopsSliceActions.changeDescriptionOfShop(payload));
+  };
+
+  const selectAllUrlHandler = (e) => {
+    e.target.select();
   };
 
   const handleImageChange = (e) => {
-    const imageUrl = e.target.value;
-    setImageUrl(imageUrl);
+    setImageUrl(e.target.value);
   };
 
+  const handleApplyChange = (e) => {
+    const payload = {
+      shopId: shop.id,
+      image: imageUrl,
+    };
+    dispatch(shopsSliceActions.changeImageOfShop(payload));
+  };
+
+  const handleResetChange = (e) => {
+    setImageUrl(originalImageUrl);
+    const payload = {
+      shopId: shop.id,
+      image: originalImageUrl,
+    };
+    dispatch(shopsSliceActions.changeImageOfShop(payload));
+  };
+
+  // Update the item that is edited in input for price and amount
   const handleItemChange = (itemId, field, value) => {
-    setItemsData((prevItems) =>
+    setShopItemsData((prevItems) =>
       prevItems.map((item) =>
         item.id === itemId
           ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
@@ -120,38 +264,9 @@ const EditShopPage = () => {
     );
   };
 
-  const handleResetChange = () => {    
-    setImageUrl(shop.image);
-  }
-
-  // const handleChange = (e, value, itemId, field) => {
-  //   if (field === "title") {
-  //     setShopTitle(value);
-  //   } else if (field === "image") {
-  //     if (e) {
-  //       e.preventDefault();
-  //       const imageInput = e.target.elements["image"].value;
-  //       setImageUrl(imageInput ? imageInput : shop.image);
-  //     } else {
-  //       setImageUrl(shop.image);
-  //     }
-  //   } else if (field === "description") {
-  //     setShopDescription(value);
-  //   } else {
-  //     setItemsData((prevItems) =>
-  //       prevItems.map((item) =>
-  //         item.id === itemId
-  //           ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
-  //           : item
-  //       )
-  //     );
-  //   }
-  // };
-
   const saveChangesHandler = () => {
     const updatedItems = {};
-    itemsData.map((item) => (updatedItems[item.id] = { ...item }));
-    //const shopid = shop.id;
+    shopItemsData.map((item) => (updatedItems[item.id] = { ...item }));
     const newShopData = {
       title: shopTitle,
       description: shopDescription,
@@ -163,82 +278,158 @@ const EditShopPage = () => {
     navigate(-1);
   };
 
+  const addAllItemsHandler = async (shop) => {
+    setAddingItemsLoading(true);
+    let items = {};
+    let payload;
+    for (const itemToAdd of displayItemsToAdd) {
+      const itemData = await getItems(itemToAdd.url);
+      const newItem = createItemObjectForShop(itemData);
+      items[newItem.id] = newItem;
+      payload = {
+        items,
+        shopId: shop.id,
+        type: "addAll",
+      };
+    }
+    dispatch(shopsSliceActions.addItemToShop(payload));
+    setAddingItemsLoading(false);
+  };
+
+  const removeAllItemsHandler = () => {
+    dispatch(shopsSliceActions.clearItemsFromShop(shop.id));
+  };
+
   const tabs = [
     {
       key: "1",
       label: "Edit Items",
       children: (
-        <div className={classes.table}>
+        <div className={classes.tableDiv}>
+          <Button onClick={removeAllItemsHandler}>
+            <DeleteOutlined />
+            Remove all items
+          </Button>
           <Table
-            columns={columns}
-            dataSource={itemsData}
+            locale={{
+              emptyText:
+                "The shop is currently empty. Add items in the next tab.",
+            }}
+            loading={isLoading}
+            columns={columnsForEdit}
+            dataSource={shopItemsData}
             pagination={false}
             size={"small"}
             rowKey="id"
+            onRow={(record) => {
+              return {
+                onClick: () => clickHandler(record.url),
+              };
+            }}
+            className={classes.tableOfItems}
           />
-          <div className={classes.buttons}>
-            <Button
-              style={{ borderColor: "#7cacbb" }}
-              onClick={saveChangesHandler}
-            >
-              Save
-            </Button>
-            <Link to={-1}>
-              <Button danger>Cancel</Button>
-            </Link>
-            <Button type="primary" danger>
-              Delete Shop
-            </Button>
-          </div>
         </div>
       ),
     },
     {
       key: "2",
       label: "Add Items",
-      children: "Content of Tab Pane 2",
+      children: (
+        <div className={classes.tableDiv}>
+          <Select
+            defaultValue="Adventuring Gear"
+            options={memoizedCategories}
+            style={{ width: "250px" }}
+            onSelect={(value) => selectHandler(value)}
+          />
+          <Button onClick={() => addAllItemsHandler(shop)}>
+            {" "}
+            <PlusCircleOutlined />
+            Add All{" "}
+          </Button>
+          <Table
+            loading={isLoading || addingItemsLoading}
+            columns={columnsForAdd}
+            dataSource={displayItemsToAdd}
+            size={"small"}
+            rowKey="id"
+            onRow={(record) => {
+              return {
+                onClick: () => clickHandler(record.url),
+              };
+            }}
+            pagination={{
+              defaultPageSize: 25,
+            }}
+            className={classes.tableOfItems}
+          />
+        </div>
+      ),
     },
   ];
 
   return (
-    <div className={classes.content}>
-      <div className={classes.shopMenu}>
-        <h3>Title</h3>
-        <Input
-          value={shopTitle}
-          // onChange={(e) => handleChange(e, e.target.value, null, "title")}
-          // onChange={(e) => handleTitleChange(e)} // $ mozhi i vaka msm ama poubo e dolnoto ko sho e, oti mozhi vaka rerender da napraj 
-          onChange={handleTitleChange}
-        ></Input>
-        <h4>Description</h4>
-        <TextArea
-          value={shopDescription}
-          // onChange={(e) => handleChange(e, e.target.value, null, "description")}
-          onChange={handleDescriptionChange}
-        ></TextArea>
-        <Tabs defaultActiveKey="1" items={tabs}></Tabs>
-      </div>
-      <div className={classes.details}>
-        <p>Image URL:</p>
-        {/* <form onSubmit={(e) => handleChange(e, null, null, "image")}> */}
-
-          {/* <Input name="image"></Input>{" "} */}
-          
-          <Input
-            name="image"
-            value={imageUrl}
-            onChange={handleImageChange}
+    <>
+      {shop ? (
+        <div className={classes.content}>
+          <CancelModal
+            showModal={showCancelModal}
+            setShowModal={setShowCancelModal}
           />
+          <DeleteModal
+            type="shop"
+            campaignId={params.campaignId}
+            showModal={showDeleteModal}
+            setShowModal={setShowDeleteModal}
+            shopId={shop.id}
+            shopTitle={shop.title}
+            navigatePath={-2}
+          />
+          <div className={classes.shopMenu}>
+            <h3>Title</h3>
+            <Input value={shopTitle} onChange={handleTitleChange}></Input>
+            <h4>Description</h4>
+            <TextArea
+              value={shopDescription}
+              onChange={handleDescriptionChange}
+            ></TextArea>
+            <Tabs defaultActiveKey="1" items={tabs}></Tabs>
+            <div className={classes.buttons}>
+              <Button
+                style={{ borderColor: "#7cacbb" }}
+                onClick={saveChangesHandler}
+              >
+                Save
+              </Button>
 
-          <Button htmlType="submit">Apply Image</Button>
-          <Button onClick={(e) => handleResetChange(null, null, null)}>
-            Reset Image
-          </Button>
-        {/* </form> */}
-        <img src={imageUrl} style={{ width: "200px" }} />
-        {clickedItem && <ItemDescriptionCard item={clickedItem} />}
-      </div>
-    </div>
+              <Button danger onClick={() => setShowCancelModal(true)}>
+                Cancel
+              </Button>
+
+              <Button type="primary" danger onClick={deleteButtonHandler}>
+                Delete Shop
+              </Button>
+            </div>
+          </div>
+          <div className={classes.details}>
+            <p>Image URL:</p>
+            <Input
+              name="image"
+              value={imageUrl}
+              onChange={handleImageChange}
+              onFocus={selectAllUrlHandler}
+            />
+
+            <Button onClick={handleApplyChange}>Apply Image</Button>
+            <Button onClick={handleResetChange}>Reset Image</Button>
+            {shop?.image && <img src={shop.image} style={{ width: "200px" }} />}
+            {clickedItem && <ItemDescriptionCard item={clickedItem} />}
+          </div>
+        </div>
+      ) : (
+        <Spin style={{ fontSize: "5rem" }} />
+      )}
+    </>
   );
 };
 export default EditShopPage;

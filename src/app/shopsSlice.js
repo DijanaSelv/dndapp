@@ -9,7 +9,42 @@ const shopsSlice = createSlice({
   initialState,
   reducers: {
     setShopsData(state, action) {
-    state.shops = action.payload;
+      state.shops = action.payload;
+    },
+    addItemToShop(state, action) {
+      const { shopId, item } = action.payload;
+      let updatedItems;
+
+      if (action.payload.type === "addAll") {
+        updatedItems = {
+          ...state.shops[shopId].items,
+          ...action.payload.items,
+        };
+      } else {
+        updatedItems = {
+          ...state.shops[shopId].items,
+          [item.id]: { ...item },
+        };
+      }
+      state.shops[shopId].items = updatedItems;
+    },
+    changeTitleOfShop(state, action) {
+      state.shops[action.payload.shopId].title = action.payload.title;
+    },
+    changeDescriptionOfShop(state, action) {
+      state.shops[action.payload.shopId].description =
+        action.payload.description;
+    },
+    changeImageOfShop(state, action) {
+      state.shops[action.payload.shopId].image = action.payload.image;
+    },
+    removeItemFromShop(state, action) {
+      const { shopId, itemId } = action.payload;
+
+      delete state.shops[shopId].items[itemId];
+    },
+    clearItemsFromShop(state, action) {
+      state.shops[action.payload].items = {};
     },
   },
 });
