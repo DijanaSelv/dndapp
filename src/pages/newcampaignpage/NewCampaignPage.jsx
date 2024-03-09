@@ -73,6 +73,11 @@ const NewCampaignPage = () => {
 
   const createCampaignHandler = async (e) => {
     e.preventDefault();
+
+    const roles = {
+      creator: true,
+      dm: true,
+    };
     const newCampaignData = {
       id: nanoid(9),
       joinCode: nanoid(12),
@@ -81,16 +86,13 @@ const NewCampaignPage = () => {
       image: image
         ? image
         : "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/13372255-837c-4b0a-a477-0be04dd57d0e/demfbcb-00cf205d-ea36-4fd3-b785-2f0b4a7546c3.png/v1/fill/w_1212,h_660,q_70,strp/landscape_by_huyztr_demfbcb-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9Njk3IiwicGF0aCI6IlwvZlwvMTMzNzIyNTUtODM3Yy00YjBhLWE0NzctMGJlMDRkZDU3ZDBlXC9kZW1mYmNiLTAwY2YyMDVkLWVhMzYtNGZkMy1iNzg1LTJmMGI0YTc1NDZjMy5wbmciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.jRPEE2K0ChsBCPx8reZfhnC5VxNOx0xsSNFC02YKv-E",
-      DM: uid,
       description,
       shops: STATIC_SHOPS,
+      members: { [uid]: { roles } },
     };
 
-    //action that sends the data to database
     setNewCampaignId(newCampaignData.id);
     dispatch(createNewCampaign(uid, newCampaignData));
-    //navigate(`/Campaigns/created/${newCampaignData.id}/info`);
-    //redirect to campaign info
   };
 
   const cancelPageHandler = () => {
@@ -148,6 +150,7 @@ const NewCampaignPage = () => {
           onBlur={descriptionBlurHandler}
           onChange={descriptionChangeHandler}
           status={descriptionIsError ? "error" : ""}
+          style={{ whiteSpace: "pre-wrap" }}
         ></TextArea>
         <Button
           disabled={!formIsValid}

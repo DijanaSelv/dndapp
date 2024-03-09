@@ -1,23 +1,56 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "antd";
-import { useNavigate } from "react-router";
+import { Button, Dropdown, Space } from "antd";
+import { useNavigate, useParams } from "react-router";
 import { signOutUser } from "../app/actions/userActions";
 import { Link, NavLink } from "react-router-dom";
 
 import classes from "./MainNav.module.css";
 import { LogoutOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+import { getRoles } from "../app/actions/databaseActions";
+import rolesSlice, { rolesSliceActions } from "../app/rolesSlice";
 
 const MainNav = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const params = useParams();
 
   const { uid, firstName } = useSelector((state) => state.userSlice.user);
+
+  useEffect(() => {
+    if (params.campaignId) {
+      dispatch(getRoles(uid, params.campaignId));
+    }
+    if (!params.campaignId) {
+      dispatch(rolesSliceActions.resetRoles());
+    }
+  }, [params.campaignId]);
 
   const logoutClickHandler = (e) => {
     e.preventDefault();
     dispatch(signOutUser());
     navigate("/");
   };
+
+  const dropdownItems = [
+    {
+      key: "1",
+      label: (
+        <NavLink to="/" className={classes.navLink}>
+          My Account
+        </NavLink>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Button className={classes.button} onClick={logoutClickHandler}>
+          <LogoutOutlined /> Log Out
+        </Button>
+      ),
+      danger: true,
+    },
+  ];
 
   return (
     <div className={classes.background}>
@@ -32,11 +65,7 @@ const MainNav = () => {
         <div className={classes.secondRow}>
           {uid && (
             <div className={classes.navLinks}>
-              {/* <NavLink href="/" className={classes.navLink}> */}
               <NavLink to="/" className={classes.navLink}>
-                {" "}
-                {/* //! Use 'to="url"' instead of 'href' */}
-                {/* // $ using 'href' instead of 'to', might make the whole page reload. Also, 'to' is provided from the react router therefore it is a better approach to use it instead. */}
                 Home
               </NavLink>
               <NavLink to="/" className={classes.navLink}>
@@ -47,8 +76,12 @@ const MainNav = () => {
               </NavLink>
             </div>
           )}
-
-          {firstName && <h3>Hello, {firstName}!</h3>}
+          {/* 
+          {firstName && (
+            <Dropdown menu={{ dropdownItems }}>
+              <Space>Hello, {firstName}!</Space>
+            </Dropdown>
+          )} */}
           {uid && (
             <Button className={classes.button} onClick={logoutClickHandler}>
               <LogoutOutlined /> Log Out
