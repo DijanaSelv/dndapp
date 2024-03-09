@@ -34,7 +34,7 @@ const CampaignShopsPage = () => {
         <div className={classes.content}>
           {notification && <NotificationBox />}
           <div className={classes.shopsHeader}>
-            <h2>SHOPS</h2>{" "}
+            <h2 className={classes.title}>SHOPS</h2>{" "}
             <Link className={classes.createShopLink} to="NewShop">
               Create <PlusCircleOutlined />
             </Link>

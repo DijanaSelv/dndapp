@@ -28,13 +28,21 @@ const campaignSlice = createSlice({
     setCreatedCampaigns(state, action) {
       state.createdCampaigns = action.payload;
     },
+    addCreatedCampaign(state, action) {
+      const newCampaign = action.payload;
+
+      state.createdCampaigns = {
+        ...state.createdCampaigns,
+        ...newCampaign,
+      };
+    },
     setJoinedCampaigns(state, action) {
       state.joinedCampaigns = action.payload;
     },
 
-    setCurrentCampaign(state, action) {
+    /*     setCurrentCampaign(state, action) {
       state.currentCampaign = action.payload;
-    },
+    }, */
     /*     resetCampaignSlice(state, action) {
       state = initialState;
     },

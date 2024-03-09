@@ -8,14 +8,16 @@ import NotificationBox from "../../components/NotificationBox";
 import { uiSliceActions } from "../../app/uiSlice";
 
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
+import { Flex, Progress, Spin } from "antd";
 import classes from "./HomePage.module.css";
 
 const Home = () => {
   const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSlice
   );
-  const { notification } = useSelector((state) => state.uiSlice);
+  const { notification, fetchedCampaigns } = useSelector(
+    (state) => state.uiSlice
+  );
   const {
     created: createdCampaignsFromUser,
     joined: joinedCampaignsFromUsers,
@@ -23,6 +25,10 @@ const Home = () => {
   const { isLoading } = useSelector((state) => state.uiSlice);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(uiSliceActions.resetRequestState());
+  }, [fetchedCampaigns]);
 
   useEffect(() => {
     if (createdCampaignsFromUser) {
@@ -41,12 +47,26 @@ const Home = () => {
       {notification && <NotificationBox />}
       <div className={classes.createdCampaignsSection}>
         <div className={classes.createdCampaignsHeader}>
-          <h2>Created Campaigns</h2>
+          <div>
+            <h2>Created Campaigns</h2>
+            {isLoading && (
+              <Flex vertical gap="small" style={{ width: 230 }}>
+                <Progress
+                  percent={100}
+                  status="active"
+                  showInfo={false}
+                  size="small"
+                  strokeColor={{ from: "#108ee9", to: "#87d068" }}
+                />
+              </Flex>
+            )}
+          </div>
+
           <Link className={classes.createdCampaignsLink} to="/NewCampaign">
             Create <PlusCircleOutlined />
           </Link>
         </div>
-        {isLoading && <Spin />}
+
         <ul>
           {Object.keys(createdCampaigns).length !== 0
             ? Object.values(createdCampaigns).map((campaign) => (
@@ -65,7 +85,26 @@ const Home = () => {
         </ul>
       </div>
       <div>
-        <h2>Joined Campaigns</h2>
+        <div className={classes.createdCampaignsHeader}>
+          <div>
+            <h2>Joined Campaigns</h2>
+            {isLoading && (
+              <Flex vertical gap="small" style={{ width: 230 }}>
+                <Progress
+                  percent={100}
+                  status="active"
+                  showInfo={false}
+                  size="small"
+                  strokeColor={{ from: "#108ee9", to: "#87d068" }}
+                />
+              </Flex>
+            )}
+          </div>
+
+          <Link className={classes.createdCampaignsLink} to="/NewCampaign">
+            Create <PlusCircleOutlined />
+          </Link>
+        </div>
         <ul>
           {Object.keys(joinedCampaigns).length !== 0 && !isLoading ? (
             Object.values(joinedCampaigns).map((campaign) => (

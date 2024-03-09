@@ -23,6 +23,7 @@ import ProtectedCampaignsRoute from "./components/ProtectedCampaignsRoute";
 import ShopPage from "./pages/shoppage/ShopPage";
 import EditShopPage from "./pages/editshoppage/EditShopPage";
 import NewShopPage from "./pages/newshoppage/NewShopPage";
+import RoleProtectedRoute from "./components/RoleProtectedRoute";
 
 //refresh state persistence
 /* import { PersistGate } from "redux-persist/integration/react";
@@ -97,11 +98,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/Campaigns/:type/:campaignId/play/shops/:shopId/edit",
-        element: <EditShopPage />,
+        element: (
+          <RoleProtectedRoute permittedRoles={["dm"]}>
+            <EditShopPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "/Campaigns/:type/:campaignId/play/shops/NewShop",
-        element: <NewShopPage />,
+        element: (
+          <RoleProtectedRoute permittedRoles={["dm"]}>
+            <NewShopPage />
+          </RoleProtectedRoute>
+        ),
       },
     ],
   },

@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router";
 
+//so that the user can't manually change created/joined campaigns in url.
+//But do i really need campaingType in mu url? Now that i have permissions.
 const ProtectedCampaignsRoute = ({ children }) => {
   const params = useParams();
   const { campaigns } = useSelector((state) => state.userSlice.user);

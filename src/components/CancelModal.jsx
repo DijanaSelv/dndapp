@@ -5,7 +5,6 @@ const CancelModal = ({ showModal, setShowModal }) => {
   const navigate = useNavigate();
 
   const handleOk = () => {
-    //dispatch a function to delete the campaign from the user and from the campaigns base.
     navigate(-1);
     setShowModal(false);
   };

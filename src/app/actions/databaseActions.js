@@ -4,6 +4,7 @@ import { db } from "./base";
 import { uiSliceActions } from "../uiSlice";
 import { campaignSliceActions } from "../campaignSlice";
 import { shopsSliceActions } from "../shopsSlice";
+import { rolesSliceActions } from "../rolesSlice";
 
 //create new user in collection (on sgin up)
 export const createNewUserData = (uid, user) => {
@@ -23,6 +24,19 @@ export const getUserData = (uid) => {
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
       dispatch(userSliceActions.setUserData(data));
+    });
+  };
+};
+
+export const getRoles = (uid, campaignId) => {
+  return async (dispatch) => {
+    const userRef = ref(
+      db,
+      "campaigns/" + campaignId + "/members/" + uid + "/roles"
+    );
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val();
+      dispatch(rolesSliceActions.setRoles(data));
     });
   };
 };
@@ -98,7 +112,10 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
       );
     }
     if (type === "created") {
-      dispatch(campaignSliceActions.setCreatedCampaigns(campaignsDataList));
+      createdCampaignsIds.length === 1 &&
+        dispatch(campaignSliceActions.addCreatedCampaign(campaignsDataList));
+      createdCampaignsIds.length > 1 &&
+        dispatch(campaignSliceActions.setCreatedCampaigns(campaignsDataList));
     }
     if (type === "joined") {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));
