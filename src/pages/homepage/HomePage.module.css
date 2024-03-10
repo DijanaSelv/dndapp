@@ -7,7 +7,7 @@
   margin: 0 100px;
 }
 
-.createdCampaignsLink {
+.campaignsLink {
   text-decoration: none;
   display: flex;
   flex-direction: row;
@@ -19,25 +19,25 @@
   border-radius: 5px;
 }
 
-.createdCampaignsLink > span {
+.campaignsLink > span {
   color: #cecece;
 }
-/* .createdCampaignsLink > span:hover {
+/* .campaignsLink > span:hover {
   color: #3a9fd6;
 } */
 
-.createdCampaignsLink:hover {
+.campaignsLink:hover {
   border: 2px solid #3a9fd6;
   border-radius: 5px;
 
   transition: all 0.5s;
 }
-.createdCampaignsLink:hover > span {
+.campaignsLink:hover > span {
   color: #3a9fd6;
   transition: color 0.5s;
 }
 
-.createdCampaignsHeader {
+.campaignsHeader {
   display: flex;
   justify-content: space-between;
   margin: 50px 0;
@@ -48,7 +48,7 @@ a {
   align-self: center;
 }
 
-.createdCampaignsSection > ul {
+.campaignsSection > ul {
   width: auto;
   padding: 0;
   display: flex;

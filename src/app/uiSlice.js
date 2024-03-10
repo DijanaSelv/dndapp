@@ -51,6 +51,12 @@ const uiSlice = createSlice({
       } else if (action.payload.code === "shop updated") {
         message = "Done";
         description = "Shop updated!";
+      } else if (action.payload.code === "no join campaign") {
+        message = "Error";
+        description = "There is no campaign with that code";
+      } else if (action.payload.code === "campaign joined") {
+        message = "Joined";
+        description = "You joined a new campaign!";
       } else {
         message = "Error";
         description = "Request failed. Try again later.";

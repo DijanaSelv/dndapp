@@ -8,7 +8,7 @@ import classes from "./MainNav.module.css";
 import { LogoutOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { getRoles } from "../app/actions/databaseActions";
-import rolesSlice, { rolesSliceActions } from "../app/rolesSlice";
+import { rolesSliceActions } from "../app/rolesSlice";
 
 const MainNav = () => {
   const dispatch = useDispatch();

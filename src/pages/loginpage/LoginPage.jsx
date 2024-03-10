@@ -10,7 +10,7 @@ import { uiSliceActions } from "../../app/uiSlice";
 import { useState, useMemo } from "react";
 import { persistenceChange } from "../../app/actions/userActions";
 
-const Login = () => {  
+const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   // **FORM VALIDATION from useValidate HOOK
@@ -40,18 +40,12 @@ const Login = () => {
   const navigate = useNavigate(); // ! remove if not used
   const { isLoggedIn } = useSelector((state) => state.userSlice); // !remove if not used
 
-// **Computed Values (Memoization)**
-// $ useMemo hook
-// # Not using the useMemo hook, the formIsValid calculation will be re-executed on every render cycle, regardless of whether emailIsValid or passwordIsValid have changed or not.
-  // let formIsValid = false;
-  
-  // if (emailIsValid && passwordIsValid) {
-  //   formIsValid = true;
-  // }
-  const formIsValid = useMemo(() => emailIsValid && passwordIsValid, [emailIsValid, passwordIsValid]);
-// $ useMemo ^
+  const formIsValid = useMemo(
+    () => emailIsValid && passwordIsValid,
+    [emailIsValid, passwordIsValid]
+  );
 
-// **Event handlers**
+  // **Event handlers**
 
   // Login user
   const loginHandler = (e) => {
@@ -66,22 +60,16 @@ const Login = () => {
     setRememberMe(e.target.checked);
   };
 
-  // Side effects
-  // $ Moved useEffect at the end, before the return statement
-  // # The component's primary logic is executed first, followed by any side effects. (useEffect is a side effect in this case)
   useEffect(() => {
     if (requestSuccess) {
       console.log("request success");
       dispatch(uiSliceActions.resetRequestState());
     } else if (requestFailed) {
-      console.log("request failed");
       emailResetInput();
       passwordResetInput();
       dispatch(uiSliceActions.resetRequestState());
     }
-
   }, [requestFailed, requestSuccess]);
-  // $ moved useEffect ^
 
   return (
     <>
