@@ -1,20 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  createdCampaigns: {},
-  joinedCampaigns: {},
+  createdCampaigns: [],
+  joinedCampaigns: [],
   currentCampaign: {
     id: null,
     details: null,
     title: null,
     shop: null,
     joinCode: null,
-    members: [
-      {
+    members: {
+      memberId: {
+        memberName: null,
         characterId: null,
         roles: null,
       },
-    ],
+    },
     logs: null,
     info: null,
     combat: null,
@@ -39,21 +40,9 @@ const campaignSlice = createSlice({
     setJoinedCampaigns(state, action) {
       state.joinedCampaigns = action.payload;
     },
-
-    /*     setCurrentCampaign(state, action) {
-      state.currentCampaign = action.payload;
-    }, */
-    /*     resetCampaignSlice(state, action) {
-      state = initialState;
+    resetCampaignSlice(state, action) {
+      return initialState;
     },
-    provideCampaignList(state, action) {
-      if (action.payload === "created") {
-        return state.createdCampaigns;
-      }
-      if (action.payload === "joined") {
-        return state.joinedCampaigns;
-      }
-    }, */
   },
 });
 

@@ -14,6 +14,7 @@ import {
   browserSessionPersistence,
   setPersistence,
 } from "firebase/auth";
+import campaignSlice, { campaignSliceActions } from "../campaignSlice";
 
 //TODO: what if when they sign up, the auth projdva a ova fialnuva. Posle kje nema data za toj user. Maybe on login, if they can log in but can't access the data, just to be safe, the data is created then?
 //try to get the home page data, and if it doesn't work create it.
@@ -116,6 +117,7 @@ export const signOutUser = () => {
       localStorage.clear();
       sessionStorage.clear();
       dispatch(userSliceActions.setSignOutUser());
+      dispatch(campaignSliceActions.resetCampaignSlice());
     } catch (error) {
       console.log("error during sign out", error);
     }
@@ -124,7 +126,8 @@ export const signOutUser = () => {
 
 //set persistence before login
 export const persistenceChange = (rememberMe) => {
-  return async (dispatch) => { // !remove dipatch if we dont use it
+  return async (dispatch) => {
+    // !remove dipatch if we dont use it
     setPersistence(
       auth,
       rememberMe ? browserLocalPersistence : browserSessionPersistence

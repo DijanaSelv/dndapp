@@ -14,7 +14,7 @@
 
 .headerContent {
   width: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -22,12 +22,16 @@
   transition: all 0.4s;
 }
 .headerContent:hover {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   transition: all 0.4s;
 }
 
 .headerContent > * {
-  margin: 5px 0 20px 0;
+  margin: 5px 0 10px 0;
+}
+
+.headerContent > p {
+  color: white;
 }
 .title {
   max-width: 40%;
@@ -86,16 +90,21 @@
   margin: 20px 0;
   text-align: justify;
   font-size: 14px;
+  border: 2px solid #fbfeff;
+  border-radius: 4px;
+  transition: all 0.5s;
+  padding: 7px;
 }
 
-.join {
+.join,
+.roles {
   display: flex;
   flex-direction: column;
   align-items: center;
   border: 2px solid #fbfeff;
   border-radius: 4px;
-  transition: border 0.5s;
-  padding: 7px;
+  transition: all 0.5s;
+  padding: 10px;
 }
 
 .join > p {
@@ -104,7 +113,8 @@
 
 .join:hover {
   border: 2px solid #3a9fd6;
-  transition: border 0.5s;
+  transition: all 0.5s;
+  background-color: #eff8fc;
 }
 
 .joinCode {

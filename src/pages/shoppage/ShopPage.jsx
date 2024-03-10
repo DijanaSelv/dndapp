@@ -18,6 +18,7 @@ const ShopPage = () => {
 
   const { isLoading } = useSelector((state) => state.uiSlice);
   const { shops } = useSelector((state) => state.shopsSlice);
+  const { dm } = useSelector((state) => state.rolesSlice);
   const shop = shops[params.shopId];
 
   const [itemsData, setItemsData] = useState();
@@ -132,14 +133,18 @@ const ShopPage = () => {
                 }}
                 className={classes.tableOfItems}
               />
-              <div className={classes.buttons}>
-                <Link to="edit">
-                  <Button style={{ borderColor: "#7cacbb" }}>Edit Shop</Button>
-                </Link>
-                <Button type="primary" danger onClick={deleteButtonHandler}>
-                  Delete Shop
-                </Button>
-              </div>
+              {dm === true && (
+                <div className={classes.buttons}>
+                  <Link to="edit">
+                    <Button style={{ borderColor: "#7cacbb" }}>
+                      Edit Shop
+                    </Button>
+                  </Link>
+                  <Button type="primary" danger onClick={deleteButtonHandler}>
+                    Delete Shop
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
           <div className={classes.details}>

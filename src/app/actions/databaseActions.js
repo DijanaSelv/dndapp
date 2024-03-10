@@ -1,4 +1,16 @@
-import { ref, onValue, set, push, get, child, update } from "firebase/database";
+import {
+  ref,
+  onValue,
+  set,
+  push,
+  get,
+  child,
+  update,
+  orderByChild,
+  equalTo,
+  on,
+  query,
+} from "firebase/database";
 import { userSliceActions } from "../userSlice";
 import { db } from "./base";
 import { uiSliceActions } from "../uiSlice";
@@ -36,7 +48,7 @@ export const getRoles = (uid, campaignId) => {
     );
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
-      dispatch(rolesSliceActions.setRoles(data));
+      data && dispatch(rolesSliceActions.setRoles(data));
     });
   };
 };
@@ -77,14 +89,14 @@ export const createNewCampaign = (uid, newCampaignData) => {
 };
 
 //get list of campaigns
-export const getCampaignsData = (createdCampaignsIds, type) => {
+export const getCampaignsData = (campaignsIds, type) => {
   return async (dispatch) => {
-    const campaignsDataList = {};
+    const campaignsDataList = [];
     dispatch(uiSliceActions.changeLoading(true));
 
     try {
       let campaignId;
-      for (campaignId of createdCampaignsIds) {
+      for (campaignId of campaignsIds) {
         const campaignsRef = ref(db, "campaigns/" + campaignId);
         const snapshot = await get(campaignsRef);
         if (snapshot.exists()) {
@@ -112,9 +124,9 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
       );
     }
     if (type === "created") {
-      createdCampaignsIds.length === 1 &&
+      campaignsIds.length === 1 &&
         dispatch(campaignSliceActions.addCreatedCampaign(campaignsDataList));
-      createdCampaignsIds.length > 1 &&
+      campaignsIds.length > 1 &&
         dispatch(campaignSliceActions.setCreatedCampaigns(campaignsDataList));
     }
     if (type === "joined") {
@@ -125,7 +137,8 @@ export const getCampaignsData = (createdCampaignsIds, type) => {
   };
 };
 
-//get one campaign
+//get one campaign (i might not need this)
+
 /* snapshot) => {
       const data = snapshot.val();
       console.log(data, createdCampaignsIds);
@@ -148,6 +161,103 @@ export const deleteCampaign = (campaignId, uid) => {
         code: "campaign deleted",
       })
     );
+  };
+};
+
+//join Campaign
+export const joinCampaign = (joinCode, uid) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    let campaignKey;
+    try {
+      const campaignsRef = ref(db, "campaigns/");
+      const joinCodeQuery = query(
+        campaignsRef,
+        orderByChild("joinCode"),
+        equalTo(joinCode)
+      );
+      const snapshot = await get(joinCodeQuery);
+
+      if (snapshot.exists()) {
+        campaignKey = Object.keys(snapshot.val())[0];
+        //add the campagin to the user joined campaigns
+        const joinedCampaignsRef = ref(
+          db,
+          "users/" + uid + "/campaigns/" + "joined/"
+        );
+        const joinedMemberRef = ref(
+          db,
+          "campaigns/" + campaignKey + "/members/" + uid
+        );
+        const roles = {
+          player: true,
+        };
+        await update(joinedCampaignsRef, { [campaignKey]: true });
+        await update(joinedMemberRef, { roles });
+
+        dispatch(
+          uiSliceActions.showNotification({
+            type: "success",
+            code: "campaign joined",
+          })
+        );
+      } else {
+        dispatch(
+          uiSliceActions.showNotification({
+            type: "error",
+            code: "no join campaign",
+          })
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "error",
+          code: "error",
+        })
+      );
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    return campaignKey;
+  };
+};
+
+//get the players in the campaign
+export const getMembers = (campaignId, type) => {
+  return async (dispatch) => {
+    let members = [];
+    try {
+      const campaignMembersRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members"
+      );
+
+      const membersQuery = query(
+        campaignMembersRef,
+        orderByChild(`roles/${type}`),
+        equalTo(true)
+      );
+      const snapshot = await get(membersQuery);
+
+      if (snapshot.exists()) {
+        const membersId = Object.keys(snapshot.val());
+
+        for (const playerId of membersId) {
+          const playerDataRef = ref(db, "users/" + playerId + "/firstName");
+          const snapshot = await get(playerDataRef);
+          if (snapshot.exists()) {
+            const playerData = snapshot.val();
+            members.push(playerData);
+          } else {
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    return members;
   };
 };
 

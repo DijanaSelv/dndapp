@@ -123,6 +123,7 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(userSliceActions.setLoggedInUser(user.uid));
+
         dispatch(getUserData(user.uid));
       }
     });
