@@ -1,8 +1,9 @@
 import { Input, Modal } from "antd";
 import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { joinCampaign } from "../app/actions/databaseActions";
+import { uiSliceActions } from "../app/uiSlice";
 
 const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
   const navigate = useNavigate();
@@ -10,17 +11,25 @@ const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
   const codeRef = useRef();
   const [invalidCode, setInvalidCode] = useState();
 
+  const { joinedCampaigns } = useSelector((state) => state.campaignSlice);
+
   const handleOk = async () => {
     if (!codeRef.current.value || codeRef.current.value.length !== 12) {
       setInvalidCode("Code must contain 12 characters.");
     } else {
-      const joinCode = codeRef.current.value;
-      try {
-        const campaignId = await dispatch(joinCampaign(joinCode, uid));
-      } catch (error) {}
-      //check if campaign exists
-      //fetch campaign
-      //navigate to campaign
+      const codeInput = codeRef.current.value;
+
+      const joinedCampaignCodes = Object.values(joinedCampaigns).map(
+        (campaign) => campaign.joinCode
+      );
+      console.log(joinedCampaignCodes);
+      if (joinedCampaignCodes.includes(codeInput)) {
+        setInvalidCode("You're already a member of this campaign.");
+      } else {
+        try {
+          const campaignId = await dispatch(joinCampaign(codeInput, uid));
+        } catch (error) {}
+      }
     }
   };
 

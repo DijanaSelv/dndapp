@@ -7,8 +7,8 @@ const initialState = {
     email: null,
     firstName: null,
     lastName: null,
-    campaigns: [],
-    characters: [],
+    campaigns: {},
+    characters: {},
   },
 };
 

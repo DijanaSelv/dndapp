@@ -91,7 +91,7 @@ export const createNewCampaign = (uid, newCampaignData) => {
 //get list of campaigns
 export const getCampaignsData = (campaignsIds, type) => {
   return async (dispatch) => {
-    const campaignsDataList = [];
+    const campaignsDataList = {};
     dispatch(uiSliceActions.changeLoading(true));
 
     try {

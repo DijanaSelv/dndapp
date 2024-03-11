@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  createdCampaigns: [],
-  joinedCampaigns: [],
+  createdCampaigns: {},
+  joinedCampaigns: {},
   currentCampaign: {
     id: null,
     details: null,
