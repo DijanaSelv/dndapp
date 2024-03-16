@@ -55,24 +55,25 @@ const CampaignInfoPage = () => {
         }}
       >
         <div className={classes.headerContent}>
-          <h1 className={classes.title}>{campaign.title}</h1>
-          {dmMembers.length !== 0 && <p>DM : {dmMembers.join(", ")}</p>}
-          {playerMembers.length !== 0 && (
-            <p>Players : {playerMembers.join(", ")}</p>
-          )}
-          <Link
-            className={classes.button}
-            to={`/Campaigns/${params.type}/${campaign.id}/play`}
-          >
-            Play
+          <Link to={`/Campaigns/${params.type}/${campaign.id}/play`}>
+            <h1 className={classes.title}>{campaign.title}</h1>
           </Link>
         </div>
       </div>
       <div>
         <div className={classes.details}>
-          <p className={classes.roles}>
-            Your role{roles.lenght > 1 ? "s" : ""} : {roles.join(", ")}
-          </p>
+          <h3 className={classes.sectionTitle}>Players</h3>
+          <div className={classes.playersInfo}>
+            {" "}
+            {dmMembers.length !== 0 && <p>DM : {dmMembers.join(", ")}</p>}
+            {playerMembers.length !== 0 && (
+              <p>Players : {playerMembers.join(", ")}</p>
+            )}
+            <p>
+              Your role{roles.length > 1 ? "s" : ""} : {roles.join(", ")}
+            </p>
+          </div>
+          <h3 className={classes.sectionTitle}>Description</h3>
           <div className={classes.description}>{campaign.description}</div>
           {dm === true && (
             <div className={classes.join}>

@@ -59,10 +59,10 @@ const Home = () => {
         setShowModal={setShowJoinModal}
         uid={uid}
       />
-      <div className={classes.campaignsSection}>
-        <div className={classes.campaignsHeader}>
+      <div className={classes.section}>
+        <div className={classes.sectionHeader}>
           <div>
-            <h2>Created Campaigns</h2>
+            <h2> Created Campaigns</h2>
             {isLoading && (
               <Flex vertical gap="small" style={{ width: 230 }}>
                 <Progress
@@ -76,8 +76,8 @@ const Home = () => {
             )}
           </div>
 
-          <Link className={classes.campaignsLink} to="/NewCampaign">
-            Create <PlusCircleOutlined />
+          <Link className={classes.sectionLink} to="/NewCampaign">
+            New Campaign <PlusCircleOutlined />
           </Link>
         </div>
 
@@ -99,8 +99,8 @@ const Home = () => {
         </ul>
       </div>
 
-      <div className={classes.campaignsSection}>
-        <div className={classes.campaignsHeader}>
+      <div className={classes.section}>
+        <div className={classes.sectionHeader}>
           <div>
             <h2>Joined Campaigns</h2>
             {isLoading && (
@@ -115,7 +115,7 @@ const Home = () => {
               </Flex>
             )}
           </div>
-          <Link className={classes.campaignsLink} onClick={joinCampaignHandler}>
+          <Link className={classes.sectionLink} onClick={joinCampaignHandler}>
             Join <PlusCircleOutlined />
           </Link>
         </div>
@@ -138,11 +138,11 @@ const Home = () => {
         </ul>
       </div>
 
-      <div className={classes.campaignsSection}>
-        <div className={classes.campaignsHeader}>
+      <div className={classes.section}>
+        <div className={classes.sectionHeader}>
           <h2>Characters</h2>
-          <Link className={classes.campaignsLink}>
-            Create <PlusCircleOutlined />
+          <Link className={classes.sectionLink}>
+            New Character <PlusCircleOutlined />
           </Link>
         </div>
 

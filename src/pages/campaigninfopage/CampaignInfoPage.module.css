@@ -5,95 +5,55 @@
 }
 
 .header {
-  background: center cover no-repeat;
+  background: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: end;
   align-items: center;
+  height: 350px;
+  width: 100%;
 }
 
 .headerContent {
   width: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
   transition: all 0.4s;
 }
 .headerContent:hover {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   transition: all 0.4s;
 }
 
-.headerContent > * {
-  margin: 5px 0 10px 0;
+.headerContent > a {
+  text-decoration: none;
 }
 
-.headerContent > p {
-  color: white;
-}
 .title {
+  margin: 10px auto;
+  font-family: "Texturina";
   max-width: 40%;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 2px;
   color: white;
   text-align: center;
 }
 
-.content > * {
-  margin: 5px 0 20px 0;
-}
-.header {
-  height: 350px;
-  width: 100%;
+.sectionTitle {
+  font-family: "Texturina";
+  margin: 10px;
 }
 
-.button {
-  font-size: 14px;
-  width: 60px;
-  color: white;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid #cecece;
-  border-radius: 4px;
-  padding: 8px;
-}
-
-/* .button > span {
-  color: #640909;
-} */
-/* .button > span:hover {
-    color: #3a9fd6;
-  } */
-
-.button:hover {
-  color: #3a9fd6;
-  border: 2px solid #3a9fd6;
-  transition: all 0.5s;
-}
-.button:hover > span {
-  color: #3a9fd6;
-  transition: color 0.5s;
-}
-
-.details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.description {
-  margin: 20px 0;
+.description,
+.playersInfo {
   text-align: justify;
   font-size: 14px;
-  border: 2px solid #fbfeff;
-  border-radius: 4px;
-  transition: all 0.5s;
-  padding: 7px;
+  border-top: 1px solid #00000073;
+  border-bottom: 1px solid #00000073;
+  line-height: 1.6;
+  padding: 15px 5px;
 }
 
 .join,
@@ -101,20 +61,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 2px solid #fbfeff;
-  border-radius: 4px;
-  transition: all 0.5s;
   padding: 10px;
 }
 
 .join > p {
   margin: 5px 0;
-}
-
-.join:hover {
-  border: 2px solid #3a9fd6;
-  transition: all 0.5s;
-  background-color: #eff8fc;
 }
 
 .joinCode {
@@ -124,4 +75,21 @@
 
 .info {
   font-size: 13px;
+}
+
+.button {
+  font-size: 14px;
+  width: 60px;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #cecece;
+  border-radius: 4px;
+  padding: 8px;
+}
+.button:hover {
+  color: #3a9fd6;
+  border: 2px solid #3a9fd6;
+  transition: all 0.5s;
 }

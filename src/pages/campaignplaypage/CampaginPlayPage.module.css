@@ -1,0 +1,18 @@
+.campaignTitle {
+  font-family: "Texturina";
+  padding: 10px 0;
+  margin-bottom: 15px;
+}
+
+.cardsList {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.icon {
+  font-size: 100px;
+  padding: 20px 0 0 0;
+  width: 100%;
+  color: #368fbe;
+}

@@ -1,19 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Dropdown, Space } from "antd";
 import { useNavigate, useParams } from "react-router";
 import { signOutUser } from "../app/actions/userActions";
 import { Link, NavLink } from "react-router-dom";
 
 import classes from "./MainNav.module.css";
-import { LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined, DownOutlined } from "@ant-design/icons";
+import { Dropdown } from "antd";
 import { useEffect } from "react";
 import { getRoles } from "../app/actions/databaseActions";
 import { rolesSliceActions } from "../app/rolesSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDiceD20 } from "@fortawesome/free-solid-svg-icons";
 
 const MainNav = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
+  const campaignId = params.campaignId;
 
   const { uid, firstName } = useSelector((state) => state.userSlice.user);
 
@@ -32,22 +35,26 @@ const MainNav = () => {
     navigate("/");
   };
 
-  const dropdownItems = [
+  const items = [
     {
+      label: <Link>My Account</Link>,
+      key: "0",
+    },
+
+    {
+      label: <Link>Help</Link>,
       key: "1",
-      label: (
-        <NavLink to="/" className={classes.navLink}>
-          My Account
-        </NavLink>
-      ),
     },
     {
-      key: "2",
+      type: "divider",
+    },
+    {
       label: (
-        <Button className={classes.button} onClick={logoutClickHandler}>
+        <Link onClick={logoutClickHandler}>
           <LogoutOutlined /> Log Out
-        </Button>
+        </Link>
       ),
+      key: "3",
       danger: true,
     },
   ];
@@ -57,7 +64,10 @@ const MainNav = () => {
       <div className={classes.mainNav}>
         <div className={classes.welcomeLogo}>
           <Link className={classes.titleLink}>
-            <h1 className={classes.title}> Di & Di </h1>
+            <div className={classes.appLogo}>
+              <FontAwesomeIcon icon={faDiceD20} className={classes.icon} />
+              <h1 className={classes.title}> Di & Di </h1>
+            </div>
             <p className={classes.subtitle}>A web app for your RPG campaigns</p>
           </Link>
         </div>
@@ -71,24 +81,63 @@ const MainNav = () => {
               <NavLink to="/" className={classes.navLink}>
                 Announcements
               </NavLink>
-              <NavLink to="/" className={classes.navLink}>
-                My Account
-              </NavLink>
             </div>
           )}
-          {/* 
+
           {firstName && (
-            <Dropdown menu={{ dropdownItems }}>
-              <Space>Hello, {firstName}!</Space>
+            <Dropdown
+              menu={{ items }}
+              trigger={["click"]}
+              className={classes.navLink}
+            >
+              <div>
+                Hi, {firstName}! <DownOutlined style={{ color: "#3a9fd6" }} />{" "}
+              </div>
             </Dropdown>
-          )} */}
-          {uid && (
-            <Button className={classes.button} onClick={logoutClickHandler}>
-              <LogoutOutlined /> Log Out
-            </Button>
           )}
         </div>
       </div>
+      {params.campaignId && (
+        <div className={classes.campaignNavBackground}>
+          <div className={classes.mainNav}>
+            <div className={classes.navLinks}>
+              <NavLink
+                to={`/Campaigns/${params.type}/${campaignId}/info`}
+                className={`${classes.navLink} ${classes.campaignNavLink}`}
+              >
+                Info
+              </NavLink>
+              <NavLink
+                to={`/Campaigns/${params.type}/${campaignId}/play`}
+                className={`${classes.navLink} ${classes.campaignNavLink}`}
+              >
+                Play
+              </NavLink>
+              <NavLink
+                to={`/Campaigns/${params.type}/${campaignId}/play/shops`}
+                className={`${classes.navLink} ${classes.campaignNavLink}`}
+              >
+                Shops
+              </NavLink>
+              {/*               <NavLink
+                className={`${classes.navLink} ${classes.campaignNavLink}`}
+              >
+                Combat
+              </NavLink>
+              <NavLink
+                className={`${classes.navLink} ${classes.campaignNavLink}`}
+              >
+                Log
+              </NavLink>
+              <NavLink
+                className={`${classes.navLink} ${classes.campaignNavLink}`}
+              >
+                Notes
+              </NavLink> */}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
