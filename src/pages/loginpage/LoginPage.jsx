@@ -9,6 +9,9 @@ import { useEffect } from "react";
 import { uiSliceActions } from "../../app/uiSlice";
 import { useState, useMemo } from "react";
 import { persistenceChange } from "../../app/actions/userActions";
+import classes from "./LoginPage.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDiceD20 } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
@@ -72,50 +75,71 @@ const Login = () => {
   }, [requestFailed, requestSuccess]);
 
   return (
-    <>
-      {notification && <NotificationBox />}
-      <form onSubmit={loginHandler}>
-        <Input
-          name="email"
-          placeholder="email"
-          value={email}
-          onBlur={emailInputBlurHandler}
-          onChange={emailValueChangeHandler}
-        />
-        {emailIsError && (
-          <p style={{ color: "red", fontSize: "0.7rem" }}>
-            Please enter a valid email.
-          </p>
-        )}
-        <Input
-          name="password"
-          placeholder="password"
-          type="password"
-          value={password}
-          onBlur={passwordInputBlurHandler}
-          onChange={passwordValueChangeHandler}
-        />
-        {passwordIsError && (
-          <p style={{ color: "red", fontSize: "0.7rem" }}>
-            Password must at least 6 characters long.
-          </p>
-        )}
-        <Checkbox onChange={rememberMeHandler} checked={rememberMe}>
-          Remember me
-        </Checkbox>
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={isLoading}
-          disabled={!formIsValid}
-        >
-          Log in
-        </Button>
-      </form>
-
-      <p>Not a member yet?</p>
-      <Link to="/Signup">Sign up here!</Link>
-    </>
+    <div className={classes.content}>
+      <div className={classes.logAndSignWindow}>
+        <img src="https://cdn.pixabay.com/photo/2021/02/16/16/22/d-d-6021557_1280.png" />
+        <div className={classes.formContent}>
+          {notification && <NotificationBox />}
+          <div className={classes.logoDiv}>
+            <div className={classes.appLogo}>
+              <FontAwesomeIcon icon={faDiceD20} className={classes.icon} />
+              <h1 className={classes.title}> Di & Di </h1>
+            </div>
+            <p className={classes.subtitle}>A web app for your RPG campaigns</p>
+          </div>
+          <form className={classes.form} onSubmit={loginHandler}>
+            <div className={classes.inputDiv}>
+              <span>Email:</span>
+              <Input
+                name="email"
+                placeholder="email"
+                value={email}
+                onBlur={emailInputBlurHandler}
+                onChange={emailValueChangeHandler}
+              />
+              {emailIsError && (
+                <p style={{ color: "red", fontSize: "0.7rem" }}>
+                  Please enter a valid email.
+                </p>
+              )}
+            </div>
+            <div className={classes.inputDiv}>
+              <span>Password:</span>
+              <Input
+                name="password"
+                placeholder="password"
+                type="password"
+                value={password}
+                onBlur={passwordInputBlurHandler}
+                onChange={passwordValueChangeHandler}
+              />
+              {passwordIsError && (
+                <p style={{ color: "red", fontSize: "0.7rem" }}>
+                  Password must be at least 6 characters long.
+                </p>
+              )}
+            </div>
+            {/*             <Checkbox onChange={rememberMeHandler} checked={rememberMe}>
+              Remember me
+            </Checkbox> */}
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isLoading}
+              disabled={!formIsValid}
+            >
+              Log in
+            </Button>
+          </form>
+          <div className={classes.notMember}>
+            <p>Not a member yet?</p>
+            <p>
+              <Link to="/Signup">Sign up here!</Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
