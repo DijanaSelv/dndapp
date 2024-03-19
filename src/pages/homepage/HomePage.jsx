@@ -16,7 +16,7 @@ const Home = () => {
   const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSlice
   );
-  const { notification, fetchedCampaigns } = useSelector(
+  const { notification, fetchedCampaigns, requestSuccess } = useSelector(
     (state) => state.uiSlice
   );
   const {
@@ -33,7 +33,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(uiSliceActions.resetRequestState());
-  }, [fetchedCampaigns]);
+  }, [fetchedCampaigns, requestSuccess]);
 
   useEffect(() => {
     if (createdCampaignsFromUser) {

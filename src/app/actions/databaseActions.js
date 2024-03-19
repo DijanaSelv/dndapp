@@ -128,6 +128,8 @@ export const getCampaignsData = (campaignsIds, type) => {
         dispatch(campaignSliceActions.addCreatedCampaign(campaignsDataList));
       campaignsIds.length > 1 &&
         dispatch(campaignSliceActions.setCreatedCampaigns(campaignsDataList));
+      campaignsIds.length === 0 &&
+        dispatch(campaignSliceActions.setCreatedCampaigns({}));
     }
     if (type === "joined") {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));
@@ -137,19 +139,11 @@ export const getCampaignsData = (campaignsIds, type) => {
   };
 };
 
-//get one campaign (i might not need this)
-
-/* snapshot) => {
-      const data = snapshot.val();
-      console.log(data, createdCampaignsIds);
-      //dispatch(userSliceActions.setUserCampaigns(data));
-     */
-
 //delete campaign from the user and from the campaign
 
 export const deleteCampaign = (campaignId, uid) => {
   return async (dispatch, getState) => {
-    const newPostKey = push(child(ref(db), "campaigns")).key;
+    const newPostKey = push(child(ref(db), "campaigns")).key; //do i need this? TODO:
     const updates = {};
     updates["users/" + uid + "/campaigns/created/" + campaignId] = null;
     updates["campaigns/" + campaignId] = null;
@@ -220,6 +214,26 @@ export const joinCampaign = (joinCode, uid) => {
     }
     dispatch(uiSliceActions.changeLoading(false));
     return campaignKey;
+  };
+};
+
+//leave a joined campaign
+
+export const leaveCampaign = (campaignId, uid) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    const updates = {};
+    updates["users/" + uid + "/campaigns/joined/" + campaignId] = null;
+    updates["campaigns/" + campaignId + "/members/" + uid] = null;
+    update(ref(db), updates);
+    dispatch(
+      uiSliceActions.showNotification({
+        type: "info",
+        code: "campaign left",
+      })
+    );
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+    dispatch(uiSliceActions.changeLoading(false));
   };
 };
 

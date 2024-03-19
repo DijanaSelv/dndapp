@@ -15,8 +15,14 @@ import {
 
 const CampaignListItem = ({ campaign, type }) => {
   const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState();
 
   const deleteButtonHandler = () => {
+    setModalType("campaign");
+    setShowModal(true);
+  };
+  const leaveCampaignButtonHandler = () => {
+    setModalType("leaveCampaign");
     setShowModal(true);
   };
 
@@ -39,6 +45,7 @@ const CampaignListItem = ({ campaign, type }) => {
           <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
             <ArrowRightOutlined key="play" />
           </Link>,
+          <CloseOutlined key="leave" onClick={leaveCampaignButtonHandler} />,
         ];
 
   return (
@@ -50,7 +57,7 @@ const CampaignListItem = ({ campaign, type }) => {
     >
       {
         <DeleteModal
-          type="campaign"
+          type={modalType}
           campaign={campaign}
           showModal={showModal}
           setShowModal={setShowModal}

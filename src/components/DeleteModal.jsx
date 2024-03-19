@@ -1,5 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCampaign, deleteShop } from "../app/actions/databaseActions";
+import {
+  deleteCampaign,
+  deleteShop,
+  leaveCampaign,
+} from "../app/actions/databaseActions";
 import { Modal } from "antd";
 import { useNavigate } from "react-router";
 
@@ -33,6 +37,33 @@ const DeleteModal = (props) => {
         onCancel={handleCancel}
       >
         <p>Are you sure you want to permanently delete this campaign?</p>
+        <p style={{ fontWeight: "bold" }}></p>
+      </Modal>
+    );
+  }
+  if (props.type === "leaveCampaign") {
+    const { campaign, showModal, setShowModal } = props;
+    const handleOk = () => {
+      dispatch(leaveCampaign(campaign.id, uid));
+      setShowModal(false);
+    };
+    const handleCancel = () => {
+      setShowModal(false);
+    };
+
+    content = (
+      <Modal
+        title={`Leaving "${campaign.title}"`}
+        centered
+        open={showModal}
+        onOk={handleOk}
+        okText="Leave"
+        okButtonProps={{
+          style: { backgroundColor: "red", borderColor: "red" },
+        }}
+        onCancel={handleCancel}
+      >
+        <p>Are you sure you want to leave this campaign?</p>
         <p style={{ fontWeight: "bold" }}></p>
       </Modal>
     );

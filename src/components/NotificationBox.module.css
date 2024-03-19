@@ -1,0 +1,10 @@
+.notificationBox {
+  top: 40px !important;
+  padding: 12px 15px !important;
+  min-width: 250px !important;
+  max-width: 300px !important;
+}
+
+.notificationBox * {
+  font-size: 14px !important;
+}
