@@ -1,19 +1,18 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Input, Select, Button } from "antd";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import NotificationBox from "../../components/NotificationBox";
-import { signUpUserAction } from "../../app/actions/userActions";
 
-import { useValidate } from "../../app/hooks/useValidate";
-import { uiSliceActions } from "../../app/uiSlice";
+import { signUpUserAction } from "../app/actions/userActions";
+import { useValidate } from "../app/hooks/useValidate";
+import { uiSliceActions } from "../app/uiSlice";
+import { Input, Select, Button } from "antd";
+import classes from "../pages/loginpage/LoginPage.module.css";
 
-const Signup = () => {
+const SignupForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { notification, requestSuccess, requestFailed, isLoading } =
     useSelector((state) => state.uiSlice);
-
   //on Signup redirect user to login page and reset notification and sign up state
   useEffect(() => {
     if (requestSuccess) {
@@ -100,7 +99,7 @@ const Signup = () => {
   }
 
   //SIGN UP
-  const submitHandler = (e) => {
+  const signupHandler = (e) => {
     e.preventDefault();
 
     const user = {
@@ -116,9 +115,9 @@ const Signup = () => {
   };
 
   return (
-    <>
-      {notification && <NotificationBox />}
-      <form onSubmit={submitHandler}>
+    <form className={classes.form} onSubmit={signupHandler}>
+      <div className={classes.inputDiv}>
+        <span>First Name: *</span>
         <Input
           placeholder="First Name"
           onBlur={firstNameInputBlurHandler}
@@ -130,6 +129,9 @@ const Signup = () => {
             Please enter your first name.
           </p>
         )}
+      </div>
+      <div className={classes.inputDiv}>
+        <span>Last Name: </span>
         <Input
           placeholder="Last Name"
           onBlur={lastNameInputBlurHandler}
@@ -141,6 +143,9 @@ const Signup = () => {
             Please enter your last name.
           </p>
         )}
+      </div>
+      <div className={classes.inputDiv}>
+        <span>Email: *</span>
         <Input
           placeholder="email"
           type="email"
@@ -153,6 +158,9 @@ const Signup = () => {
             Please enter a valid email.
           </p>
         )}
+      </div>
+      <div className={classes.inputDiv}>
+        <span>Password: *</span>
         <Input
           placeholder="password"
           type="password"
@@ -165,6 +173,9 @@ const Signup = () => {
             Password must at least 6 characters long.
           </p>
         )}
+      </div>
+      <div className={classes.inputDiv}>
+        <span>Confirm Password: *</span>
         <Input
           placeholder="Confirm password"
           type="password"
@@ -184,43 +195,41 @@ const Signup = () => {
               Passwords must match.
             </p>
           )}
-        <Select
-          defaultValue="Years of experience"
-          onChange={handleChange}
-          options={[
-            {
-              label: "less than 1",
-              value: "<1",
-            },
-            {
-              label: "1-4",
-              value: "1-4",
-            },
-            {
-              label: "5-9",
-              value: "5-9",
-            },
-            {
-              label: "10+",
-              value: "10+",
-            },
-          ]}
-        />
+      </div>
+      <Select
+        className={classes.selector}
+        defaultValue="Years of experience"
+        onChange={handleChange}
+        options={[
+          {
+            label: "less than 1",
+            value: "<1",
+          },
+          {
+            label: "1-4",
+            value: "1-4",
+          },
+          {
+            label: "5-9",
+            value: "5-9",
+          },
+          {
+            label: "10+",
+            value: "10+",
+          },
+        ]}
+      />
 
-        <Button
-          disabled={!formIsValid}
-          type="primary"
-          htmlType="submit"
-          loading={isLoading}
-        >
-          Sign up
-        </Button>
-      </form>
-
-      <p>Already a member?</p>
-      <Link to="/">Log in here!</Link>
-    </>
+      <Button
+        disabled={!formIsValid}
+        type="primary"
+        htmlType="submit"
+        loading={isLoading}
+      >
+        Sign up
+      </Button>
+    </form>
   );
 };
 
-export default Signup;
+export default SignupForm;

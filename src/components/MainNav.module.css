@@ -70,7 +70,8 @@
   border-top: 1px solid #5d6779d2;
   display: flex;
   justify-content: space-between;
-  padding-bottom: 3px;
+  padding: 7px;
+  font-size: 18px;
 }
 
 .secondRow p {
@@ -87,8 +88,8 @@
   display: flex;
   text-decoration: none;
   font-family: "Texturina";
-  padding: 2px 15px;
-  border-bottom: 1px solid transparent;
+  padding: 2px 17px;
+  border-bottom: 2px solid transparent;
   transition: all 0.5s;
 }
 
@@ -102,7 +103,7 @@
 .navLink:hover {
   color: #ffffff;
   transition: color 0.3s;
-  border-bottom: 1px solid #3a9fd6;
+  border-bottom: 2px solid #3a9fd6;
   transition: all 0.5s;
 }
 
@@ -119,9 +120,15 @@
 .campaignNavLink {
   padding: 0 20px;
   margin: 3px 0px 5px 0;
+  font-size: 17px;
 }
 
 .campaignNavLink:hover {
-  border-bottom: 1px solid #2d323bf9;
+  border-bottom: 2px solid #373d49;
   transition: all 0.5s;
+}
+
+.activeNavLink {
+  background-color: #c7e9ff46;
+  border-radius: 30px;
 }

@@ -79,12 +79,27 @@ const MainNav = () => {
             <div className={classes.secondRow}>
               {uid && (
                 <div className={classes.navLinks}>
-                  <NavLink to="/" className={classes.navLink}>
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      isActive
+                        ? ` ${classes.activeNavLink} ${classes.navLink} `
+                        : `${classes.navLink} `
+                    }
+                    end
+                  >
                     Home
                   </NavLink>
-                  <NavLink to="/" className={classes.navLink}>
+                  {/*                   <NavLink
+                    to="/announcements"
+                    className={({ isActive }) =>
+                      isActive
+                        ? ` ${classes.activeNavLink} ${classes.navLink} `
+                        : `${classes.navLink} `
+                    }
+                  >
                     Announcements
-                  </NavLink>
+                  </NavLink> */}
                 </div>
               )}
 
@@ -95,8 +110,8 @@ const MainNav = () => {
                   className={classes.navLink}
                 >
                   <div>
-                    Hi, {firstName}!{" "}
-                    <DownOutlined style={{ color: "#3a9fd6" }} />{" "}
+                    Hi, {firstName}!&nbsp;
+                    <DownOutlined style={{ color: "#3a9fd6" }} />
                   </div>
                 </Dropdown>
               )}
@@ -108,19 +123,32 @@ const MainNav = () => {
                 <div className={classes.navLinks}>
                   <NavLink
                     to={`/Campaigns/${params.type}/${campaignId}/info`}
-                    className={`${classes.navLink} ${classes.campaignNavLink}`}
+                    className={({ isActive }) =>
+                      isActive
+                        ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
+                        : `${classes.navLink} ${classes.campaignNavLink}`
+                    }
                   >
                     Info
                   </NavLink>
                   <NavLink
                     to={`/Campaigns/${params.type}/${campaignId}/play`}
-                    className={`${classes.navLink} ${classes.campaignNavLink}`}
+                    className={({ isActive }) =>
+                      isActive
+                        ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
+                        : `${classes.navLink} ${classes.campaignNavLink}`
+                    }
+                    end
                   >
                     Play
                   </NavLink>
                   <NavLink
                     to={`/Campaigns/${params.type}/${campaignId}/play/shops`}
-                    className={`${classes.navLink} ${classes.campaignNavLink}`}
+                    className={({ isActive }) =>
+                      isActive
+                        ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
+                        : `${classes.navLink} ${classes.campaignNavLink}`
+                    }
                   >
                     Shops
                   </NavLink>

@@ -60,6 +60,9 @@ const uiSlice = createSlice({
       } else if (action.payload.code === "already joined") {
         message = "Already joined";
         description = "You're already a member of this campaign.";
+      } else if (action.payload.code === "campaign left") {
+        message = "Campaign left";
+        description = "You left the campaign.";
       } else {
         message = "Error";
         description = "Request failed. Try again later.";

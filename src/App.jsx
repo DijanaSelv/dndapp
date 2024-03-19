@@ -6,7 +6,6 @@ import RootLayout from "./pages/Root";
 import ErrorPage from "./pages/errorpage/Error";
 import LoginPage from "./pages/loginpage/LoginPage";
 import HomePage from "./pages/homepage/HomePage";
-import SignupPage from "./pages/signuppage/SignupPage";
 import CampaignInfoPage from "./pages/campaigninfopage/CampaignInfoPage";
 import CampaignPlayPage from "./pages/campaignplaypage/CampaignPlayPage";
 import NewCampaignPage from "./pages/newcampaignpage/NewCampaignPage";
@@ -51,7 +50,7 @@ const router = createBrowserRouter([
           </LoggedInRoute>
         ),
       },
-      { path: "/Signup", element: <SignupPage /> },
+
       {
         path: "/NewCampaign",
         element: (
