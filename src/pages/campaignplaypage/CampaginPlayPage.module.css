@@ -10,6 +10,10 @@
   flex-wrap: wrap;
 }
 
+.cardsList * {
+  text-decoration: none;
+}
+
 .icon {
   font-size: 100px;
   padding: 20px 0 0 0;

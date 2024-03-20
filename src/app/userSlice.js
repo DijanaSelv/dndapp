@@ -30,6 +30,9 @@ const userSlice = createSlice({
       // ! remove the state since its not used
       return initialState;
     },
+    updateUserCampaigns(state, action) {
+      state.user.campaigns = action.payload;
+    },
   },
 });
 

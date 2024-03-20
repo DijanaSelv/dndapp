@@ -8,7 +8,6 @@ import {
   update,
   orderByChild,
   equalTo,
-  on,
   query,
 } from "firebase/database";
 import { userSliceActions } from "../userSlice";
@@ -36,6 +35,16 @@ export const getUserData = (uid) => {
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
       dispatch(userSliceActions.setUserData(data));
+    });
+  };
+};
+
+export const getUserCampaigns = (uid) => {
+  return async (dispatch) => {
+    const userRef = ref(db, "users/" + uid + "/campaigns");
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val();
+      dispatch(userSliceActions.updateUserCampaigns(data));
     });
   };
 };
@@ -84,6 +93,7 @@ export const createNewCampaign = (uid, newCampaignData) => {
         })
       );
     }
+    dispatch(getUserCampaigns(uid));
     dispatch(uiSliceActions.changeLoading(false));
   };
 };
@@ -112,7 +122,11 @@ export const getCampaignsData = (campaignsIds, type) => {
           };
           campaignsDataList[data.id] = campaign;
         } else {
-          console.log("snapshot doesnt exist!");
+          console.log(
+            "no campaigns in",
+            type,
+            "campaign probably erased from the creator"
+          );
         }
       }
     } catch (error) {
@@ -124,12 +138,7 @@ export const getCampaignsData = (campaignsIds, type) => {
       );
     }
     if (type === "created") {
-      campaignsIds.length === 1 &&
-        dispatch(campaignSliceActions.addCreatedCampaign(campaignsDataList));
-      campaignsIds.length > 1 &&
-        dispatch(campaignSliceActions.setCreatedCampaigns(campaignsDataList));
-      campaignsIds.length === 0 &&
-        dispatch(campaignSliceActions.setCreatedCampaigns({}));
+      dispatch(campaignSliceActions.setCreatedCampaigns(campaignsDataList));
     }
     if (type === "joined") {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));
@@ -142,7 +151,7 @@ export const getCampaignsData = (campaignsIds, type) => {
 //delete campaign from the user and from the campaign
 
 export const deleteCampaign = (campaignId, uid) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const newPostKey = push(child(ref(db), "campaigns")).key; //do i need this? TODO:
     const updates = {};
     updates["users/" + uid + "/campaigns/created/" + campaignId] = null;
@@ -155,6 +164,8 @@ export const deleteCampaign = (campaignId, uid) => {
         code: "campaign deleted",
       })
     );
+    dispatch(getUserCampaigns(uid));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
 
@@ -212,6 +223,7 @@ export const joinCampaign = (joinCode, uid) => {
         })
       );
     }
+    dispatch(getUserCampaigns(uid));
     dispatch(uiSliceActions.changeLoading(false));
     return campaignKey;
   };
@@ -233,6 +245,7 @@ export const leaveCampaign = (campaignId, uid) => {
       })
     );
     dispatch(uiSliceActions.requestSuccessIsTrue());
+    dispatch(getUserCampaigns(uid));
     dispatch(uiSliceActions.changeLoading(false));
   };
 };

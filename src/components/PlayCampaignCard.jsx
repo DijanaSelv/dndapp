@@ -11,11 +11,6 @@ const PlayCampaignCard = ({ goTo, cardFor, image, description }) => {
   const campaignId = params.campaignId;
   const type = params.type;
 
-  const actions = [
-    <Link to={goTo}>
-      <ArrowRightOutlined key="play" />
-    </Link>,
-  ];
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -23,9 +18,11 @@ const PlayCampaignCard = ({ goTo, cardFor, image, description }) => {
       transition={{ duration: 0.3 }}
       whileHover={{ scale: 1.02 }}
     >
-      <Card cover={<Link to={goTo}>{image}</Link>} actions={actions}>
-        <Meta title={cardFor} description={description} />
-      </Card>
+      <Link to={goTo}>
+        <Card cover={image}>
+          <Meta title={cardFor} description={description} />
+        </Card>
+      </Link>
     </motion.div>
   );
 };

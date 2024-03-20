@@ -36,14 +36,16 @@ const Home = () => {
   }, [fetchedCampaigns, requestSuccess]);
 
   useEffect(() => {
-    if (createdCampaignsFromUser) {
-      const createdCampaignsIds = Object.keys(createdCampaignsFromUser);
-      dispatch(getCampaignsData(createdCampaignsIds, "created"));
-    }
-    if (joinedCampaignsFromUsers) {
-      const joinedCampaignsIds = Object.keys(joinedCampaignsFromUsers);
-      dispatch(getCampaignsData(joinedCampaignsIds, "joined"));
-    }
+    const createdCampaignsIds = createdCampaignsFromUser
+      ? Object.keys(createdCampaignsFromUser)
+      : [];
+
+    dispatch(getCampaignsData(createdCampaignsIds, "created"));
+    const joinedCampaignsIds = joinedCampaignsFromUsers
+      ? Object.keys(joinedCampaignsFromUsers)
+      : [];
+    dispatch(getCampaignsData(joinedCampaignsIds, "joined"));
+
     dispatch(uiSliceActions.resetRequestState());
   }, [createdCampaignsFromUser, joinedCampaignsFromUsers]);
 
@@ -121,20 +123,20 @@ const Home = () => {
         </div>
 
         <ul>
-          {Object.keys(joinedCampaigns).length !== 0 && !isLoading ? (
-            Object.values(joinedCampaigns).map((campaign) => (
-              <CampaignListItem
-                key={campaign.id}
-                campaign={campaign}
-                type={campaign.type}
-              />
-            ))
-          ) : (
-            <p>
-              You haven't joined any campaigns yet. Do you have a{" "}
-              <Link onClick={joinCampaignHandler}>Join Code</Link>?
-            </p>
-          )}
+          {Object.keys(joinedCampaigns).length !== 0
+            ? Object.values(joinedCampaigns).map((campaign) => (
+                <CampaignListItem
+                  key={campaign.id}
+                  campaign={campaign}
+                  type={campaign.type}
+                />
+              ))
+            : !isLoading && (
+                <p>
+                  You haven't joined any campaigns yet. Do you have a{" "}
+                  <Link onClick={joinCampaignHandler}>Join Code</Link>?
+                </p>
+              )}
         </ul>
       </div>
 
