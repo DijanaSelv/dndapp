@@ -1,9 +1,3 @@
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .header {
   background: center;
   background-size: cover;
@@ -56,21 +50,34 @@
   padding: 15px 5px;
 }
 
-.join,
-.roles {
+.join {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.joinContent {
+  border: 1px dashed #5d67794f;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px;
 }
 
-.join > p {
+.joinContent p {
   margin: 5px 0;
 }
 
 .joinCode {
   font-weight: bold;
   color: rgb(0, 73, 156);
+}
+
+.copy button {
+  height: 108px;
+  font-size: 19px;
 }
 
 .info {

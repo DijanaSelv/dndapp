@@ -1,12 +1,14 @@
-import { Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Link } from "react-router-dom";
-import classes from "./CampaignInfoPage.module.css";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import { getMembers } from "../../app/actions/databaseActions";
-//TODO: add to clipboard functionality for the join code
+
+import { Button } from "antd";
+import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import classes from "./CampaignInfoPage.module.css";
 
 const CampaignInfoPage = () => {
   const params = useParams();
@@ -21,6 +23,7 @@ const CampaignInfoPage = () => {
 
   const [playerMembers, setPlayerMembers] = useState([]);
   const [dmMembers, setDmMembers] = useState([]);
+  const [copy, setCopy] = useState({ value: "", copied: false });
 
   const roles = [
     dm === true && "dm",
@@ -77,12 +80,24 @@ const CampaignInfoPage = () => {
           <div className={classes.description}>{campaign.description}</div>
           {dm === true && (
             <div className={classes.join}>
-              {" "}
-              <p>
-                Campaign code:
-                <span className={classes.joinCode}> {campaign.joinCode}</span>
-              </p>
-              <p className={classes.info}>invite other members to join</p>
+              <div className={classes.joinContent}>
+                {" "}
+                <p>Campaign code: </p>
+                <p className={classes.joinCode}> {campaign.joinCode} </p>{" "}
+                <p className={classes.info}>invite other members to join</p>
+              </div>
+              <div className={classes.copy}>
+                <CopyToClipboard
+                  text={campaign.joinCode}
+                  onCopy={() =>
+                    setCopy({ copied: true, value: campaign.joinCode })
+                  }
+                >
+                  <Button type={copy.copied ? "default" : "dashed"}>
+                    {copy.copied ? <CheckOutlined /> : <CopyOutlined />}
+                  </Button>
+                </CopyToClipboard>
+              </div>
             </div>
           )}
         </div>
