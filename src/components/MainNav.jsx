@@ -152,6 +152,16 @@ const MainNav = () => {
                   >
                     Shops
                   </NavLink>
+                  <NavLink
+                    to={`/Campaigns/${params.type}/${campaignId}/play/notes`}
+                    className={({ isActive }) =>
+                      isActive
+                        ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
+                        : `${classes.navLink} ${classes.campaignNavLink}`
+                    }
+                  >
+                    Notes
+                  </NavLink>
                   {/*               <NavLink
             className={`${classes.navLink} ${classes.campaignNavLink}`}
           >
