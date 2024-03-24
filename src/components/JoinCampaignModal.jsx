@@ -1,13 +1,11 @@
-import { Input, Modal } from "antd";
+import { Modal } from "antd";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 import { joinCampaign } from "../app/actions/databaseActions";
-import { uiSliceActions } from "../app/uiSlice";
+
 import classes from "./JoinCampaignModal.module.css";
 
 const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const codeRef = useRef();
   const [invalidCode, setInvalidCode] = useState();

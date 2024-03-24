@@ -16,6 +16,7 @@ import { uiSliceActions } from "../uiSlice";
 import { campaignSliceActions } from "../campaignSlice";
 import { shopsSliceActions } from "../shopsSlice";
 import { rolesSliceActions } from "../rolesSlice";
+import { notesSliceActions } from "../notesSlice";
 
 //create new user in collection (on sgin up)
 export const createNewUserData = (uid, user) => {
@@ -395,5 +396,72 @@ export const deleteShop = (campaignId, shopId) => {
       );
     }
     dispatch(uiSliceActions.changeLoading(false));
+  };
+};
+
+//PRIVATE NOTES
+
+export const createNotes = (campaignId, uid, notesData) => {
+  return async (dispatch) => {
+    try {
+      const notesRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members/" + uid + "/notes"
+      );
+      await update(notesRef, { ...notesData });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
+export const getNotes = (campaignId, uid) => {
+  return async (dispatch) => {
+    try {
+      const notesRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members/" + uid + "/notes"
+      );
+      const snapshot = await get(notesRef);
+      if (snapshot.exists()) {
+        const notesData = snapshot.val();
+        dispatch(notesSliceActions.setNotesData(notesData));
+      } else {
+        dispatch(notesSliceActions.setNotesData(""));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const deleteNotes = (campaignId, uid, noteId) => {
+  return async (dispatch) => {
+    try {
+      const notesRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members/" + uid + "/notes"
+      );
+      await update(notesRef, { [noteId]: null });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
+export const updateNotes = (campaignId, uid, noteId, newContent) => {
+  return async (dispatch) => {
+    try {
+      const notesRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members/" + uid + "/notes/" + noteId
+      );
+      await update(notesRef, { content: newContent });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };

@@ -6,7 +6,8 @@ import uiSliceReducer from "./uiSlice";
 import campaignSliceReducer from "./campaignSlice";
 import shopsSliceReducer from "./shopsSlice";
 import { configureStore } from "@reduxjs/toolkit";
-import rolesSlice from "./rolesSlice";
+import rolesSliceReducer from "./rolesSlice";
+import notesSliceReducer from "./notesSlice";
 
 /* export const rootReducer = combineReducers({
   userSlice: userSliceReducer,
@@ -23,7 +24,8 @@ export const store = configureStore({
     uiSlice: uiSliceReducer,
     campaignSlice: campaignSliceReducer,
     shopsSlice: shopsSliceReducer,
-    rolesSlice: rolesSlice,
+    rolesSlice: rolesSliceReducer,
+    notesSlice: notesSliceReducer,
   },
   /*  middleware: getDefaultMiddleware({
     serializableCheck: {

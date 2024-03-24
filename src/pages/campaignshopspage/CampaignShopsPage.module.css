@@ -42,10 +42,7 @@
 .shopDescription {
   height: 75px;
 }
-.shopsHeader {
-  display: flex;
-  justify-content: space-between;
-}
+
 .createShopLink {
   text-decoration: none;
   color: #3b3c3fd2;
