@@ -1,64 +1,69 @@
-import { Editor } from "@tinymce/tinymce-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createNotes, getNotes } from "../../app/actions/databaseActions";
 import { useParams } from "react-router";
+
+import { getNotes } from "../../app/actions/databaseActions";
 import NotesCard from "../../components/NotesCard";
+import classes from "./NotesPage.module.css";
+import { Link } from "react-router-dom";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import NewNoteModal from "../../components/NewNoteModal";
+import { uiSliceActions } from "../../app/uiSlice";
 
 const NotesPage = () => {
-  const editorRef = useRef(null);
   const dispatch = useDispatch();
   const params = useParams();
   const { uid } = useSelector((state) => state.userSlice.user);
   const { notes } = useSelector((state) => state.notesSlice);
+  const { requestSuccess } = useSelector((state) => state.uiSlice);
+  const [showModal, setShowModal] = useState(false);
+  const [doubleClickedNoteId, setDoubleClickedNoteId] = useState(null);
 
   useEffect(() => {
-    dispatch(getNotes(params.campaignId, uid));
-  }, [notes]);
+    uid && dispatch(getNotes(params.campaignId, uid));
+    dispatch(uiSliceActions.resetRequestState());
+  }, [requestSuccess, uid]);
 
-  const saveNotes = () => {
-    if (editorRef.current) {
-      const notesData = {
-        [Date.now()]: editorRef.current.getContent(),
-      };
-      dispatch(createNotes(params.campaignId, uid, notesData));
-      editorRef.current.setContent("");
-    }
+  const doubleClickHandler = (notesKey) => {
+    setDoubleClickedNoteId(notesKey);
   };
 
   return (
     <>
-      {Object.keys(notes).lenght !== 0 &&
-        Object.keys(notes).map((notesKey) => (
-          <NotesCard key={notesKey} notesContent={notes[notesKey]} />
-        ))}
-      <Editor
-        onInit={(evt, editor) => (editorRef.current = editor)}
-        apiKey="gj5be9f0p9tpj5ywxgps2tjheydl1pkwhduywiex7no73ux1"
-        init={{
-          plugins: "autoresize image link lists emoticons save",
-          toolbar:
-            "undo redo | bold italic underline  | checklist numlist bullist indent outdent | align lineheight | link emoticons ",
-          tinycomments_mode: "embedded",
-
-          menubar: "",
-          statusbar: false,
-          skin: "jam",
-          autoresize: true,
-          min_height: 300,
-          max_height: 500,
-          width: 400,
-          save_onsavecallback: () => {
-            console.log("Saved");
-          },
-          mergetags_list: [
-            { value: "First.Name", title: "First Name" },
-            { value: "Email", title: "Email" },
-          ],
-        }}
-        /* initialValue="Welcome to TinyMCE!" */
+      <NewNoteModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        uid={uid}
       />
-      <button onClick={saveNotes}>Save</button>
+      <div className={classes.content}>
+        <div className={classes.header}>
+          <h2 className={classes.title}>Personal Notes</h2>
+          <Link
+            className={classes.createNoteLink}
+            onClick={() => setShowModal(true)}
+          >
+            New Note <PlusCircleOutlined />
+          </Link>
+        </div>
+        <div className={classes.noteCards}>
+          {Object.keys(notes).lenght !== 0 &&
+            Object.keys(notes).map((notesKey) => (
+              <div
+                key={notesKey}
+                onDoubleClick={() => doubleClickHandler(notesKey)}
+              >
+                <NotesCard
+                  doubleClickedNoteId={doubleClickedNoteId}
+                  setDoubleClickedNoteId={setDoubleClickedNoteId}
+                  notes={notes[notesKey]}
+                  noteId={notesKey}
+                  uid={uid}
+                  campaignId={params.campaignId}
+                />
+              </div>
+            ))}
+        </div>
+      </div>
     </>
   );
 };

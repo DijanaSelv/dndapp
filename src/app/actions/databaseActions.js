@@ -412,6 +412,7 @@ export const createNotes = (campaignId, uid, notesData) => {
     } catch (error) {
       console.error(error);
     }
+    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
 
@@ -432,5 +433,35 @@ export const getNotes = (campaignId, uid) => {
     } catch (error) {
       console.error(error);
     }
+  };
+};
+
+export const deleteNotes = (campaignId, uid, noteId) => {
+  return async (dispatch) => {
+    try {
+      const notesRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members/" + uid + "/notes"
+      );
+      await update(notesRef, { [noteId]: null });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
+export const updateNotes = (campaignId, uid, noteId, newContent) => {
+  return async (dispatch) => {
+    try {
+      const notesRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members/" + uid + "/notes/" + noteId
+      );
+      await update(notesRef, { content: newContent });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };

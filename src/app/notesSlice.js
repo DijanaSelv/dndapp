@@ -5,7 +5,7 @@ const initialState = {
 };
 
 const notesSlice = createSlice({
-  name: "shonoetsps",
+  name: "notes",
   initialState,
   reducers: {
     setNotesData(state, action) {

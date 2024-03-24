@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteCampaign,
+  deleteNotes,
   deleteShop,
   leaveCampaign,
 } from "../app/actions/databaseActions";
@@ -20,6 +21,7 @@ const DeleteModal = (props) => {
       dispatch(deleteCampaign(campaign.id, uid));
       setShowModal(false);
     };
+
     const handleCancel = () => {
       setShowModal(false);
     };
@@ -102,6 +104,34 @@ const DeleteModal = (props) => {
         onCancel={handleCancel}
       >
         <p>Are you sure you want to permanently delete this shop?</p>
+        <p style={{ fontWeight: "bold" }}></p>
+      </Modal>
+    );
+  }
+
+  if (props.type === "deleteNote") {
+    const { uid, campaignId, noteId, showModal, setShowModal } = props;
+
+    const handleOk = () => {
+      dispatch(deleteNotes(campaignId, uid, noteId));
+      setShowModal(false);
+    };
+    const handleCancel = () => {
+      setShowModal(false);
+    };
+    content = (
+      <Modal
+        title={`Deleting note`}
+        centered
+        open={showModal}
+        onOk={handleOk}
+        okText="Delete"
+        okButtonProps={{
+          style: { backgroundColor: "red", borderColor: "red" },
+        }}
+        onCancel={handleCancel}
+      >
+        <p>Are you sure you want to permanently delete this note?</p>
         <p style={{ fontWeight: "bold" }}></p>
       </Modal>
     );
