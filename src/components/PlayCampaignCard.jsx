@@ -1,16 +1,9 @@
-import { ArrowRightOutlined } from "@ant-design/icons";
 import { Card } from "antd";
 import Meta from "antd/es/card/Meta";
 import { motion } from "framer-motion";
-import { Link, useParams } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classes from "../pages/campaignplaypage/CampaginPlayPage.module.css";
+import { Link } from "react-router-dom";
 
 const PlayCampaignCard = ({ goTo, cardFor, image, description }) => {
-  const params = useParams();
-  const campaignId = params.campaignId;
-  const type = params.type;
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}

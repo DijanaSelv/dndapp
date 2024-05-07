@@ -1,14 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Input, Checkbox } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import NotificationBox from "../../components/NotificationBox";
 
-import { loginUserAction } from "../../app/actions/userActions";
-import { useValidate } from "../../app/hooks/useValidate";
-import { useEffect } from "react";
-import { uiSliceActions } from "../../app/uiSlice";
-import { useState, useMemo } from "react";
-import { persistenceChange } from "../../app/actions/userActions";
+import { useState } from "react";
 import classes from "./LoginPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiceD20 } from "@fortawesome/free-solid-svg-icons";
@@ -27,7 +21,10 @@ const Login = () => {
           displayForm === "signup" && classes.signupWindow
         }`}
       >
-        <img src="https://cdn.pixabay.com/photo/2021/02/16/16/22/d-d-6021557_1280.png" />
+        <img
+          src="https://cdn.pixabay.com/photo/2021/02/16/16/22/d-d-6021557_1280.png"
+          alt="loading"
+        />
         <div className={classes.formContent}>
           {notification && <NotificationBox />}
           <div className={classes.logoDiv}>

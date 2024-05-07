@@ -1,9 +1,9 @@
 import { Editor } from "@tinymce/tinymce-react";
-import { Input, Modal } from "antd";
+import { Modal } from "antd";
 import { Radio } from "antd";
 
 import { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createNotes } from "../app/actions/databaseActions";
 
 import classes from "../pages/notespage/NotesPage.module.css";
