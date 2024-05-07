@@ -143,7 +143,7 @@ const Home = () => {
       <div className={classes.section}>
         <div className={classes.sectionHeader}>
           <h2>Characters</h2>
-          <Link className={classes.sectionLink}>
+          <Link to="/NewCharacter" className={classes.sectionLink}>
             New Character <PlusCircleOutlined />
           </Link>
         </div>

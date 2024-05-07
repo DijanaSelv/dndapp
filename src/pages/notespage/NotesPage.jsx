@@ -10,6 +10,8 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import NewNoteModal from "../../components/NewNoteModal";
 import { uiSliceActions } from "../../app/uiSlice";
 
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+
 const NotesPage = () => {
   const dispatch = useDispatch();
   const params = useParams();
@@ -45,24 +47,35 @@ const NotesPage = () => {
             New Note <PlusCircleOutlined />
           </Link>
         </div>
-        <div className={classes.noteCards}>
-          {Object.keys(notes).lenght !== 0 &&
-            Object.keys(notes).map((notesKey) => (
-              <div
-                key={notesKey}
-                onDoubleClick={() => doubleClickHandler(notesKey)}
-              >
-                <NotesCard
-                  doubleClickedNoteId={doubleClickedNoteId}
-                  setDoubleClickedNoteId={setDoubleClickedNoteId}
-                  notes={notes[notesKey]}
-                  noteId={notesKey}
-                  uid={uid}
-                  campaignId={params.campaignId}
-                />
-              </div>
-            ))}
-        </div>
+
+        <ResponsiveMasonry
+          columnsCountBreakPoints={{
+            350: 1,
+            800: 2,
+            1100: 3,
+            1400: 4,
+            1800: 5,
+          }}
+        >
+          <Masonry>
+            {Object.keys(notes).lenght !== 0 &&
+              Object.keys(notes).map((notesKey) => (
+                <div
+                  key={notesKey}
+                  onDoubleClick={() => doubleClickHandler(notesKey)}
+                >
+                  <NotesCard
+                    doubleClickedNoteId={doubleClickedNoteId}
+                    setDoubleClickedNoteId={setDoubleClickedNoteId}
+                    notes={notes[notesKey]}
+                    noteId={notesKey}
+                    uid={uid}
+                    campaignId={params.campaignId}
+                  />
+                </div>
+              ))}
+          </Masonry>
+        </ResponsiveMasonry>
       </div>
     </>
   );
