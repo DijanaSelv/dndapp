@@ -20,6 +20,7 @@ const MainNav = () => {
 
   const { uid, firstName } = useSelector((state) => state.userSlice.user);
 
+  //if a campaign is accessed, fetch roles. If not clear the roles.
   useEffect(() => {
     if (params.campaignId) {
       dispatch(getRoles(uid, params.campaignId));
@@ -35,6 +36,7 @@ const MainNav = () => {
     navigate("/");
   };
 
+  //dropdown profile menu
   const items = [
     {
       label: <Link>My Account</Link>,

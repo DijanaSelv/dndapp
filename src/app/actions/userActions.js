@@ -114,8 +114,8 @@ export const signOutUser = () => {
   return async (dispatch) => {
     try {
       await signOut(auth);
-      localStorage.clear();
-      sessionStorage.clear();
+      /* localStorage.clear(); */
+      /* sessionStorage.clear(); */
       dispatch(userSliceActions.setSignOutUser());
       dispatch(campaignSliceActions.resetCampaignSlice());
     } catch (error) {
@@ -125,7 +125,7 @@ export const signOutUser = () => {
 };
 
 //set persistence before login
-export const persistenceChange = (rememberMe) => {
+/* export const persistenceChange = (rememberMe) => {
   return async (dispatch) => {
     // !remove dipatch if we dont use it
     setPersistence(
@@ -135,3 +135,4 @@ export const persistenceChange = (rememberMe) => {
     // console.log("persistence changed", auth);
   };
 };
+ */

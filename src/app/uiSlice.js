@@ -6,6 +6,7 @@ const initialState = {
   requestFailed: false,
   isLoading: false,
   fetchedCampaigns: false,
+  userChecked: false,
 };
 
 const uiSlice = createSlice({
@@ -98,6 +99,9 @@ const uiSlice = createSlice({
     },
     changeFetchedCampaigns(state, action) {
       state.fetchedCampaigns = action.payload;
+    },
+    setUserChecked(state) {
+      state.userChecked = true;
     },
   },
 });

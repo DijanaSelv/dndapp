@@ -32,6 +32,8 @@ const CampaignInfoPage = () => {
     loremaster === true && "loremaster",
   ].filter(Boolean);
 
+  console.log(roles);
+
   const campaign =
     params.type === "created"
       ? createdCampaigns[params.campaignId]
@@ -43,6 +45,7 @@ const CampaignInfoPage = () => {
 
     setPlayerMembers(playersData);
     setDmMembers(dmData);
+    console.log("members shown");
   };
 
   useEffect(() => {

@@ -13,28 +13,24 @@ import classes from "./HomePage.module.css";
 import JoinCampaignModal from "../../components/JoinCampaignModal";
 
 const Home = () => {
+  //fetch state from store
   const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSlice
   );
-  const { notification, fetchedCampaigns, requestSuccess } = useSelector(
-    (state) => state.uiSlice
-  );
+  const { notification } = useSelector((state) => state.uiSlice);
+  const { uid } = useSelector((state) => state.userSlice.user);
   const {
     created: createdCampaignsFromUser,
     joined: joinedCampaignsFromUsers,
   } = useSelector((state) => state.userSlice.user.campaigns || {});
 
-  const { uid } = useSelector((state) => state.userSlice.user);
   const { isLoading } = useSelector((state) => state.uiSlice);
 
   const [showJoinModal, setShowJoinModal] = useState(false);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(uiSliceActions.resetRequestState());
-  }, [fetchedCampaigns, requestSuccess]);
-
+  //useEffect sets the campaigns once the user and data is fetched.
   useEffect(() => {
     const createdCampaignsIds = createdCampaignsFromUser
       ? Object.keys(createdCampaignsFromUser)

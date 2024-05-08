@@ -11,7 +11,7 @@ import CampaignPlayPage from "./pages/campaignplaypage/CampaignPlayPage";
 import NewCampaignPage from "./pages/newcampaignpage/NewCampaignPage";
 import NewCharacterPage from "./pages/newcharacterpage/NewCharacterPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { useDispatch, Provider } from "react-redux";
+import { useDispatch } from "react-redux";
 import { auth } from "./app/actions/base";
 import { userSliceActions } from "./app/userSlice";
 import { getUserData } from "./app/actions/databaseActions";
@@ -24,6 +24,7 @@ import EditShopPage from "./pages/editshoppage/EditShopPage";
 import NewShopPage from "./pages/newshoppage/NewShopPage";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import NotesPage from "./pages/notespage/NotesPage";
+import uiSlice, { uiSliceActions } from "./app/uiSlice";
 
 //refresh state persistence
 /* import { PersistGate } from "redux-persist/integration/react";
@@ -123,15 +124,20 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useDispatch();
 
+  //when app mounts, we set a listener on authStateChanged, if there's a user it sets it in store. OnAuthStateChanged returns an unsubscribe function that we call when the component unmounts (because we return it with use effect.)
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         dispatch(userSliceActions.setLoggedInUser(user.uid));
 
-        dispatch(getUserData(user.uid));
+        //it gets the user data and sets it in userSlice
+        await dispatch(getUserData(user.uid));
       }
-    });
 
+      //userChecked flag prevents LoginPage flicker on repfresh when a user is Logged in.
+      dispatch(uiSliceActions.setUserChecked());
+    });
     return () => unsubscribe();
   }, []);
 
