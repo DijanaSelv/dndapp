@@ -70,39 +70,31 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Campaigns/:type/:campaignId/info",
+        path: "/Campaigns/:campaignId/info",
         element: (
-          <ProtectedCampaignsRoute>
+          <ProtectedRoute>
             <CampaignInfoPage />
-          </ProtectedCampaignsRoute>
+          </ProtectedRoute>
         ),
       },
       {
-        path: "/Campaigns/:type/:campaignId/play",
-        element: (
-          <ProtectedCampaignsRoute>
-            <CampaignPlayPage />
-          </ProtectedCampaignsRoute>
-        ),
+        path: "/Campaigns/:campaignId/play",
+        element: <CampaignPlayPage />,
       },
       {
-        path: "/Campaigns/:type/:campaignId/play/shops",
-        element: (
-          <ProtectedCampaignsRoute>
-            <CampaignShopsPage />
-          </ProtectedCampaignsRoute>
-        ),
+        path: "/Campaigns/:campaignId/play/shops",
+        element: <CampaignShopsPage />,
       },
       {
-        path: "/Campaigns/:type/:campaignId/play/shops/:shopId",
+        path: "/Campaigns/:campaignId/play/shops/:shopId",
         element: <ShopPage />,
       },
       {
-        path: "/Campaigns/:type/:campaignId/play/notes",
+        path: "/Campaigns/:campaignId/play/notes",
         element: <NotesPage />,
       },
       {
-        path: "/Campaigns/:type/:campaignId/play/shops/:shopId/edit",
+        path: "/Campaigns/:campaignId/play/shops/:shopId/edit",
         element: (
           <RoleProtectedRoute permittedRoles={["dm"]}>
             <EditShopPage />
@@ -110,7 +102,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Campaigns/:type/:campaignId/play/shops/NewShop",
+        path: "/Campaigns/:campaignId/play/shops/NewShop",
         element: (
           <RoleProtectedRoute permittedRoles={["dm"]}>
             <NewShopPage />
@@ -138,6 +130,7 @@ function App() {
       //userChecked flag prevents LoginPage flicker on repfresh when a user is Logged in.
       dispatch(uiSliceActions.setUserChecked());
     });
+
     return () => unsubscribe();
   }, []);
 

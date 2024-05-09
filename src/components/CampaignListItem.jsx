@@ -29,20 +29,20 @@ const CampaignListItem = ({ campaign, type }) => {
   const actions =
     type === "created"
       ? [
-          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
+          <Link to={`/Campaigns/${campaign.id}/info`}>
             <InfoCircleOutlined key="info" />
           </Link>,
-          <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
+          <Link to={`/Campaigns/${campaign.id}/play`}>
             <ArrowRightOutlined key="play" />
           </Link>,
 
           <CloseOutlined key="delete" onClick={deleteButtonHandler} />,
         ]
       : [
-          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
+          <Link to={`/Campaigns/${campaign.id}/info`}>
             <InfoCircleOutlined key="info" />
           </Link>,
-          <Link to={`/Campaigns/${type}/${campaign.id}/play`}>
+          <Link to={`/Campaigns/${campaign.id}/play`}>
             <ArrowRightOutlined key="play" />
           </Link>,
           <CloseOutlined key="leave" onClick={leaveCampaignButtonHandler} />,
@@ -65,7 +65,7 @@ const CampaignListItem = ({ campaign, type }) => {
       }
       <Card
         cover={
-          <Link to={`/Campaigns/${type}/${campaign.id}/info`}>
+          <Link to={`/Campaigns/${campaign.id}/info`}>
             <div className={classes.coverDiv}>
               <img alt="campaign image" src={campaign.image} />
             </div>

@@ -116,10 +116,7 @@ export const getCampaignsData = (campaignsIds, type) => {
             image: data.image,
             title: data.title,
             players: data.players ? data.players : 0,
-            description: data.description,
-            joinCode: data.joinCode,
             id: data.id,
-            type,
           };
           campaignsDataList[data.id] = campaign;
         } else {
@@ -146,6 +143,47 @@ export const getCampaignsData = (campaignsIds, type) => {
     }
     dispatch(uiSliceActions.changeLoading(false));
     dispatch(uiSliceActions.changeFetchedCampaigns(true));
+  };
+};
+
+//get current campaign
+export const getCurrentCampaign = (uid, campaignId) => {
+  return async (dispatch) => {
+    let currentCampaign;
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const campaignsRef = ref(db, "campaigns/" + campaignId);
+      const snapshot = await get(campaignsRef);
+
+      if (snapshot.exists() && snapshot.val().members[uid]) {
+        const data = snapshot.val();
+        currentCampaign = {
+          image: data.image,
+          description: data.description,
+          title: data.title,
+          joinCode: data.joinCode,
+          location: data.location,
+          members: data.members,
+          id: data.id,
+        };
+      } else {
+        throw new Error("pageUnavailable");
+      }
+    } catch (error) {
+      console.error(error.message);
+      dispatch(
+        uiSliceActions.showNotification({
+          type: "error",
+          code: error.message,
+        })
+      );
+      dispatch(uiSliceActions.requestFailedIsTrue());
+    }
+    dispatch(campaignSliceActions.setCurrentCampaign(currentCampaign));
+    dispatch(getRoles(uid, campaignId));
+    dispatch(uiSliceActions.changeLoading(false));
+
+    /* dispatch(uiSliceActions.changeFetchedCurrentCampaign(true)); */
   };
 };
 

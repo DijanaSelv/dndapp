@@ -5,9 +5,8 @@ const initialState = {
   joinedCampaigns: {},
   currentCampaign: {
     id: null,
-    details: null,
+    description: null,
     title: null,
-    shop: null,
     joinCode: null,
     members: {
       memberId: {
@@ -16,9 +15,6 @@ const initialState = {
         roles: null,
       },
     },
-    logs: null,
-    info: null,
-    combat: null,
   },
 };
 
@@ -40,8 +36,12 @@ const campaignSlice = createSlice({
     setJoinedCampaigns(state, action) {
       state.joinedCampaigns = action.payload;
     },
+
     resetCampaignSlice(state, action) {
       return initialState;
+    },
+    setCurrentCampaign(state, action) {
+      state.currentCampaign = action.payload;
     },
   },
 });

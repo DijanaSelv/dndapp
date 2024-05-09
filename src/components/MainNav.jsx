@@ -124,7 +124,7 @@ const MainNav = () => {
               <div className={classes.mainNav}>
                 <div className={classes.navLinks}>
                   <NavLink
-                    to={`/Campaigns/${params.type}/${campaignId}/info`}
+                    to={`/Campaigns/${campaignId}/info`}
                     className={({ isActive }) =>
                       isActive
                         ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
@@ -134,7 +134,7 @@ const MainNav = () => {
                     Info
                   </NavLink>
                   <NavLink
-                    to={`/Campaigns/${params.type}/${campaignId}/play`}
+                    to={`/Campaigns/${campaignId}/play`}
                     className={({ isActive }) =>
                       isActive
                         ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
@@ -145,7 +145,7 @@ const MainNav = () => {
                     Play
                   </NavLink>
                   <NavLink
-                    to={`/Campaigns/${params.type}/${campaignId}/play/shops`}
+                    to={`/Campaigns/${campaignId}/play/shops`}
                     className={({ isActive }) =>
                       isActive
                         ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
@@ -155,7 +155,7 @@ const MainNav = () => {
                     Shops
                   </NavLink>
                   <NavLink
-                    to={`/Campaigns/${params.type}/${campaignId}/play/notes`}
+                    to={`/Campaigns/${campaignId}/play/notes`}
                     className={({ isActive }) =>
                       isActive
                         ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`

@@ -82,11 +82,7 @@ const Home = () => {
         <ul>
           {Object.keys(createdCampaigns).length !== 0
             ? Object.values(createdCampaigns).map((campaign) => (
-                <CampaignListItem
-                  key={campaign.id}
-                  campaign={campaign}
-                  type={campaign.type}
-                />
+                <CampaignListItem key={campaign.id} campaign={campaign} />
               ))
             : !isLoading && (
                 <p>
@@ -121,11 +117,7 @@ const Home = () => {
         <ul>
           {Object.keys(joinedCampaigns).length !== 0
             ? Object.values(joinedCampaigns).map((campaign) => (
-                <CampaignListItem
-                  key={campaign.id}
-                  campaign={campaign}
-                  type={campaign.type}
-                />
+                <CampaignListItem key={campaign.id} campaign={campaign} />
               ))
             : !isLoading && (
                 <p>
