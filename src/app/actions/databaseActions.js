@@ -171,13 +171,6 @@ export const getCurrentCampaign = (uid, campaignId) => {
       }
     } catch (error) {
       console.error(error.message);
-      dispatch(
-        uiSliceActions.showNotification({
-          type: "error",
-          code: error.message,
-        })
-      );
-      dispatch(uiSliceActions.requestFailedIsTrue());
     }
     dispatch(campaignSliceActions.setCurrentCampaign(currentCampaign));
     dispatch(getRoles(uid, campaignId));
@@ -289,8 +282,8 @@ export const leaveCampaign = (campaignId, uid) => {
   };
 };
 
-//get the players in the campaign
-export const getMembers = (campaignId, type) => {
+//get the players in the campaign by role
+export const getMembers = (campaignId, role) => {
   return async (dispatch) => {
     let members = [];
     try {
@@ -301,7 +294,7 @@ export const getMembers = (campaignId, type) => {
 
       const membersQuery = query(
         campaignMembersRef,
-        orderByChild(`roles/${type}`),
+        orderByChild(`roles/${role}`),
         equalTo(true)
       );
       const snapshot = await get(membersQuery);

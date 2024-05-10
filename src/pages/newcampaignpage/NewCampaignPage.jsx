@@ -27,7 +27,7 @@ const NewCampaignPage = () => {
   const [newCampaingId, setNewCampaignId] = useState();
 
   useEffect(() => {
-    newCampaingId && navigate(`/Campaigns/created/${newCampaingId}/info`);
+    newCampaingId && navigate(`/Campaigns/${newCampaingId}/info`);
   }, [createdCampaigns]);
 
   useEffect(() => {

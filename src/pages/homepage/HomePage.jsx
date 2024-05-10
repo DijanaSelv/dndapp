@@ -7,10 +7,11 @@ import { getCampaignsData } from "../../app/actions/databaseActions";
 import NotificationBox from "../../components/NotificationBox";
 import { uiSliceActions } from "../../app/uiSlice";
 
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { LoadingOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Flex, Progress } from "antd";
 import classes from "./HomePage.module.css";
 import JoinCampaignModal from "../../components/JoinCampaignModal";
+import LoadingCard from "../../components/LoadingCard";
 
 const Home = () => {
   //fetch state from store
@@ -24,7 +25,7 @@ const Home = () => {
     joined: joinedCampaignsFromUsers,
   } = useSelector((state) => state.userSlice.user.campaigns || {});
 
-  const { isLoading } = useSelector((state) => state.uiSlice);
+  const { isLoading, fetchedCampaigns } = useSelector((state) => state.uiSlice);
 
   const [showJoinModal, setShowJoinModal] = useState(false);
 
@@ -32,18 +33,20 @@ const Home = () => {
 
   //useEffect sets the campaigns once the user and data is fetched.
   useEffect(() => {
-    const createdCampaignsIds = createdCampaignsFromUser
-      ? Object.keys(createdCampaignsFromUser)
-      : [];
+    //check if we have the needed data to prevent unnecessary rerendering
+    if (uid && createdCampaignsFromUser && joinedCampaignsFromUsers) {
+      const createdCampaignsIds = createdCampaignsFromUser
+        ? Object.keys(createdCampaignsFromUser)
+        : [];
+      dispatch(getCampaignsData(createdCampaignsIds, "created"));
+      const joinedCampaignsIds = joinedCampaignsFromUsers
+        ? Object.keys(joinedCampaignsFromUsers)
+        : [];
+      dispatch(getCampaignsData(joinedCampaignsIds, "joined"));
 
-    dispatch(getCampaignsData(createdCampaignsIds, "created"));
-    const joinedCampaignsIds = joinedCampaignsFromUsers
-      ? Object.keys(joinedCampaignsFromUsers)
-      : [];
-    dispatch(getCampaignsData(joinedCampaignsIds, "joined"));
-
-    dispatch(uiSliceActions.resetRequestState());
-  }, [createdCampaignsFromUser, joinedCampaignsFromUsers]);
+      dispatch(uiSliceActions.resetRequestState());
+    }
+  }, [createdCampaignsFromUser, joinedCampaignsFromUsers, uid]);
 
   const joinCampaignHandler = () => {
     setShowJoinModal(true);
@@ -60,18 +63,7 @@ const Home = () => {
       <div className={classes.section}>
         <div className={classes.sectionHeader}>
           <div>
-            <h2> Created Campaigns</h2>
-            {isLoading && (
-              <Flex vertical gap="small" style={{ width: 230 }}>
-                <Progress
-                  percent={100}
-                  status="active"
-                  showInfo={false}
-                  size="small"
-                  strokeColor={{ from: "#108ee9", to: "#87d068" }}
-                />
-              </Flex>
-            )}
+            <h2> Created Campaigns {isLoading && <LoadingOutlined />}</h2>
           </div>
 
           <Link className={classes.sectionLink} to="/NewCampaign">
@@ -82,32 +74,27 @@ const Home = () => {
         <ul>
           {Object.keys(createdCampaigns).length !== 0
             ? Object.values(createdCampaigns).map((campaign) => (
-                <CampaignListItem key={campaign.id} campaign={campaign} />
+                <CampaignListItem
+                  key={campaign.id}
+                  campaign={campaign}
+                  type="created"
+                />
               ))
-            : !isLoading && (
-                <p>
-                  You haven't created any campaigns yet.{" "}
-                  <Link to="/NewCampaign">Create one here.</Link>
-                </p>
-              )}
+            : !fetchedCampaigns && <LoadingCard />}
+          {fetchedCampaigns &&
+            Object.keys(createdCampaignsFromUser).length === 0 && (
+              <p>
+                You haven't created any campaigns yet.{" "}
+                <Link to="/NewCampaign">Create one here.</Link>
+              </p>
+            )}
         </ul>
       </div>
 
       <div className={classes.section}>
         <div className={classes.sectionHeader}>
           <div>
-            <h2>Joined Campaigns</h2>
-            {isLoading && (
-              <Flex vertical gap="small" style={{ width: 230 }}>
-                <Progress
-                  percent={100}
-                  status="active"
-                  showInfo={false}
-                  size="small"
-                  strokeColor={{ from: "#108ee9", to: "#87d068" }}
-                />
-              </Flex>
-            )}
+            <h2>Joined Campaigns {isLoading && <LoadingOutlined />}</h2>
           </div>
           <Link className={classes.sectionLink} onClick={joinCampaignHandler}>
             Join <PlusCircleOutlined />
@@ -119,18 +106,20 @@ const Home = () => {
             ? Object.values(joinedCampaigns).map((campaign) => (
                 <CampaignListItem key={campaign.id} campaign={campaign} />
               ))
-            : !isLoading && (
-                <p>
-                  You haven't joined any campaigns yet. Do you have a{" "}
-                  <Link onClick={joinCampaignHandler}>Join Code</Link>?
-                </p>
-              )}
+            : !fetchedCampaigns && <LoadingCard />}
+          {fetchedCampaigns &&
+            Object.keys(joinedCampaignsFromUsers).length === 0 && (
+              <p>
+                You haven't joined any campaigns yet. Do you have a{" "}
+                <Link onClick={joinCampaignHandler}>Join Code</Link>?
+              </p>
+            )}
         </ul>
       </div>
 
       <div className={classes.section}>
         <div className={classes.sectionHeader}>
-          <h2>Characters</h2>
+          <h2>Characters {isLoading && <LoadingOutlined />}</h2>
           <Link className={classes.sectionLink}>
             New Character <PlusCircleOutlined />
           </Link>

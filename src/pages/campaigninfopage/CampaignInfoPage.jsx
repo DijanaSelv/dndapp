@@ -3,7 +3,10 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getCurrentCampaign } from "../../app/actions/databaseActions";
+import {
+  getCurrentCampaign,
+  getMembers,
+} from "../../app/actions/databaseActions";
 import NotificationBox from "../../components/NotificationBox";
 
 import { Button, Progress } from "antd";
@@ -18,9 +21,7 @@ const CampaignInfoPage = () => {
 
   const { uid } = useSelector((state) => state.userSlice.user);
   const { currentCampaign } = useSelector((state) => state.campaignSlice);
-  const { isLoading, notification, requestFailed } = useSelector(
-    (state) => state.uiSlice
-  );
+  const { isLoading } = useSelector((state) => state.uiSlice);
 
   const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSlice
@@ -30,24 +31,22 @@ const CampaignInfoPage = () => {
   );
 
   const [playerMembers, setPlayerMembers] = useState([]);
-  const [dmMembers, setDmMembers] = useState([]);
+  const [dmMembers, setDmMembers] = useState();
   const [copy, setCopy] = useState({ value: "", copied: false });
 
   //when we open the gage: 1. when we have uid fetch the current campaign, update the currentCampaign store and display the members from there not from a separate thing. Useffect, vaka kje bidi fetched sekogash.
-  /*   const roles = [
+  const roles = [
     dm === true && "dm",
     player === true && "player",
     creator === true && "creator",
     loremaster === true && "loremaster",
   ].filter(Boolean);
 
-  const campaign = roles.includes("creator")
-    ? createdCampaigns[params.campaignId]
-    : joinedCampaigns[params.campaignId];
-
   const showMembers = async () => {
-    const playersData = await dispatch(getMembers(params.campaignId, "player"));
-    const dmData = await dispatch(getMembers(params.campaignId, "dm"));
+    const playersData = await dispatch(
+      getMembers(currentCampaign.id, "player")
+    );
+    const dmData = await dispatch(getMembers(currentCampaign.id, "dm"));
 
     setPlayerMembers(playersData);
     setDmMembers(dmData);
@@ -55,21 +54,28 @@ const CampaignInfoPage = () => {
 
   useEffect(() => {
     showMembers();
-  }, []); */
+  }, [currentCampaign]);
 
   useEffect(() => {
     uid && dispatch(getCurrentCampaign(uid, params.campaignId));
   }, [uid]);
 
-  useEffect(() => {
-    //clear notofication state if the page was not accessible
-    dispatch(uiSliceActions.resetRequestState());
-  }, [requestFailed]);
-
   return (
     <div className={classes.content}>
-      {notification && <NotificationBox />}
-      {uid && !isLoading && currentCampaign ? (
+      {!currentCampaign?.id && isLoading && (
+        <>
+          <p className={classes.pageInfo}>Loading...</p>
+          <Progress
+            percent={100}
+            status="active"
+            showInfo={false}
+            size="small"
+            strokeColor={{ from: "#108ee9", to: "#87d068" }}
+          />
+        </>
+      )}
+      {/* check if dmMembers are fetched too, to avoid flicker when added late */}
+      {currentCampaign?.id && dmMembers && (
         <>
           <div
             className={classes.header}
@@ -88,13 +94,15 @@ const CampaignInfoPage = () => {
               <h3 className={classes.sectionTitle}>Players</h3>
               <div className={classes.playersInfo}>
                 {" "}
-                {/* {dmMembers.length !== 0 && <p>DM : {dmMembers.join(", ")}</p>}
+                {dmMembers.length !== 0 && <p>DM : {dmMembers.join(", ")}</p>}
                 {playerMembers.length !== 0 && (
                   <p>Players : {playerMembers.join(", ")}</p>
                 )}
-                <p>
-                  Your role{roles.length > 1 ? "s" : ""} : {roles.join(", ")}
-                </p> */}
+                {
+                  <p>
+                    Your role{roles.length > 1 ? "s" : ""} : {roles.join(", ")}
+                  </p>
+                }
               </div>
               <h3 className={classes.sectionTitle}>Description</h3>
               <div className={classes.description}>
@@ -131,17 +139,9 @@ const CampaignInfoPage = () => {
             </div>
           </div>
         </>
-      ) : (
-        <>
-          <p className={classes.loading}>Loading...</p>
-          <Progress
-            percent={100}
-            status="active"
-            showInfo={false}
-            size="small"
-            strokeColor={{ from: "#108ee9", to: "#87d068" }}
-          />
-        </>
+      )}
+      {!isLoading && !currentCampaign && (
+        <p className={classes.pageInfo}>Page not found...</p>
       )}
     </div>
   );

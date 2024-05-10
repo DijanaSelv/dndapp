@@ -64,9 +64,6 @@ const uiSlice = createSlice({
       } else if (action.payload.code === "campaign left") {
         message = "Campaign left";
         description = "You left the campaign.";
-      } else if (action.payload.code === "pageUnavailable") {
-        message = "Page unavailable";
-        description = "This page is not accessible to you or does not exist.";
       } else {
         message = "Error";
         description = "Request failed. Try again later.";
@@ -94,7 +91,6 @@ const uiSlice = createSlice({
       state.notification = null;
       state.requestSuccess = false;
       state.requestFailed = false;
-      state.fetchedCampaigns = false;
     },
 
     changeLoading(state, action) {
