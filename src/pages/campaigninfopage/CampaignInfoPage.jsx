@@ -53,7 +53,7 @@ const CampaignInfoPage = () => {
   };
 
   useEffect(() => {
-    showMembers();
+    currentCampaign && showMembers();
   }, [currentCampaign]);
 
   useEffect(() => {

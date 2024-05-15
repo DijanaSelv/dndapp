@@ -35,6 +35,7 @@ export const getUserData = (uid) => {
     const userRef = ref(db, "users/" + uid);
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
+
       dispatch(userSliceActions.setUserData(data));
     });
   };
@@ -45,6 +46,7 @@ export const getUserCampaigns = (uid) => {
     const userRef = ref(db, "users/" + uid + "/campaigns");
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
+
       dispatch(userSliceActions.updateUserCampaigns(data));
     });
   };
@@ -142,7 +144,6 @@ export const getCampaignsData = (campaignsIds, type) => {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));
     }
     dispatch(uiSliceActions.changeLoading(false));
-    dispatch(uiSliceActions.changeFetchedCampaigns(true));
   };
 };
 

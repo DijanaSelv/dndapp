@@ -4,8 +4,7 @@ const initialState = {
   notification: null,
   requestSuccess: false,
   requestFailed: false,
-  isLoading: false,
-  fetchedCampaigns: false,
+  isLoading: true,
   userChecked: false,
 };
 
@@ -96,9 +95,7 @@ const uiSlice = createSlice({
     changeLoading(state, action) {
       state.isLoading = action.payload;
     },
-    changeFetchedCampaigns(state, action) {
-      state.fetchedCampaigns = action.payload;
-    },
+
     setUserChecked(state) {
       state.userChecked = true;
     },

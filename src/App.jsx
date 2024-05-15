@@ -18,13 +18,13 @@ import { getUserData } from "./app/actions/databaseActions";
 import { onAuthStateChanged } from "firebase/auth";
 import LoggedInRoute from "./components/LoggedInRoute";
 import CampaignShopsPage from "./pages/campaignshopspage/CampaignShopsPage";
-import ProtectedCampaignsRoute from "./components/ProtectedCampaignsRoute";
+
 import ShopPage from "./pages/shoppage/ShopPage";
 import EditShopPage from "./pages/editshoppage/EditShopPage";
 import NewShopPage from "./pages/newshoppage/NewShopPage";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import NotesPage from "./pages/notespage/NotesPage";
-import uiSlice, { uiSliceActions } from "./app/uiSlice";
+import { uiSliceActions } from "./app/uiSlice";
 
 //refresh state persistence
 /* import { PersistGate } from "redux-persist/integration/react";
