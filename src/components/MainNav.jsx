@@ -7,7 +7,7 @@ import classes from "./MainNav.module.css";
 import { LogoutOutlined, DownOutlined } from "@ant-design/icons";
 import { Dropdown } from "antd";
 import { useEffect } from "react";
-import { getRoles } from "../app/actions/databaseActions";
+import { getCurrentCampaign, getRoles } from "../app/actions/databaseActions";
 import { rolesSliceActions } from "../app/rolesSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiceD20 } from "@fortawesome/free-solid-svg-icons";
@@ -24,11 +24,12 @@ const MainNav = () => {
   useEffect(() => {
     if (params.campaignId) {
       dispatch(getRoles(uid, params.campaignId));
+      uid && dispatch(getCurrentCampaign(uid, params.campaignId));
     }
     if (!params.campaignId) {
       dispatch(rolesSliceActions.resetRoles());
     }
-  }, [params.campaignId]);
+  }, [params.campaignId, uid]);
 
   const logoutClickHandler = (e) => {
     e.preventDefault();

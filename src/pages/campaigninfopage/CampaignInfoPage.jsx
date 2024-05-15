@@ -19,13 +19,9 @@ const CampaignInfoPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
-  const { uid } = useSelector((state) => state.userSlice.user);
   const { currentCampaign } = useSelector((state) => state.campaignSlice);
   const { isLoading } = useSelector((state) => state.uiSlice);
 
-  const { createdCampaigns, joinedCampaigns } = useSelector(
-    (state) => state.campaignSlice
-  );
   const { dm, player, creator, loremaster } = useSelector(
     (state) => state.rolesSlice
   );
@@ -34,7 +30,7 @@ const CampaignInfoPage = () => {
   const [dmMembers, setDmMembers] = useState();
   const [copy, setCopy] = useState({ value: "", copied: false });
 
-  //when we open the gage: 1. when we have uid fetch the current campaign, update the currentCampaign store and display the members from there not from a separate thing. Useffect, vaka kje bidi fetched sekogash.
+  //when we open the page: 1. reach currentCampaign (fetched from MainNav). Display members as a separate thing, because we must find their names.
   const roles = [
     dm === true && "dm",
     player === true && "player",
@@ -55,10 +51,6 @@ const CampaignInfoPage = () => {
   useEffect(() => {
     currentCampaign && showMembers();
   }, [currentCampaign]);
-
-  useEffect(() => {
-    uid && dispatch(getCurrentCampaign(uid, params.campaignId));
-  }, [uid]);
 
   return (
     <div className={classes.content}>

@@ -9,7 +9,7 @@ import NotificationBox from "../../components/NotificationBox";
 
 import classes from "./CampaignShopsPage.module.css";
 import { Link } from "react-router-dom";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { LoadingOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { uiSliceActions } from "../../app/uiSlice";
 
 const CampaignShopsPage = () => {
@@ -23,36 +23,33 @@ const CampaignShopsPage = () => {
 
   useEffect(() => {
     dispatch(getShopsData(params.campaignId));
-    dispatch(uiSliceActions.resetRequestState());
   }, [requestSuccess, requestFailed]);
 
   return (
     <>
-      {isLoading && !shops.length ? (
-        <Spin />
-      ) : (
-        <div className={classes.content}>
-          {notification && <NotificationBox />}
-          <div className={classes.shopsHeader}>
-            <h2 className={classes.title}>SHOPS</h2>{" "}
-            <Link className={classes.createShopLink} to="NewShop">
-              Create <PlusCircleOutlined />
-            </Link>
-          </div>
-          <ul className={classes.shopCards}>
-            {Object.keys(shops).length !== 0 ? (
-              Object.values(shops).map((shop) => (
-                <ShopListItem key={shop.id} shop={shop} type={params.type} />
-              ))
-            ) : (
-              <div>
-                <p>There are no available shops.</p>
-                {params.type === "created" && <a>Create a shop</a>}
-              </div>
-            )}
-          </ul>
+      <div className={classes.content}>
+        {notification && <NotificationBox />}
+        <div className={classes.shopsHeader}>
+          <h2 className={classes.title}>SHOPS</h2>{" "}
+          <Link className={classes.createShopLink} to="NewShop">
+            Create <PlusCircleOutlined />
+          </Link>
         </div>
-      )}
+        <ul className={classes.shopCards}>
+          {isLoading && !shops.length ? (
+            <LoadingOutlined />
+          ) : Object.keys(shops).length !== 0 ? (
+            Object.values(shops).map((shop) => (
+              <ShopListItem key={shop.id} shop={shop} type={params.type} />
+            ))
+          ) : (
+            <div>
+              <p>There are no available shops.</p>
+              {params.type === "created" && <a>Create a shop</a>}
+            </div>
+          )}
+        </ul>
+      </div>
     </>
   );
 };

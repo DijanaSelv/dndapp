@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import classes from "./CampaginPlayPage.module.css";
 import { useSelector } from "react-redux";
 import PlayCampaignCard from "../../components/PlayCampaignCard";
@@ -10,50 +10,45 @@ import {
   faBook,
   faPencil,
 } from "@fortawesome/free-solid-svg-icons";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const CampaignPlayPage = () => {
   const params = useParams();
-
-  const { createdCampaigns, joinedCampaigns } = useSelector(
-    (state) => state.campaignSlice
-  );
-
-  const campaign =
-    params.type === "created"
-      ? createdCampaigns[params.campaignId]
-      : joinedCampaigns[params.campaignId];
+  const { currentCampaign } = useSelector((state) => state.campaignSlice);
 
   return (
     <>
-      <h1 className={classes.campaignTitle}>{campaign.title}</h1>
+      <h1 className={classes.campaignTitle}>
+        {currentCampaign.title || <LoadingOutlined />}
+      </h1>
 
       <ul className={classes.cardsList}>
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.type}/${params.campaignId}/info`}
+          goTo={`/Campaigns/${params.campaignId}/info`}
           cardFor="Info"
           image={<FontAwesomeIcon className={classes.icon} icon={faInfo} />}
           description="General campaign info."
         />
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.type}/${params.campaignId}/play/shops`}
+          goTo={`/Campaigns/${params.campaignId}/play/shops`}
           cardFor="Shops"
           image={<FontAwesomeIcon className={classes.icon} icon={faShop} />}
           description="You can buy and sell items."
         />
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.type}/${params.campaignId}/play/combat`}
+          goTo={`/Campaigns/${params.campaignId}/play/combat`}
           cardFor="Combat"
           image={<FontAwesomeIcon className={classes.icon} icon={faDiceD20} />}
           description="Fight!"
         />
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.type}/${params.campaignId}/play/log`}
+          goTo={`/Campaigns/${params.campaignId}/play/log`}
           cardFor="Log"
           image={<FontAwesomeIcon className={classes.icon} icon={faBook} />}
           description="Campaign lore and progress."
         />
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.type}/${params.campaignId}/play/notes`}
+          goTo={`/Campaigns/${params.campaignId}/play/notes`}
           cardFor="Notes"
           image={<FontAwesomeIcon className={classes.icon} icon={faPencil} />}
           description="Your personal notes."

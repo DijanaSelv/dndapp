@@ -176,8 +176,6 @@ export const getCurrentCampaign = (uid, campaignId) => {
     dispatch(campaignSliceActions.setCurrentCampaign(currentCampaign));
     dispatch(getRoles(uid, campaignId));
     dispatch(uiSliceActions.changeLoading(false));
-
-    /* dispatch(uiSliceActions.changeFetchedCurrentCampaign(true)); */
   };
 };
 
