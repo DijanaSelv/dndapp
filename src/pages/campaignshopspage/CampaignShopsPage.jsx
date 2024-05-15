@@ -4,13 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import ShopListItem from "../../components/ShopListItem";
 import { getShopsData } from "../../app/actions/databaseActions";
 
-import { Spin } from "antd";
 import NotificationBox from "../../components/NotificationBox";
 
 import classes from "./CampaignShopsPage.module.css";
 import { Link } from "react-router-dom";
 import { LoadingOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { uiSliceActions } from "../../app/uiSlice";
 
 const CampaignShopsPage = () => {
   const params = useParams();
