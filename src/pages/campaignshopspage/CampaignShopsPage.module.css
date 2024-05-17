@@ -23,8 +23,6 @@
 
 .shopCards > div {
   width: 24%;
-  min-width: 250px;
-  max-width: 450px;
 }
 
 /* TO MAINTAIN IMAGE RATIO 3:2 */
@@ -69,4 +67,20 @@
 .createShopLink:hover > span {
   color: #226f99;
   transition: all 0.3s;
+}
+
+@media (max-width: 1600px) {
+  .shopCards > div {
+    width: 32%;
+  }
+}
+@media (max-width: 1070px) {
+  .shopCards > div {
+    width: 48%;
+  }
+}
+@media (max-width: 750px) {
+  .shopCards > div {
+    width: 90%;
+  }
 }

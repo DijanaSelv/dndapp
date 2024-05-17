@@ -29,21 +29,20 @@ const CampaignListItem = ({ campaign, type }) => {
   const actions =
     type === "created"
       ? [
-          <Link to={`/Campaigns/${campaign.id}/info`}>
-            <InfoCircleOutlined key="info" />
-          </Link>,
           <Link to={`/Campaigns/${campaign.id}/play`}>
             <ArrowRightOutlined key="play" />
           </Link>,
-
+          <Link to={`/Campaigns/${campaign.id}/info`}>
+            <InfoCircleOutlined key="info" />
+          </Link>,
           <CloseOutlined key="delete" onClick={deleteButtonHandler} />,
         ]
       : [
-          <Link to={`/Campaigns/${campaign.id}/info`}>
-            <InfoCircleOutlined key="info" />
-          </Link>,
           <Link to={`/Campaigns/${campaign.id}/play`}>
             <ArrowRightOutlined key="play" />
+          </Link>,
+          <Link to={`/Campaigns/${campaign.id}/info`}>
+            <InfoCircleOutlined key="info" />
           </Link>,
           <CloseOutlined key="leave" onClick={leaveCampaignButtonHandler} />,
         ];

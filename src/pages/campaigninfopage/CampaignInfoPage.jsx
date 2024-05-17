@@ -76,7 +76,7 @@ const CampaignInfoPage = () => {
             }}
           >
             <div className={classes.headerContent}>
-              <Link to={`/Campaigns/${params.type}/${currentCampaign.id}/play`}>
+              <Link to={`/Campaigns/${currentCampaign.id}/play`}>
                 <h1 className={classes.title}>{currentCampaign.title}</h1>
               </Link>
             </div>

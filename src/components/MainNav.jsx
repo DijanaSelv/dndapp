@@ -133,16 +133,6 @@ const MainNav = () => {
             <div className={classes.mainNav}>
               <div className={classes.navLinks}>
                 <NavLink
-                  to={`/Campaigns/${campaignId}/info`}
-                  className={({ isActive }) =>
-                    isActive
-                      ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
-                      : `${classes.navLink} ${classes.campaignNavLink}`
-                  }
-                >
-                  Info
-                </NavLink>
-                <NavLink
                   to={`/Campaigns/${campaignId}/play`}
                   className={({ isActive }) =>
                     isActive
@@ -152,6 +142,16 @@ const MainNav = () => {
                   end
                 >
                   Play
+                </NavLink>
+                <NavLink
+                  to={`/Campaigns/${campaignId}/info`}
+                  className={({ isActive }) =>
+                    isActive
+                      ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
+                      : `${classes.navLink} ${classes.campaignNavLink}`
+                  }
+                >
+                  Info
                 </NavLink>
                 <NavLink
                   to={`/Campaigns/${campaignId}/play/shops`}
