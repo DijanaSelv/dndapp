@@ -35,6 +35,7 @@ export const getUserData = (uid) => {
     const userRef = ref(db, "users/" + uid);
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
+
       dispatch(userSliceActions.setUserData(data));
     });
   };
@@ -45,6 +46,7 @@ export const getUserCampaigns = (uid) => {
     const userRef = ref(db, "users/" + uid + "/campaigns");
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
+
       dispatch(userSliceActions.updateUserCampaigns(data));
     });
   };
@@ -116,10 +118,7 @@ export const getCampaignsData = (campaignsIds, type) => {
             image: data.image,
             title: data.title,
             players: data.players ? data.players : 0,
-            description: data.description,
-            joinCode: data.joinCode,
             id: data.id,
-            type,
           };
           campaignsDataList[data.id] = campaign;
         } else {
@@ -145,7 +144,38 @@ export const getCampaignsData = (campaignsIds, type) => {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));
     }
     dispatch(uiSliceActions.changeLoading(false));
-    dispatch(uiSliceActions.changeFetchedCampaigns(true));
+  };
+};
+
+//get current campaign
+export const getCurrentCampaign = (uid, campaignId) => {
+  return async (dispatch) => {
+    let currentCampaign;
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const campaignsRef = ref(db, "campaigns/" + campaignId);
+      const snapshot = await get(campaignsRef);
+
+      if (snapshot.exists() && snapshot.val().members[uid]) {
+        const data = snapshot.val();
+        currentCampaign = {
+          image: data.image,
+          description: data.description,
+          title: data.title,
+          joinCode: data.joinCode,
+          location: data.location,
+          members: data.members,
+          id: data.id,
+        };
+      } else {
+        throw new Error("pageUnavailable");
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+    dispatch(campaignSliceActions.setCurrentCampaign(currentCampaign));
+    dispatch(getRoles(uid, campaignId));
+    dispatch(uiSliceActions.changeLoading(false));
   };
 };
 
@@ -251,8 +281,8 @@ export const leaveCampaign = (campaignId, uid) => {
   };
 };
 
-//get the players in the campaign
-export const getMembers = (campaignId, type) => {
+//get the players in the campaign by role
+export const getMembers = (campaignId, role) => {
   return async (dispatch) => {
     let members = [];
     try {
@@ -263,7 +293,7 @@ export const getMembers = (campaignId, type) => {
 
       const membersQuery = query(
         campaignMembersRef,
-        orderByChild(`roles/${type}`),
+        orderByChild(`roles/${role}`),
         equalTo(true)
       );
       const snapshot = await get(membersQuery);

@@ -15,3 +15,10 @@
   color: red;
   font-size: 13px;
 }
+
+.modalWindow h3 {
+  font-family: "Texturina";
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccd1dad2;
+}

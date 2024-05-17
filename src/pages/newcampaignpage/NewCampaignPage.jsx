@@ -12,6 +12,7 @@ import {
   getCampaignsData,
 } from "../../app/actions/databaseActions";
 import CancelModal from "../../components/CancelModal";
+import classes from "./NewCampaignPage.module.css";
 
 const NewCampaignPage = () => {
   const navigate = useNavigate();
@@ -27,16 +28,15 @@ const NewCampaignPage = () => {
   const [newCampaingId, setNewCampaignId] = useState();
 
   useEffect(() => {
-    newCampaingId && navigate(`/Campaigns/created/${newCampaingId}/info`);
+    newCampaingId && navigate(`/Campaigns/${newCampaingId}/info`);
   }, [createdCampaigns]);
 
   useEffect(() => {
     if (requestSuccess) {
       dispatch(getCampaignsData([newCampaingId], "created"));
     }
-    if (requestFailed) {
-    }
     dispatch(uiSliceActions.resetRequestState());
+    dispatch(uiSliceActions.changeLoading(false));
   }, [requestSuccess, requestFailed, fetchedCampaigns]);
 
   const {
@@ -104,44 +104,45 @@ const NewCampaignPage = () => {
   };
 
   return (
-    <>
+    <div className={classes.content}>
       {notification && <NotificationBox />}
       <CancelModal showModal={showModal} setShowModal={setShowModal} />
-      <h3>Create new campaign</h3>
+      <h2>Create a new campaign</h2>
       <Form>
+        <h3> Title*</h3>
+        <p>What is the name of your campaign?</p>
         <Input
-          addonBefore="Title"
-          placeholder={
-            titleIsError ? "Title is requred" : "The name of your campaign"
-          }
+          placeholder={titleIsError && "Title is requred"}
           onBlur={titleBlurHandler}
           onChange={titleChangeHandler}
           status={titleIsError ? "error" : ""}
         ></Input>
+        <h3> Location*</h3>
+        <p>Where is your story taking place?</p>
         <Input
-          addonBefore="image"
-          placeholder="Image url here"
-          onBlur={imageBlurHandler}
-          onChange={imageChangeHandler}
-        ></Input>
-        <Input
-          addonBefore="Location"
-          placeholder={
-            locationIsError
-              ? "Location is requred"
-              : "Where is your campaign set?"
-          }
+          placeholder={locationIsError && "Location is requred"}
           onBlur={locationBlurHandler}
           onChange={locationChangeHandler}
           status={locationIsError ? "error" : ""}
         ></Input>
+        <h3> Image</h3>
+        <p>
+          Pick a cover image for your campaign if you want. If not we'll pick
+          for you.
+        </p>
+        <Input
+          addonBefore="image url:"
+          onBlur={imageBlurHandler}
+          onChange={imageChangeHandler}
+        ></Input>
 
-        <p>Descirption</p>
+        <h3> Summary *</h3>
+        <p>
+          Add a brief description for your campaign. Or not brief. Whatever.
+        </p>
         <TextArea
           placeholder={
-            descriptionIsError
-              ? "Tell us something about your campaign"
-              : "blurb for your campaign"
+            descriptionIsError && "Tell us something about your campaign"
           }
           autoSize={{
             minRows: 2,
@@ -152,20 +153,22 @@ const NewCampaignPage = () => {
           status={descriptionIsError ? "error" : ""}
           style={{ whiteSpace: "pre-wrap" }}
         ></TextArea>
-        <Button
-          disabled={!formIsValid}
-          type="primary"
-          htmlType="submit"
-          onClick={createCampaignHandler}
-          loading={isLoading}
-        >
-          Submit
-        </Button>
-        <Button type="primary" danger onClick={cancelPageHandler}>
-          Cancel
-        </Button>
+        <div className={classes.buttonContainer}>
+          <Button
+            disabled={!formIsValid}
+            type="primary"
+            htmlType="submit"
+            onClick={createCampaignHandler}
+            loading={isLoading}
+          >
+            Submit
+          </Button>
+          <Button type="primary" danger onClick={cancelPageHandler}>
+            Cancel
+          </Button>
+        </div>
       </Form>
-    </>
+    </div>
   );
 };
 

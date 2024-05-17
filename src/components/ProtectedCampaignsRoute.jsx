@@ -7,6 +7,7 @@ const ProtectedCampaignsRoute = ({ children }) => {
   const params = useParams();
   const { campaigns } = useSelector((state) => state.userSlice.user);
   const { isLoggedIn } = useSelector((state) => state.userSlice);
+  const { userChecked } = useSelector((state) => state.uiSlice);
 
   if (!isLoggedIn) {
     return <Navigate to="/Login" />;
@@ -14,12 +15,12 @@ const ProtectedCampaignsRoute = ({ children }) => {
     params.type === "created" &&
     !Object.keys(campaigns.created).includes(params.campaignId)
   ) {
-    return <Navigate to="/Login" />;
+    return <Navigate to="/" />;
   } else if (
     params.type === "joined" &&
     !Object.keys(campaigns.joined).includes(params.campaignId)
   ) {
-    return <Navigate to="/Login" />;
+    return <Navigate to="/" />;
   }
 
   return children;

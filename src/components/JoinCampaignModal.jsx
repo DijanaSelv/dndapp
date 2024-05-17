@@ -54,7 +54,7 @@ const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
     <>
       <Modal
         className={classes.modalWindow}
-        title={"Join a campaign"}
+        title={<h3>Paste the campaign code to join:</h3>}
         centered
         open={showModal}
         onOk={handleOk}
@@ -62,7 +62,7 @@ const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
         onCancel={handleCancel}
         cancelText="Cancel"
       >
-        <p>Paste the campaign code here:</p>
+        <span>Join Code: </span>
         <input ref={codeRef} className={classes.modalInput} />
         {invalidCode && <p className={classes.invalidCode}>{invalidCode}</p>}
       </Modal>
