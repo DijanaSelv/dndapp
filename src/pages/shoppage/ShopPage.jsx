@@ -29,6 +29,9 @@ const ShopPage = () => {
     setShowModal(true);
   };
   let itemsList = [];
+  const chooseItem = {
+    equipment_category: { index: "choose" },
+  };
 
   //POPULATE THE SHOP ITEMS in shop
   const getShop = async () => {
@@ -68,7 +71,7 @@ const ShopPage = () => {
   //define the columns of the table
   const columns = [
     {
-      title: "name",
+      title: "item",
       dataIndex: "name",
 
       sorter: {
@@ -99,59 +102,71 @@ const ShopPage = () => {
   return (
     <>
       {shop ? (
-        <div className={classes.content}>
-          <DeleteModal
-            type="shop"
-            campaignId={params.campaignId}
-            showModal={showModal}
-            setShowModal={setShowModal}
-            shopId={shop.id}
-            shopTitle={shop.title}
-            navigatePath={-1}
-          />
-          <div className={classes.shopMenu}>
-            <Link to={-1}>
-              <LeftSquareOutlined /> Back to shoppes
-            </Link>
+        <>
+          <div className={classes.titleContainer}>
             <h2 className={classes.title}>{shop.title}</h2>
-            <p>{shop.description}</p>
-            <div className={classes.tableDiv}>
-              <Table
-                locale={{
-                  emptyText: "The shop is currently empty.",
-                }}
-                loading={isLoading}
-                columns={columns}
-                dataSource={itemsData}
-                pagination={false}
-                size={"small"}
-                rowKey="id"
-                onRow={(record) => {
-                  return {
-                    onClick: () => clickHandler(record.url),
-                  };
-                }}
-                className={classes.tableOfItems}
-              />
-              {dm === true && (
-                <div className={classes.buttons}>
-                  <Link to="edit">
-                    <Button style={{ borderColor: "#7cacbb" }}>
-                      Edit Shop
+          </div>
+          <div className={classes.content}>
+            <DeleteModal
+              type="shop"
+              campaignId={params.campaignId}
+              showModal={showModal}
+              setShowModal={setShowModal}
+              shopId={shop.id}
+              shopTitle={shop.title}
+              navigatePath={-1}
+            />
+
+            <div className={classes.shopMenu}>
+              {/* <Link to={-1}>
+              <LeftSquareOutlined /> Back to shoppes
+            </Link> */}
+
+              <div className={classes.tableDiv}>
+                <Table
+                  locale={{
+                    emptyText: "The shop is currently empty.",
+                  }}
+                  loading={isLoading}
+                  columns={columns}
+                  dataSource={itemsData}
+                  pagination={false}
+                  size={"small"}
+                  rowKey="id"
+                  onRow={(record) => {
+                    return {
+                      onClick: () => clickHandler(record.url),
+                    };
+                  }}
+                  className={classes.tableOfItems}
+                />
+                {dm === true && (
+                  <div className={classes.buttons}>
+                    <Link to="edit">
+                      <Button style={{ borderColor: "#7cacbb" }}>
+                        Edit Shop
+                      </Button>
+                    </Link>
+                    <Button type="primary" danger onClick={deleteButtonHandler}>
+                      Delete Shop
                     </Button>
-                  </Link>
-                  <Button type="primary" danger onClick={deleteButtonHandler}>
-                    Delete Shop
-                  </Button>
-                </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className={classes.details}>
+              <div className={classes.logoWrapper}>
+                <p>{shop.description}</p>
+                <img src={shop.image} style={{ width: "200px" }} />
+              </div>
+              {clickedItem ? (
+                <ItemDescriptionCard item={clickedItem} />
+              ) : (
+                <ItemDescriptionCard item={chooseItem} />
               )}
             </div>
-          </div>
-          <div className={classes.details}>
-            <img src={shop.image} style={{ width: "200px" }} />
-            {clickedItem && <ItemDescriptionCard item={clickedItem} />}
-          </div>
-        </div>
+          </div>{" "}
+        </>
       ) : (
         <Spin style={{ fontSize: "5rem" }} />
       )}

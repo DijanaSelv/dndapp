@@ -26,6 +26,7 @@ const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
       const createdCampaignCodes = Object.values(createdCampaigns).map(
         (campaign) => campaign.joinCode
       );
+      console.log(joinedCampaignCodes, createdCampaignCodes);
 
       if (joinedCampaignCodes.includes(codeInput)) {
         setInvalidCode("You're already a member of this campaign.");
@@ -39,7 +40,9 @@ const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
           codeRef.current.value = "";
           setInvalidCode("");
           setShowModal(false);
-        } catch (error) {}
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };

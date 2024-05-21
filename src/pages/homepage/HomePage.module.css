@@ -4,7 +4,7 @@
 
 .mainWrapper {
   color: #333131;
-  margin: 0 15%;
+  margin: 0 25%;
 }
 
 .sectionLink {
@@ -75,9 +75,25 @@ ul > div {
   object-fit: cover;
 }
 
+@media (max-width: 2270px) {
+  .mainWrapper {
+    margin: 0 20%;
+  }
+  ul > div {
+    width: 32%;
+  }
+}
 @media (max-width: 1600px) {
   ul > div {
     width: 32%;
+  }
+}
+@media (max-width: 1270px) {
+  .mainWrapper {
+    margin: 0 15%;
+  }
+  ul > div {
+    width: 48%;
   }
 }
 @media (max-width: 1070px) {

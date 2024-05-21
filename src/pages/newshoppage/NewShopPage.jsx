@@ -293,10 +293,12 @@ const NewShopPage = () => {
       label: "Edit Items",
       children: (
         <div className={classes.tableDiv}>
-          <Button onClick={removeAllItemsHandler}>
-            <DeleteOutlined />
-            Remove all items
-          </Button>
+          <div className={classes.itemEdits}>
+            <Button onClick={removeAllItemsHandler}>
+              <DeleteOutlined />
+              Remove All
+            </Button>
+          </div>
           <Table
             locale={{
               emptyText:
@@ -323,17 +325,19 @@ const NewShopPage = () => {
       label: "Add Items",
       children: (
         <div className={classes.tableDiv}>
-          <Select
-            defaultValue="Adventuring Gear"
-            options={memoizedCategories}
-            style={{ width: "250px" }}
-            onSelect={(value) => selectHandler(value)}
-          />
-          <Button onClick={addAllItemsHandler}>
-            {" "}
-            <PlusCircleOutlined />
-            Add All{" "}
-          </Button>
+          <div className={classes.itemEdits}>
+            <Button onClick={addAllItemsHandler}>
+              {" "}
+              <PlusCircleOutlined />
+              Add All{" "}
+            </Button>
+            <Select
+              defaultValue="Adventuring Gear"
+              options={memoizedCategories}
+              style={{ width: "250px" }}
+              onSelect={(value) => selectHandler(value)}
+            />
+          </div>
           <Table
             loading={isLoading || addingItemsLoading}
             columns={columnsForAdd}
@@ -361,23 +365,19 @@ const NewShopPage = () => {
       <DeleteModal />
       <CancelModal showModal={showModal} setShowModal={setShowModal} />
       <div className={classes.shopMenu}>
-        <h3>Title</h3>
-        <Input
-          placeholder={
-            titleIsError ? "Title is requred" : "The name of your shop"
-          }
-          status={titleIsError ? "error" : ""}
-          value={title}
-          onBlur={titleBlurHandler}
-          onChange={titleChangeHandler}
-        ></Input>
-        <h4>Description</h4>
-        <TextArea
-          placeholder={"A blurb for your shop"}
-          value={description}
-          onBlur={descriptionBlurHandler}
-          onChange={descriptionChangeHandler}
-        ></TextArea>
+        <div className={classes.editContainer}>
+          <h3>Title</h3>
+          <Input
+            placeholder={
+              titleIsError ? "Title is requred" : "The name of your shop"
+            }
+            status={titleIsError ? "error" : ""}
+            value={title}
+            onBlur={titleBlurHandler}
+            onChange={titleChangeHandler}
+          ></Input>
+        </div>
+
         <Tabs defaultActiveKey="1" items={tabs}></Tabs>
         <div className={classes.buttons}>
           <Button
@@ -393,15 +393,26 @@ const NewShopPage = () => {
           </Button>
         </div>
       </div>
-      <div className={classes.details}>
-        <p>Image URL:</p>
-        <Input
-          name="image"
-          value={imageUrl}
-          onBlur={imageUrlBlurHandler}
-          onChange={imageUrlChangeHandler}
-          onFocus={selectAllUrlHandler}
-        />
+      <div className={classes.editDetails}>
+        <div className={classes.editContainer}>
+          <h4>Description</h4>
+          <TextArea
+            placeholder={"A blurb for your shop"}
+            value={description}
+            onBlur={descriptionBlurHandler}
+            onChange={descriptionChangeHandler}
+          ></TextArea>
+        </div>
+        <div className={classes.editContainer}>
+          <h3>Image URL:</h3>
+          <Input
+            name="image"
+            value={imageUrl}
+            onBlur={imageUrlBlurHandler}
+            onChange={imageUrlChangeHandler}
+            onFocus={selectAllUrlHandler}
+          />
+        </div>
         {<img src={imageUrl || null} style={{ width: "200px" }} />}
         {clickedItem && <ItemDescriptionCard item={clickedItem} />}
       </div>

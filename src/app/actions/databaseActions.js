@@ -119,6 +119,7 @@ export const getCampaignsData = (campaignsIds, type) => {
             title: data.title,
             players: data.players ? data.players : 0,
             id: data.id,
+            joinCode: data.joinCode,
           };
           campaignsDataList[data.id] = campaign;
         } else {

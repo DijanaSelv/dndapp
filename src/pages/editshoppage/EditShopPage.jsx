@@ -306,10 +306,12 @@ const EditShopPage = () => {
       label: "Edit Items",
       children: (
         <div className={classes.tableDiv}>
-          <Button onClick={removeAllItemsHandler}>
-            <DeleteOutlined />
-            Remove all items
-          </Button>
+          <div className={classes.itemEdits}>
+            <Button onClick={removeAllItemsHandler}>
+              <DeleteOutlined />
+              Remove All
+            </Button>
+          </div>
           <Table
             locale={{
               emptyText:
@@ -336,17 +338,19 @@ const EditShopPage = () => {
       label: "Add Items",
       children: (
         <div className={classes.tableDiv}>
-          <Select
-            defaultValue="Adventuring Gear"
-            options={memoizedCategories}
-            style={{ width: "250px" }}
-            onSelect={(value) => selectHandler(value)}
-          />
-          <Button onClick={() => addAllItemsHandler(shop)}>
-            {" "}
-            <PlusCircleOutlined />
-            Add All{" "}
-          </Button>
+          <div className={classes.itemEdits}>
+            <Button onClick={() => addAllItemsHandler(shop)}>
+              {" "}
+              <PlusCircleOutlined />
+              Add All{" "}
+            </Button>
+            <Select
+              defaultValue="Adventuring Gear"
+              options={memoizedCategories}
+              style={{ width: "250px" }}
+              onSelect={(value) => selectHandler(value)}
+            />
+          </div>
           <Table
             loading={isLoading || addingItemsLoading}
             columns={columnsForAdd}
@@ -386,13 +390,11 @@ const EditShopPage = () => {
             navigatePath={-2}
           />
           <div className={classes.shopMenu}>
-            <h3>Title</h3>
-            <Input value={shopTitle} onChange={handleTitleChange}></Input>
-            <h4>Description</h4>
-            <TextArea
-              value={shopDescription}
-              onChange={handleDescriptionChange}
-            ></TextArea>
+            <div className={classes.editContainer}>
+              <h3>Shop Name: </h3>
+              <Input value={shopTitle} onChange={handleTitleChange}></Input>
+            </div>
+
             <Tabs defaultActiveKey="1" items={tabs}></Tabs>
             <div className={classes.buttons}>
               <Button
@@ -411,17 +413,28 @@ const EditShopPage = () => {
               </Button>
             </div>
           </div>
-          <div className={classes.details}>
-            <p>Image URL:</p>
-            <Input
-              name="image"
-              value={imageUrl}
-              onChange={handleImageChange}
-              onFocus={selectAllUrlHandler}
-            />
+          <div className={classes.editDetails}>
+            <div className={classes.editContainer}>
+              <h3>Description:</h3>
+              <TextArea
+                value={shopDescription}
+                onChange={handleDescriptionChange}
+              ></TextArea>
+            </div>
+            <div className={classes.editContainer}>
+              <h3>Image URL:</h3>
+              <Input
+                name="image"
+                value={imageUrl}
+                onChange={handleImageChange}
+                onFocus={selectAllUrlHandler}
+              />
+              <div className={classes.buttons}>
+                <Button onClick={handleApplyChange}>Apply Image</Button>
+                <Button onClick={handleResetChange}>Reset Image</Button>
+              </div>
+            </div>
 
-            <Button onClick={handleApplyChange}>Apply Image</Button>
-            <Button onClick={handleResetChange}>Reset Image</Button>
             {shop?.image && <img src={shop.image} style={{ width: "200px" }} />}
             {clickedItem && <ItemDescriptionCard item={clickedItem} />}
           </div>
