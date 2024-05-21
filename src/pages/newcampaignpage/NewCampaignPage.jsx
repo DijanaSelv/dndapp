@@ -112,7 +112,7 @@ const NewCampaignPage = () => {
         <h3> Title*</h3>
         <p>What is the name of your campaign?</p>
         <Input
-          placeholder={titleIsError && "Title is requred"}
+          placeholder={titleIsError ? "Title is requred" : ""}
           onBlur={titleBlurHandler}
           onChange={titleChangeHandler}
           status={titleIsError ? "error" : ""}
@@ -120,7 +120,7 @@ const NewCampaignPage = () => {
         <h3> Location*</h3>
         <p>Where is your story taking place?</p>
         <Input
-          placeholder={locationIsError && "Location is requred"}
+          placeholder={locationIsError ? "Location is requred" : ""}
           onBlur={locationBlurHandler}
           onChange={locationChangeHandler}
           status={locationIsError ? "error" : ""}
@@ -142,7 +142,7 @@ const NewCampaignPage = () => {
         </p>
         <TextArea
           placeholder={
-            descriptionIsError && "Tell us something about your campaign"
+            descriptionIsError ? "Tell us something about your campaign" : ""
           }
           autoSize={{
             minRows: 2,

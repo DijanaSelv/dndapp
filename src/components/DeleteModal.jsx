@@ -20,6 +20,7 @@ const DeleteModal = (props) => {
     const handleOk = () => {
       dispatch(deleteCampaign(campaign.id, uid));
       setShowModal(false);
+      navigate("/");
     };
 
     const handleCancel = () => {
@@ -48,6 +49,7 @@ const DeleteModal = (props) => {
     const handleOk = () => {
       dispatch(leaveCampaign(campaign.id, uid));
       setShowModal(false);
+      navigate("/");
     };
     const handleCancel = () => {
       setShowModal(false);

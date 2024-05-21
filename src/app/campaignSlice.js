@@ -37,7 +37,7 @@ const campaignSlice = createSlice({
       state.joinedCampaigns = action.payload;
     },
 
-    resetCampaignSlice(state, action) {
+    resetCampaignSlice() {
       return initialState;
     },
     setCurrentCampaign(state, action) {

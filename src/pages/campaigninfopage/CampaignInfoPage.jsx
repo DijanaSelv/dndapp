@@ -14,6 +14,7 @@ import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import classes from "./CampaignInfoPage.module.css";
 import { uiSliceActions } from "../../app/uiSlice";
+import DeleteModal from "../../components/DeleteModal";
 
 const CampaignInfoPage = () => {
   const params = useParams();
@@ -29,6 +30,20 @@ const CampaignInfoPage = () => {
   const [playerMembers, setPlayerMembers] = useState([]);
   const [dmMembers, setDmMembers] = useState();
   const [copy, setCopy] = useState({ value: "", copied: false });
+
+  //Delete or leave campaign
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState();
+
+  const deleteButtonHandler = () => {
+    setModalType("campaign");
+    setShowModal(true);
+  };
+  const leaveCampaignButtonHandler = () => {
+    setModalType("leaveCampaign");
+    setShowModal(true);
+  };
 
   //when we open the page: 1. reach currentCampaign (fetched from MainNav). Display members as a separate thing, because we must find their names.
   const roles = [
@@ -54,6 +69,12 @@ const CampaignInfoPage = () => {
 
   return (
     <div className={classes.content}>
+      <DeleteModal
+        type={modalType}
+        campaign={currentCampaign}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
       {!currentCampaign?.id && isLoading && (
         <>
           <p className={classes.pageInfo}>Loading...</p>
@@ -128,6 +149,17 @@ const CampaignInfoPage = () => {
                   </div>
                 </div>
               )}
+              <div className={classes.leaveOrDeleteButton}>
+                {dm || creator ? (
+                  <Button danger onClick={deleteButtonHandler}>
+                    Delete Campaign
+                  </Button>
+                ) : (
+                  <Button danger onClick={leaveCampaignButtonHandler}>
+                    Leave Campaign
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </>

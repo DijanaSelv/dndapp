@@ -31,8 +31,7 @@ const userSlice = createSlice({
       state.user.campaigns.created = action.payload.campaigns?.created || null;
       state.user.campaigns.joined = action.payload.campaigns?.joined || null;
     },
-    setSignOutUser(state) {
-      // ! remove the state since its not used
+    setSignOutUser() {
       return initialState;
     },
     updateUserCampaigns(state, action) {

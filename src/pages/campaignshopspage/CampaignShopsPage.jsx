@@ -15,6 +15,7 @@ const CampaignShopsPage = () => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.uiSlice);
   const { shops } = useSelector((state) => state.shopsSlice);
+  const { creator, dm } = useSelector((state) => state.rolesSlice);
   const { requestSuccess, requestFailed, notification } = useSelector(
     (state) => state.uiSlice
   );
@@ -28,7 +29,7 @@ const CampaignShopsPage = () => {
       <div className={classes.content}>
         {notification && <NotificationBox />}
         <div className={classes.shopsHeader}>
-          <h2 className={classes.title}>SHOPS</h2>{" "}
+          <h2 className={classes.title}>Shops</h2>{" "}
           <Link className={classes.createShopLink} to="NewShop">
             Create <PlusCircleOutlined />
           </Link>
@@ -38,7 +39,11 @@ const CampaignShopsPage = () => {
             <LoadingOutlined />
           ) : Object.keys(shops).length !== 0 ? (
             Object.values(shops).map((shop) => (
-              <ShopListItem key={shop.id} shop={shop} type={params.type} />
+              <ShopListItem
+                key={shop.id}
+                shop={shop}
+                type={creator || dm ? "created" : ""}
+              />
             ))
           ) : (
             <div>
