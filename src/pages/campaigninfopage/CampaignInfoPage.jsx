@@ -13,7 +13,7 @@ import { Button, Progress } from "antd";
 import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import classes from "./CampaignInfoPage.module.css";
-import { uiSliceActions } from "../../app/uiSlice";
+
 import DeleteModal from "../../components/DeleteModal";
 
 const CampaignInfoPage = () => {
