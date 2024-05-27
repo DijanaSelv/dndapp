@@ -496,3 +496,19 @@ export const updateNotes = (campaignId, uid, noteId, newContent) => {
     dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
+
+//CHARACTER
+
+export const createCharacter = (data, uid, id) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const charRef = ref(db, "users/" + uid + "/characters/" + id);
+      await update(charRef, { ...data });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};

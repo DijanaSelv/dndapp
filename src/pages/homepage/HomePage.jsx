@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NotificationBox from "../../components/NotificationBox";
 import { LoadingOutlined, PlusCircleOutlined } from "@ant-design/icons";
 
@@ -8,6 +8,7 @@ import classes from "./HomePage.module.css";
 import CampaignCardsContainer from "../../components/CampaignCardsContainer";
 import { useState } from "react";
 import JoinCampaignModal from "../../components/JoinCampaignModal";
+import { uiSliceActions } from "../../app/uiSlice";
 
 const Home = () => {
   //fetch state from store
@@ -20,6 +21,8 @@ const Home = () => {
   const joinCampaignHandler = () => {
     setShowJoinModal(true);
   };
+  const dispatch = useDispatch();
+  dispatch(uiSliceActions.resetRequestState());
 
   return (
     <div className={classes.content}>

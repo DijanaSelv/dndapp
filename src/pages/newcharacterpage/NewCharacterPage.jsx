@@ -1,14 +1,21 @@
-import { Input, Button, Select, Radio, Checkbox, Tabs, Form } from "antd";
-
+import { Input, Button, Select, Checkbox, Tabs, Form } from "antd";
 import { useEffect, useState } from "react";
 import { getItems } from "../../app/actions/dndApiActions";
 import { useForm } from "antd/es/form/Form";
 
 import cssClasses from "./NewCharacterPage.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { nanoid } from "nanoid";
+import { createCharacter } from "../../app/actions/databaseActions";
+import { useNavigate } from "react-router";
 
 const NewCharacterPage = () => {
   const { TextArea } = Input;
   const [form] = useForm();
+  const navigate = useNavigate();
+  const { uid } = useSelector((state) => state.userSlice.user);
+  const { requestSuccess } = useSelector((state) => state.uiSlice);
+  const dispatch = useDispatch();
   const [optionsData, setOptionsData] = useState({
     races: [],
     subRaces: [],
@@ -39,7 +46,11 @@ const NewCharacterPage = () => {
   };
 
   const createCharacterHandler = (values) => {
-    console.log(values);
+    //JSON parse so that undefined variables are removed (firebase does not accept undefined)
+    const data = JSON.parse(JSON.stringify(values));
+    console.log(data);
+    const id = nanoid(13);
+    dispatch(createCharacter(data, uid, id));
   };
 
   const getCategoryOptions = async (category) => {
@@ -131,11 +142,11 @@ const NewCharacterPage = () => {
 
   useEffect(() => {
     getAllOptions();
-    console.log(optionsData);
-  }, []);
+    requestSuccess && navigate("/");
+  }, [requestSuccess]);
 
   const findSubclassesHandler = async (classValue) => {
-    form.setFieldValue("subclass", null);
+    form.setFieldValue("subclass", undefined);
     const subclassesData = await getCategoryOptions(
       `classes/${classValue}/subclasses`
     );
@@ -152,21 +163,19 @@ const NewCharacterPage = () => {
       label: "General",
       children: (
         <>
-          <Form.Item name="name" style={{ width: "250px" }}>
-            <p>Name:</p>
+          <Form.Item name="name" label="Name:" style={{ width: "250px" }}>
             <Input placeholder="The name of your character"></Input>
           </Form.Item>
-          <p>Race</p>
-          <Form.Item name="race">
+
+          <Form.Item name="race" label="Race:">
             <Select
               placeholder="Select a race"
               options={optionsData.races}
               style={{ width: "250px" }}
-              onSelect={(value) => console.log(value)}
             />
           </Form.Item>
-          <p>Class</p>
-          <Form.Item name="class">
+
+          <Form.Item name="class" label="Class:">
             <Select
               placeholder="Select a class"
               options={optionsData.classes}
@@ -176,7 +185,7 @@ const NewCharacterPage = () => {
           </Form.Item>
           {/* TODO:on change class reset subclass if it was selected */}
           {optionsData.subClasses.length != 0 && (
-            <Form.Item name="subclass">
+            <Form.Item name="subclass" label="Subclass:">
               <Select
                 placeholder="Subclass (optional)"
                 options={optionsData.subClasses}
@@ -184,7 +193,7 @@ const NewCharacterPage = () => {
               />
             </Form.Item>
           )}
-          <h3>Physical appearance</h3>
+          <p>Physical appearance:</p>
           <Form.Item name="height">
             <Input addonBefore="Height"></Input>
           </Form.Item>
@@ -203,7 +212,7 @@ const NewCharacterPage = () => {
           <Form.Item name="hair">
             <Input addonBefore="Hair"></Input>
           </Form.Item>
-          <p>Any other pshysical peculiarities?</p>
+          <p>Any other physical peculiarities?</p>
           <Form.Item name="physical description">
             <TextArea placeholder="describe your character"></TextArea>
           </Form.Item>
@@ -216,7 +225,7 @@ const NewCharacterPage = () => {
       label: "Specs",
       children: (
         <>
-          <h3>Ability Scores</h3>
+          <h3>Ability Scores:</h3>
           <Form.Item name="strength" rules={[abilityScoreRules]}>
             <Input addonBefore="Strength" type="number"></Input>
           </Form.Item>
@@ -236,38 +245,37 @@ const NewCharacterPage = () => {
             <Input addonBefore="Charisma" type="number"></Input>
           </Form.Item>
 
-          <h3>Proficiencies</h3>
+          <h3>Proficiencies:</h3>
 
           {/* ovie kje bidat clickable to expand the radio buttons for every section */}
-          <p>Skills</p>
-          <Form.Item name="skills">
+
+          <Form.Item name="skills" label="Skills:">
             <Checkbox.Group options={optionsData.proficiencies.skills} />
           </Form.Item>
-          <p>Tools & Kits</p>
-          <Form.Item name="tools">
+
+          <Form.Item name="tools" label="Tools & Kits:">
             <Checkbox.Group options={optionsData.proficiencies.tools} />
           </Form.Item>
-          <p>Armor</p>
-          <Form.Item name="armor">
+
+          <Form.Item name="armor" label="Armor:">
             <Checkbox.Group options={optionsData.proficiencies.armor} />
           </Form.Item>
-          <p>Supplies</p>
-          <Form.Item name="supplies">
+
+          <Form.Item name="supplies" label="Supplies:">
             <Checkbox.Group options={optionsData.proficiencies.supplies} />
           </Form.Item>
-          <p>Saving Throws</p>
-          <Form.Item name="saving throws">
+
+          <Form.Item name="saving throws" label="Saving throws:">
             <Checkbox.Group options={optionsData.proficiencies.savingThrows} />
           </Form.Item>
-          <p>Weapons & Instruments</p>
-          <Form.Item name="weapons">
+
+          <Form.Item name="weapons" label="Weapons & Instruments:">
             <Checkbox.Group
               options={optionsData.proficiencies.weaponsInstruments}
             />
           </Form.Item>
 
-          <h3>Languages</h3>
-          <Form.Item name="languages">
+          <Form.Item name="languages" label="Languages:">
             <Checkbox.Group options={optionsData.languages} />
           </Form.Item>
         </>
@@ -283,7 +291,6 @@ const NewCharacterPage = () => {
               placeholder="School of Magic"
               options={optionsData.magicSchools}
               style={{ width: "250px" }}
-              onSelect={(value) => console.log(value)}
             />
           </Form.Item>
         </>
@@ -303,7 +310,7 @@ const NewCharacterPage = () => {
               placeholder="Select alignment"
               options={optionsData.alignments}
               style={{ width: "250px" }}
-              onSelect={(value) => console.log(value)}
+              /* onSelect={(value) => console.log(value)} */
             />
           </Form.Item>
 
@@ -349,7 +356,7 @@ const NewCharacterPage = () => {
 
   return (
     <>
-      <h2 className={cssClasses.title}>Create new character</h2>
+      <h2 className={cssClasses.title}>Create a new character</h2>
       <Form
         form={form}
         layout="vertical"
