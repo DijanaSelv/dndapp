@@ -1,7 +1,8 @@
 .campaignTitle {
   font-family: "Texturina";
-  padding: 10px 0;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ccd1dad2;
 }
 
 .cardsList {

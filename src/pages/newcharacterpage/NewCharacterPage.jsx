@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { getItems } from "../../app/actions/dndApiActions";
 import { useForm } from "antd/es/form/Form";
 
+import cssClasses from "./NewCharacterPage.module.css";
+
 const NewCharacterPage = () => {
   const { TextArea } = Input;
   const [form] = useForm();
@@ -150,12 +152,9 @@ const NewCharacterPage = () => {
       label: "General",
       children: (
         <>
-          <h3>General</h3>
-          <Form.Item name="name">
-            <Input
-              addonBefore="Name"
-              placeholder="The name of your character"
-            ></Input>
+          <Form.Item name="name" style={{ width: "250px" }}>
+            <p>Name:</p>
+            <Input placeholder="The name of your character"></Input>
           </Form.Item>
           <p>Race</p>
           <Form.Item name="race">
@@ -350,8 +349,13 @@ const NewCharacterPage = () => {
 
   return (
     <>
-      <h3>Create new character</h3>
-      <Form form={form} layout="vertical" onFinish={createCharacterHandler}>
+      <h2 className={cssClasses.title}>Create new character</h2>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={createCharacterHandler}
+        className={cssClasses.characterForm}
+      >
         <Tabs defaultActiveKey="1" items={items} />
         <Button danger>Cancel</Button>
       </Form>

@@ -391,7 +391,7 @@ const EditShopPage = () => {
           />
           <div className={classes.shopMenu}>
             <div className={classes.editContainer}>
-              <h3>Shop Name: </h3>
+              <h3 className={classes.label}>Shop Name: </h3>
               <Input value={shopTitle} onChange={handleTitleChange}></Input>
             </div>
 
@@ -415,14 +415,14 @@ const EditShopPage = () => {
           </div>
           <div className={classes.editDetails}>
             <div className={classes.editContainer}>
-              <h3>Description:</h3>
+              <h3 className={classes.label}>Description:</h3>
               <TextArea
                 value={shopDescription}
                 onChange={handleDescriptionChange}
               ></TextArea>
             </div>
             <div className={classes.editContainer}>
-              <h3>Image URL:</h3>
+              <h3 className={classes.label}>Image URL:</h3>
               <Input
                 name="image"
                 value={imageUrl}

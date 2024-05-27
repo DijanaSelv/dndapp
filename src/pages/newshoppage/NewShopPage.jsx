@@ -366,7 +366,7 @@ const NewShopPage = () => {
       <CancelModal showModal={showModal} setShowModal={setShowModal} />
       <div className={classes.shopMenu}>
         <div className={classes.editContainer}>
-          <h3>Title</h3>
+          <h3 className={classes.label}>Title:</h3>
           <Input
             placeholder={
               titleIsError ? "Title is requred" : "The name of your shop"
@@ -395,7 +395,7 @@ const NewShopPage = () => {
       </div>
       <div className={classes.editDetails}>
         <div className={classes.editContainer}>
-          <h4>Description</h4>
+          <h3 className={classes.label}>Description:</h3>
           <TextArea
             placeholder={"A blurb for your shop"}
             value={description}
@@ -404,7 +404,7 @@ const NewShopPage = () => {
           ></TextArea>
         </div>
         <div className={classes.editContainer}>
-          <h3>Image URL:</h3>
+          <h3 className={classes.label}>Image URL:</h3>
           <Input
             name="image"
             value={imageUrl}

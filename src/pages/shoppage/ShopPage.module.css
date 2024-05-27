@@ -7,7 +7,7 @@
 }
 
 .titleContainer {
-  margin: 40px 0 40px 25px;
+  margin: 20px 0 40px 25px;
 }
 
 .titleContainer * {
@@ -95,8 +95,7 @@
   font-style: italic;
 }
 
-h3,
-h4 {
+.label {
   margin-bottom: 8px;
   font-family: "Texturina";
 }
