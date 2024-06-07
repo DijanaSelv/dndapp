@@ -9,6 +9,7 @@ import CampaignCardsContainer from "../../components/CampaignCardsContainer";
 import { useState } from "react";
 import JoinCampaignModal from "../../components/JoinCampaignModal";
 import { uiSliceActions } from "../../app/uiSlice";
+import CharacterCardsContainer from "../../components/CharacterCardsContainer";
 
 const Home = () => {
   //fetch state from store
@@ -67,9 +68,7 @@ const Home = () => {
         </div>
 
         <ul>
-          {/* {characters.map((character) => (
-            <CharacterListItem character={character} />
-          ))} */}
+          <CharacterCardsContainer />
         </ul>
       </div>
     </div>
