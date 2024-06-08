@@ -111,11 +111,11 @@
   font-weight: bold;
   font-size: large;
   padding: 5px;
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
 }
 
 .abilityTitle svg {
-  padding-right: 10px;
+  padding-right: 5px;
   transition: all 0.2s;
 }
 .singleAbility {
@@ -161,10 +161,54 @@
 }
 /* .modifierScore {
   border-top: none !important;
-  margin-top: -3px; 
+  margin-top: -5px;
 } */
 .modifierScore {
   border: 1px solid #c3c3c5d2;
   border-radius: 0 0 110px 110px;
   color: rgb(116, 21, 21);
+}
+
+@media (min-width: 1200px) {
+  .allStats {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 20px;
+  }
+  .abilities {
+    display: flex;
+    flex-direction: column;
+    padding-right: 15px;
+    padding-left: 15px;
+    border-right: 1px solid #c3c3c5d2;
+    gap: 10px;
+  }
+
+  .skills {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #c3c3c5d2;
+    padding: 0 20px;
+  }
+
+  .skillsTitle {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #c3c3c5d2;
+  }
+
+  .singleSkill {
+    padding-bottom: 15px;
+  }
+  .singleSkill * {
+    font-size: large;
+  }
+
+  .singleSkill svg {
+    padding-right: 10px;
+  }
+
+  .skillScore {
+    padding-right: 5px;
+  }
 }

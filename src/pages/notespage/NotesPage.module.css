@@ -51,33 +51,35 @@
 }
 
 /* Masonry layout */
-.card {
+/* .card {
   float: left;
-  width: 18% !important;
+
+  min-width: 22% !important;
   height: auto;
   margin: 5px;
   transition: all 0.4s;
-}
+} */
 
-/* .noteCards {
+.noteCards {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-auto-rows: 200px;
-} */
+}
 
-/* .noteCards {
+.noteCards {
   display: flex;
   flex-flow: column wrap;
-  max-height: 1000px;
+  max-height: 1500px;
+  /* can I make max height change and calculate according to how many columns there are? primer ako ima 4th column, add 500 more px */
   margin-left: -8px;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .card {
   width: 400px;
   margin: 0 8px 8px 0;
-} */
+}
 
 /* Edit form on double click */
 .doubleClickedCard {
