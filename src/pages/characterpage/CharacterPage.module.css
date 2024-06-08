@@ -1,5 +1,6 @@
 .charInfoSection * {
   font-family: "Texturina";
+  cursor: default;
 }
 
 .charInfoSection {
@@ -58,6 +59,7 @@
 
 .singleStat {
   margin: 10px;
+  min-width: 140px;
 }
 .statRow {
   display: flex;
@@ -89,4 +91,80 @@
 
 .singleStat:hover span {
   background-color: #f8f8f8;
+}
+.singleStat:hover svg,
+.singleStat:hover .statLabel {
+  color: #2778a3;
+  color: rgba(1, 58, 88, 0.993);
+  transition: all 0.2s;
+}
+
+/* ABILITIES */
+
+.abilities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 30px 50px;
+}
+
+.abilityTitle {
+  font-weight: bold;
+  font-size: large;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.abilityTitle svg {
+  padding-right: 10px;
+  transition: all 0.2s;
+}
+.singleAbility {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.singleAbility:hover .abilityScore {
+  background-color: #f8f8f8;
+}
+
+.singleAbility:hover svg,
+.singleAbility:hover .abilityTitle {
+  color: #2778a3;
+  transition: all 0.2s;
+}
+
+.abilityTitle:hover {
+  cursor: pointer;
+}
+
+.abilityCircle {
+  display: flex;
+  flex-direction: column;
+}
+
+.abilityScore,
+.modifierScore {
+  display: flex;
+  width: 100px;
+  height: 50px;
+  border: 1px solid #7f8288d2;
+  border-radius: 101px 101px 0 0px;
+  display: inline-flex;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.3s;
+}
+
+.abilityScore {
+  padding-top: 6px;
+}
+/* .modifierScore {
+  border-top: none !important;
+  margin-top: -3px; 
+} */
+.modifierScore {
+  border: 1px solid #c3c3c5d2;
+  border-radius: 0 0 110px 110px;
+  color: rgb(116, 21, 21);
 }
