@@ -3,10 +3,6 @@
   cursor: default;
 }
 
-.charInfoSection {
-  margin-bottom: 30px;
-}
-
 .sectionTitle {
   padding: 10px 0 8px 0;
   margin-top: 10px;
@@ -40,6 +36,7 @@
 
 .charInfoContent {
   display: flex;
+
   /* align-items: center; */
 }
 
@@ -54,7 +51,6 @@
 
 .mainStats svg {
   padding-right: 7px;
-  font-size: large;
 }
 
 .singleStat {
@@ -103,15 +99,14 @@
 
 .abilities {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 30px 50px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding-bottom: 30px;
 }
 
 .abilityTitle {
   font-weight: bold;
   font-size: large;
   padding: 5px;
-  /* margin-bottom: 5px; */
 }
 
 .abilityTitle svg {
@@ -122,6 +117,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 137px;
 }
 
 .singleAbility:hover .abilityScore {
@@ -159,27 +155,114 @@
 .abilityScore {
   padding-top: 6px;
 }
-/* .modifierScore {
-  border-top: none !important;
-  margin-top: -5px;
-} */
+
 .modifierScore {
   border: 1px solid #c3c3c5d2;
   border-radius: 0 0 110px 110px;
   color: rgb(116, 21, 21);
 }
 
-@media (min-width: 1200px) {
+/* STATS */
+.skillsTitle {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #c3c3c5d2;
+  color: black;
+}
+.skillGroup {
+  margin-bottom: 30px;
+}
+
+.singleSkill {
+  padding-bottom: 15px;
+  color: rgb(65, 65, 65);
+}
+.skills * {
+  font-size: medium;
+}
+
+.singleSkill svg {
+  padding-right: 10px;
+}
+
+.skillScore {
+  padding-right: 5px;
+}
+
+.proficiency span {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.proficiency {
+  margin-bottom: 10px;
+}
+
+.otherInfoGroup {
+  margin-bottom: 30px;
+}
+
+@media (max-width: 799px) {
+  .skillGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .abilityTitle {
+    font-weight: 400;
+    font-size: medium;
+    padding: 5px 2px;
+  }
+}
+
+@media (min-width: 800px) and (max-width: 1599px) {
   .allStats {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
     padding-bottom: 20px;
   }
   .abilities {
     display: flex;
     flex-direction: column;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 30px;
+    border-right: 1px solid #c3c3c5d2;
+    gap: 10px;
+  }
+
+  .skills {
+    display: flex;
+    flex-basis: calc(100% / 3);
+    flex-direction: column;
+    border-right: 1px solid #c3c3c5d2;
+    padding: 0 15px;
+    width: 50%;
+    margin-right: auto;
+  }
+
+  .equippedSection {
+    flex-basis: 100%;
+    border: none;
+  }
+
+  .proficiency {
+    margin: 10px -10px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .allStats {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 20px;
+  }
+
+  .abilities {
+    display: flex;
+    flex-direction: column;
+    padding-right: 30px;
     border-right: 1px solid #c3c3c5d2;
     gap: 10px;
   }
@@ -188,27 +271,16 @@
     display: flex;
     flex-direction: column;
     border-right: 1px solid #c3c3c5d2;
-    padding: 0 20px;
+    padding: 0 15px;
+    width: 25%;
+    margin-right: auto;
   }
 
-  .skillsTitle {
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #c3c3c5d2;
+  .equippedSection {
+    width: 40%;
   }
 
-  .singleSkill {
-    padding-bottom: 15px;
-  }
-  .singleSkill * {
-    font-size: large;
-  }
-
-  .singleSkill svg {
-    padding-right: 10px;
-  }
-
-  .skillScore {
-    padding-right: 5px;
+  .proficiency {
+    margin: 10px -10px;
   }
 }

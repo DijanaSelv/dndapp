@@ -79,6 +79,10 @@
   padding: 5px;
 }
 
+.itemDescription h3 {
+  font-family: "Texturina";
+}
+
 .chooseItem {
   border: dashed #b1ccd4;
   text-align: center;

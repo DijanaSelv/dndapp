@@ -79,7 +79,7 @@ const CharacterPage = () => {
         </h2>
 
         <div className={classes.allStats}>
-          <div className={classes.abilities}>
+          <div className={`${classes.abilities} `}>
             <div className={classes.singleAbility}>
               <Tooltip title="athletics" trigger={"click"}>
                 <p className={classes.abilityTitle}>
@@ -220,113 +220,194 @@ const CharacterPage = () => {
           </div>
           <div className={classes.skills}>
             <h3 className={classes.skillsTitle}>Skills</h3>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+9</span>{" "}
-              <span className={classes.skillLabel}>Acrobatics</span>{" "}
-              <FontAwesomeIcon icon={faBullseye} />
+            <div className={classes.skillGroup}>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+9</span>{" "}
+                <span className={classes.skillLabel}>Acrobatics</span>{" "}
+                <FontAwesomeIcon icon={faBullseye} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircleDot} />
+                <span className={classes.skillScore}>+3</span>{" "}
+                <span className={classes.skillLabel}>Animal Handling</span>{" "}
+                <FontAwesomeIcon icon={faLightbulb} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+4</span>{" "}
+                <span className={classes.skillLabel}>Arcana</span>{" "}
+                <FontAwesomeIcon icon={faBrain} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircle} />
+                <span className={classes.skillScore}>+5</span>{" "}
+                <span className={classes.skillLabel}>Athletics</span>{" "}
+                <FontAwesomeIcon icon={faPersonRunning} />
+              </div>
             </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircleDot} />
-              <span className={classes.skillScore}>+3</span>{" "}
-              <span className={classes.skillLabel}>Animal Handling</span>{" "}
-              <FontAwesomeIcon icon={faLightbulb} />
+          </div>
+          <div className={classes.skills}>
+            <h3 className={classes.skillsTitle}>Saving Throws</h3>
+            <div className={classes.skillGroup}>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircleDot} />
+                <span className={classes.skillScore}>+4</span>{" "}
+                <span className={classes.skillLabel}>Strength</span>{" "}
+                <FontAwesomeIcon icon={faHandFist} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircleDot} />
+                <span className={classes.skillScore}>+4</span>{" "}
+                <span className={classes.skillLabel}>Strength</span>{" "}
+                <FontAwesomeIcon icon={faHandFist} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircleDot} />
+                <span className={classes.skillScore}>+4</span>{" "}
+                <span className={classes.skillLabel}>Strength</span>{" "}
+                <FontAwesomeIcon icon={faHandFist} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircleDot} />
+                <span className={classes.skillScore}>+4</span>{" "}
+                <span className={classes.skillLabel}>Strength</span>{" "}
+                <FontAwesomeIcon icon={faHandFist} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircleDot} />
+                <span className={classes.skillScore}>+4</span>{" "}
+                <span className={classes.skillLabel}>Strength</span>{" "}
+                <FontAwesomeIcon icon={faHandFist} />
+              </div>
+              <div className={classes.singleSkill}>
+                <FontAwesomeIcon icon={faCircleDot} />
+                <span className={classes.skillScore}>+4</span>{" "}
+                <span className={classes.skillLabel}>Strength</span>{" "}
+                <FontAwesomeIcon icon={faHandFist} />
+              </div>
             </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+4</span>{" "}
-              <span className={classes.skillLabel}>Arcana</span>{" "}
-              <FontAwesomeIcon icon={faBrain} />
+
+            <h3 className={classes.skillsTitle}>Proficiencies</h3>
+            <div className={classes.otherInfoGroup}>
+              <div className={classes.proficiency}>
+                <span className={classes.proficiencyTitle}>
+                  Armor Proficiencies:
+                </span>{" "}
+                Light armor, Medium Armor, Shields
+              </div>
+              <div className={classes.proficiency}>
+                <span className={classes.proficiencyTitle}>
+                  Weapon Proficiencies:
+                </span>{" "}
+                Simple Weapons, Martial Weapons
+              </div>
+              <div className={classes.proficiency}>
+                <span className={classes.proficiencyTitle}>
+                  Tool Proficiencies:
+                </span>{" "}
+                -
+              </div>
+              <div className={classes.proficiency}>
+                <span className={classes.proficiencyTitle}>Languages:</span>{" "}
+                Common, all bird languages, Basic Walnar
+              </div>
             </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
+          </div>
+          <div className={`${classes.skills} ${classes.equippedSection}`}>
+            <h3 className={classes.skillsTitle}>Equipped items</h3>
+            <div className={classes.otherInfoGroup}>
+              <div> Crossbow heavy Ova treba table da e nekoj</div>
+              <div> Crossbow heavy Ova treba table da e nekoj</div>
+              <div> Crossbow heavy Ova treba table da e nekoj</div>
             </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
-            </div>
-            <div className={classes.singleSkill}>
-              <FontAwesomeIcon icon={faCircle} />
-              <span className={classes.skillScore}>+5</span>{" "}
-              <span className={classes.skillLabel}>Athletics</span>{" "}
-              <FontAwesomeIcon icon={faPersonRunning} />
+            <h3 className={classes.skillsTitle}>Features and Traits</h3>
+            <div className={classes.otherInfoGroup}>
+              <div> Add additional info for your character here</div>
             </div>
           </div>
         </div>

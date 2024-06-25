@@ -6,9 +6,9 @@
 }
 
 .cardsList {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 4fr));
   gap: 15px;
-  flex-wrap: wrap;
 }
 
 .cardsList * {
