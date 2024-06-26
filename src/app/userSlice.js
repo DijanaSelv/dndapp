@@ -30,6 +30,7 @@ const userSlice = createSlice({
       //null distinguishes from undefined, means data has been fetched but is empty vs undefined might still be loading (on home page campaign cards container)
       state.user.campaigns.created = action.payload.campaigns?.created || null;
       state.user.campaigns.joined = action.payload.campaigns?.joined || null;
+      state.user.characters = action.payload.characters || null;
     },
     setSignOutUser() {
       return initialState;
@@ -37,6 +38,9 @@ const userSlice = createSlice({
     updateUserCampaigns(state, action) {
       state.user.campaigns.created = action.payload.created || null;
       state.user.campaigns.joined = action.payload.joined || null;
+    },
+    updateCharacters(state, action) {
+      state.user.characters = action.payload || null;
     },
   },
 });

@@ -1,0 +1,15 @@
+export const HIT_DICE = {
+  artificer: 8,
+  barbarian: 12,
+  bard: 8,
+  cleric: 8,
+  druid: 8,
+  fighter: 10,
+  monk: 8,
+  ranger: 10,
+  rogue: 8,
+  paladin: 10,
+  sorcerer: 6,
+  wizard: 6,
+  warlock: 8,
+};

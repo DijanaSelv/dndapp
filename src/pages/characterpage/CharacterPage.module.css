@@ -19,6 +19,20 @@
   display: inline-block;
 }
 
+.printButton {
+  display: flex;
+  align-items: center;
+}
+
+.printButton svg {
+  font-size: large;
+}
+
+.charProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .charIcon {
   width: 150px;
   height: 150px;
@@ -43,13 +57,14 @@
 .mainStats {
   margin-left: 20px;
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
   justify-content: space-evenly;
   width: 100%;
 }
 
-.mainStats svg {
+.mainStats svg,
+.printButton svg,
+.gold svg {
   padding-right: 7px;
 }
 
@@ -117,7 +132,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 137px;
+  min-width: 118px;
 }
 
 .singleAbility:hover .abilityScore {
@@ -176,6 +191,13 @@
 .singleSkill {
   padding-bottom: 15px;
   color: rgb(65, 65, 65);
+  transition: all 0.2s;
+}
+
+.singleSkill:hover {
+  color: #2778a3;
+  transform: scale(1.05);
+  transition: all 0.2s;
 }
 .skills * {
   font-size: medium;
@@ -212,6 +234,10 @@
     font-weight: 400;
     font-size: medium;
     padding: 5px 2px;
+  }
+
+  .charInfoContent {
+    flex-direction: column;
   }
 }
 
@@ -251,7 +277,7 @@
   }
 }
 
-@media (min-width: 1600px) {
+@media (min-width: 1600px), print {
   .allStats {
     display: flex;
     flex-direction: row;
@@ -282,5 +308,26 @@
 
   .proficiency {
     margin: 10px -10px;
+  }
+}
+
+@media print {
+  body {
+    zoom: 75%;
+    margin: 0 -15%;
+  }
+
+  .skillGroup {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .charInfoContent {
+    flex-direction: row;
+  }
+
+  :global(#mainNav),
+  .printButton {
+    display: none;
   }
 }

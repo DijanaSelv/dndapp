@@ -11,25 +11,47 @@ import {
   faBrain,
   faLightbulb,
   faMasksTheater,
+  faDice,
+  faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faCircleDot, faCircle } from "@fortawesome/free-regular-svg-icons";
-import { Tooltip } from "antd";
+import { Button, Tooltip } from "antd";
 import classes from "./CharacterPage.module.css";
 
 const CharacterPage = () => {
+  const printCharacterHandler = () => {
+    window.print();
+  };
+
   return (
     <>
       <div className={classes.charInfoSection}>
         <h2 className={classes.sectionTitle}>
           {" "}
-          Slafko Janevski <span>Human Bard</span>
+          Slafko Janevski{" "}
+          <Button
+            className={classes.printButton}
+            onClick={printCharacterHandler}
+          >
+            <FontAwesomeIcon icon={faPrint} /> Print Character Sheet
+          </Button>
+          <span className={classes.gold}>
+            {" "}
+            <FontAwesomeIcon icon={faCoins} />
+            200gp, 56sp, 5cp
+          </span>
         </h2>
         <div className={classes.charInfoContent}>
-          <img
-            className={classes.charIcon}
-            src="https://pics.craiyon.com/2023-10-07/7f7dddf8a3594e2289ef0b90ab1628cf.webp"
-          ></img>
+          <div className={classes.charProfile}>
+            {" "}
+            <img
+              className={classes.charIcon}
+              src="https://pics.craiyon.com/2023-10-07/7f7dddf8a3594e2289ef0b90ab1628cf.webp"
+            ></img>
+            <p>Human Bard</p>
+            <p>Lawful Neutral</p>
+          </div>
           <div className={classes.mainStats}>
             <div className={classes.statRow}>
               <div className={classes.singleStat}>
@@ -48,10 +70,10 @@ const CharacterPage = () => {
               </div>
               <div className={classes.singleStat}>
                 <span className={classes.statLabel}>
-                  <FontAwesomeIcon icon={faCoins} />
-                  Gold:
+                  <FontAwesomeIcon icon={faDice} />
+                  Hit Dice:
                 </span>
-                <span className={classes.statValue}>200gp, 56sp, 5cp</span>
+                <span className={classes.statValue}>10d8</span>
               </div>
             </div>
             <div className={classes.statRow}>

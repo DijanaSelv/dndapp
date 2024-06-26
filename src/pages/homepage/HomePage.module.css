@@ -68,6 +68,11 @@ a {
   width: 24%;
 } */
 
+.campaignMeta div {
+  font-family: "Texturina";
+  font-size: large !important;
+}
+
 /* TO MAINTAIN IMAGE RATIO 3:2 */
 .coverDiv {
   padding-bottom: 70%;
@@ -115,3 +120,27 @@ a {
     width: 90%;
   }
 } */
+
+/* CHARACTER CARDS ARE A BIT DIFFERENT */
+
+.characterCard {
+  border: none;
+}
+
+.characterCard .coverDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.characterCard img {
+  border-radius: 100% !important;
+  width: auto;
+}
+
+.characterCard .characterMeta div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Texturina";
+  font-size: large;
+}
