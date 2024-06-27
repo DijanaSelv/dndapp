@@ -73,6 +73,7 @@ const CampaignListItem = ({ campaign, type }) => {
         actions={actions}
       >
         <Meta
+          className={classes.campaignMeta}
           title={campaign.title}
           description={`Players: ${
             campaign.players ? campaign.players.length : "0"

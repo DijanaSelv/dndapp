@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  getCurrentCampaign,
-  getMembers,
-} from "../../app/actions/databaseActions";
-import NotificationBox from "../../components/NotificationBox";
+import { getMembers } from "../../app/actions/databaseActions";
 
 import { Button, Progress } from "antd";
 import { CheckOutlined, CopyOutlined } from "@ant-design/icons";
@@ -17,7 +12,6 @@ import classes from "./CampaignInfoPage.module.css";
 import DeleteModal from "../../components/DeleteModal";
 
 const CampaignInfoPage = () => {
-  const params = useParams();
   const dispatch = useDispatch();
 
   const { currentCampaign } = useSelector((state) => state.campaignSlice);

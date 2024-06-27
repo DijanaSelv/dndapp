@@ -51,16 +51,26 @@ a {
 }
 
 .section > ul {
-  width: auto;
-  padding: 0;
-  display: flex;
+  /* width: auto; */
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 4fr));
+  gap: 15px;
+  /* padding: 0;
+
   flex-wrap: wrap;
   gap: 15px;
   justify-content: flex-start;
+ */
 }
 
-ul > div {
+/* ul > div {
   width: 24%;
+} */
+
+.campaignMeta div {
+  font-family: "Texturina";
+  font-size: large !important;
 }
 
 /* TO MAINTAIN IMAGE RATIO 3:2 */
@@ -74,17 +84,21 @@ ul > div {
   height: 100%;
   object-fit: cover;
 }
-
-@media (max-width: 2270px) {
+@media (max-width: 1270px) {
+  .mainWrapper {
+    margin: 0 15%;
+  }
+}
+/* @media (max-width: 2270px) {
   .mainWrapper {
     margin: 0 20%;
   }
-  ul > div {
+    ul > div {
     width: 32%;
   }
 }
 @media (max-width: 1600px) {
-  ul > div {
+    ul > div {
     width: 32%;
   }
 }
@@ -92,17 +106,41 @@ ul > div {
   .mainWrapper {
     margin: 0 15%;
   }
-  ul > div {
+    ul > div {
     width: 48%;
   }
 }
 @media (max-width: 1070px) {
-  ul > div {
+    ul > div {
     width: 48%;
   }
 }
 @media (max-width: 650px) {
-  ul > div {
+    ul > div {
     width: 90%;
   }
+} */
+
+/* CHARACTER CARDS ARE A BIT DIFFERENT */
+
+.characterCard {
+  border: none;
+}
+
+.characterCard .coverDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.characterCard img {
+  border-radius: 100% !important;
+  width: auto;
+}
+
+.characterCard .characterMeta div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Texturina";
+  font-size: large;
 }

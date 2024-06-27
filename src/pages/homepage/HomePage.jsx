@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NotificationBox from "../../components/NotificationBox";
 import { LoadingOutlined, PlusCircleOutlined } from "@ant-design/icons";
 
@@ -8,6 +8,8 @@ import classes from "./HomePage.module.css";
 import CampaignCardsContainer from "../../components/CampaignCardsContainer";
 import { useState } from "react";
 import JoinCampaignModal from "../../components/JoinCampaignModal";
+import { uiSliceActions } from "../../app/uiSlice";
+import CharacterCardsContainer from "../../components/CharacterCardsContainer";
 
 const Home = () => {
   //fetch state from store
@@ -20,6 +22,8 @@ const Home = () => {
   const joinCampaignHandler = () => {
     setShowJoinModal(true);
   };
+  const dispatch = useDispatch();
+  dispatch(uiSliceActions.resetRequestState());
 
   return (
     <div className={classes.content}>
@@ -58,15 +62,13 @@ const Home = () => {
       <div className={classes.section}>
         <div className={classes.sectionHeader}>
           <h2>Characters {isLoading && <LoadingOutlined />}</h2>
-          <Link className={classes.sectionLink}>
+          <Link to="/NewCharacter" className={classes.sectionLink}>
             New Character <PlusCircleOutlined />
           </Link>
         </div>
 
         <ul>
-          {/* {characters.map((character) => (
-            <CharacterListItem character={character} />
-          ))} */}
+          <CharacterCardsContainer uid={uid} />
         </ul>
       </div>
     </div>

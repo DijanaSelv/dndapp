@@ -1,13 +1,14 @@
 .campaignTitle {
   font-family: "Texturina";
-  padding: 10px 0;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ccd1dad2;
 }
 
 .cardsList {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 4fr));
   gap: 15px;
-  flex-wrap: wrap;
 }
 
 .cardsList * {

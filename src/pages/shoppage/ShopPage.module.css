@@ -7,7 +7,7 @@
 }
 
 .titleContainer {
-  margin: 40px 0 40px 25px;
+  margin: 20px 0 40px 25px;
 }
 
 .titleContainer * {
@@ -79,6 +79,10 @@
   padding: 5px;
 }
 
+.itemDescription h3 {
+  font-family: "Texturina";
+}
+
 .chooseItem {
   border: dashed #b1ccd4;
   text-align: center;
@@ -95,8 +99,7 @@
   font-style: italic;
 }
 
-h3,
-h4 {
+.label {
   margin-bottom: 8px;
   font-family: "Texturina";
 }

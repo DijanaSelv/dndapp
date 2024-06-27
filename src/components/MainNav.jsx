@@ -70,7 +70,7 @@ const MainNav = () => {
 
   return (
     <>
-      <div className={classes.background}>
+      <div className={classes.background} id="mainNav">
         <div className={classes.mainNav}>
           <div className={classes.welcomeLogo}>
             <Link className={classes.titleLink}>

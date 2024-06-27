@@ -25,6 +25,7 @@ import NewShopPage from "./pages/newshoppage/NewShopPage";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import NotesPage from "./pages/notespage/NotesPage";
 import { uiSliceActions } from "./app/uiSlice";
+import CharacterPage from "./pages/characterpage/CharacterPage";
 
 //refresh state persistence
 /* import { PersistGate } from "redux-persist/integration/react";
@@ -107,6 +108,14 @@ const router = createBrowserRouter([
           <RoleProtectedRoute permittedRoles={["dm"]}>
             <NewShopPage />
           </RoleProtectedRoute>
+        ),
+      },
+      {
+        path: "Characters/:characterId",
+        element: (
+          <ProtectedRoute>
+            <CharacterPage />
+          </ProtectedRoute>
         ),
       },
     ],
