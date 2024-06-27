@@ -3,6 +3,13 @@
   cursor: default;
 }
 
+.pageInfo {
+  font-size: 20px;
+  font-family: "Texturina";
+  margin-top: 30px;
+  text-align: center;
+}
+
 .sectionTitle {
   padding: 10px 0 8px 0;
   margin-top: 10px;
@@ -36,6 +43,7 @@
 .charIcon {
   width: 150px;
   height: 150px;
+  object-fit: cover;
   border: 2px solid #7f8288d2;
   border-radius: 100%;
   margin: 0 20px;
@@ -212,12 +220,12 @@
 }
 
 .proficiency span {
-  font-style: italic;
-  font-weight: bold;
+  /* font-style: italic; */
+  font-weight: bolder;
 }
 
 .proficiency {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .otherInfoGroup {
@@ -273,7 +281,7 @@
   }
 
   .proficiency {
-    margin: 10px -10px;
+    margin: 0 -10px 15px -10px;
   }
 }
 
@@ -307,7 +315,7 @@
   }
 
   .proficiency {
-    margin: 10px -10px;
+    margin: 0 -10px 15px -10px;
   }
 }
 

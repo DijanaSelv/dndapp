@@ -1,4 +1,4 @@
-import { Input, Button, Select, Checkbox, Tabs, Form } from "antd";
+import { Input, Button, Select, Checkbox, Tabs, Form, InputNumber } from "antd";
 import { useEffect, useState } from "react";
 import { getItems } from "../../app/actions/dndApiActions";
 import { useForm } from "antd/es/form/Form";
@@ -15,6 +15,8 @@ const NewCharacterPage = () => {
   const navigate = useNavigate();
   const { uid } = useSelector((state) => state.userSlice.user);
   const { requestSuccess } = useSelector((state) => state.uiSlice);
+
+  const [messageContent, setMessageContent] = useState("");
   const dispatch = useDispatch();
   const [optionsData, setOptionsData] = useState({
     races: [],
@@ -36,13 +38,14 @@ const NewCharacterPage = () => {
   //VALIDATION RULES
 
   const abilityScoreRules = {
+    required: true,
     type: "number",
     min: 1,
     max: 20,
     transform: (value) => {
       return value ? Number(value) : undefined;
     },
-    message: "Must be between 1 and 20",
+    message: "must be between 1 and 20",
   };
 
   const createCharacterHandler = (values) => {
@@ -51,6 +54,10 @@ const NewCharacterPage = () => {
     console.log(data);
     const id = nanoid(13);
     dispatch(createCharacter(data, uid, id));
+  };
+
+  const notSubmittedHandler = () => {
+    setMessageContent("Please fill out all required fields.");
   };
 
   const getCategoryOptions = async (category) => {
@@ -163,11 +170,30 @@ const NewCharacterPage = () => {
       label: "General",
       children: (
         <>
-          <Form.Item name="name" label="Name:" style={{ width: "250px" }}>
+          <Form.Item
+            name="name"
+            label="Name:"
+            style={{ width: "250px" }}
+            rules={[
+              {
+                required: true,
+                message: "Please name your character",
+              },
+            ]}
+          >
             <Input placeholder="The name of your character"></Input>
           </Form.Item>
 
-          <Form.Item name="race" label="Race:">
+          <Form.Item
+            name="race"
+            label="Race:"
+            rules={[
+              {
+                required: true,
+                message: "Please pick a race",
+              },
+            ]}
+          >
             <Select
               placeholder="Select a race"
               options={optionsData.races}
@@ -175,7 +201,16 @@ const NewCharacterPage = () => {
             />
           </Form.Item>
 
-          <Form.Item name="class" label="Class:">
+          <Form.Item
+            name="class"
+            label="Class:"
+            rules={[
+              {
+                required: true,
+                message: "Please pick a class",
+              },
+            ]}
+          >
             <Select
               placeholder="Select a class"
               options={optionsData.classes}
@@ -183,7 +218,7 @@ const NewCharacterPage = () => {
               onSelect={(value) => findSubclassesHandler(value)}
             />
           </Form.Item>
-          {/* TODO:on change class reset subclass if it was selected */}
+
           {optionsData.subClasses.length != 0 && (
             <Form.Item name="subclass" label="Subclass:">
               <Select
@@ -225,6 +260,19 @@ const NewCharacterPage = () => {
       label: "Specs",
       children: (
         <>
+          <Form.Item
+            name="level"
+            label="Level:"
+            style={{ width: "250px" }}
+            rules={[
+              {
+                required: true,
+                message: "field mandatory",
+              },
+            ]}
+          >
+            <InputNumber min="1" max="20"></InputNumber>
+          </Form.Item>
           <h3>Ability Scores:</h3>
           <Form.Item name="strength" rules={[abilityScoreRules]}>
             <Input addonBefore="Strength" type="number"></Input>
@@ -343,7 +391,7 @@ const NewCharacterPage = () => {
             <TextArea placeholder="describe your character"></TextArea>
           </Form.Item>
 
-          <Form.Item name="avatar" label="Avatar:">
+          <Form.Item name="image">
             <Input addonBefore="Image"></Input>
           </Form.Item>
           <Button type="primary" htmlType="submit">
@@ -361,10 +409,21 @@ const NewCharacterPage = () => {
         form={form}
         layout="vertical"
         onFinish={createCharacterHandler}
+        onFinishFailed={notSubmittedHandler}
         className={cssClasses.characterForm}
+        initialValues={{
+          strength: 10,
+          dexterity: 10,
+          constitution: 10,
+          intelligence: 10,
+          wisdom: 10,
+          charisma: 10,
+          level: 1,
+        }}
       >
         <Tabs defaultActiveKey="1" items={items} />
         <Button danger>Cancel</Button>
+        <p>{messageContent}</p>
       </Form>
     </>
   );

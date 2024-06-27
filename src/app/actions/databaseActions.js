@@ -37,6 +37,7 @@ export const getUserData = (uid) => {
       const data = snapshot.val();
 
       dispatch(userSliceActions.setUserData(data));
+      dispatch(uiSliceActions.changeLoading(false));
     });
   };
 };

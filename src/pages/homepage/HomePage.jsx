@@ -68,7 +68,7 @@ const Home = () => {
         </div>
 
         <ul>
-          <CharacterCardsContainer />
+          <CharacterCardsContainer uid={uid} />
         </ul>
       </div>
     </div>
