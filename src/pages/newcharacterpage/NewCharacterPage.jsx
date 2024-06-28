@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { createCharacter } from "../../app/actions/databaseActions";
 import { useNavigate } from "react-router";
+import { currencyToCopper } from "../../app/actions/uitls";
 
 const NewCharacterPage = () => {
   const { TextArea } = Input;
@@ -50,6 +51,7 @@ const NewCharacterPage = () => {
 
   const createCharacterHandler = (values) => {
     //JSON parse so that undefined variables are removed (firebase does not accept undefined)
+    values["gold"] = currencyToCopper(values["gold"]);
     const data = JSON.parse(JSON.stringify(values));
     console.log(data);
     const id = nanoid(13);
@@ -362,6 +364,9 @@ const NewCharacterPage = () => {
             />
           </Form.Item>
 
+          <Form.Item name="gold" label="Starting gold:">
+            <Input addonBefore="gp" type="number"></Input>
+          </Form.Item>
           {/* <p>Backstory</p> */}
           <Form.Item
             name="backstory"
@@ -419,6 +424,7 @@ const NewCharacterPage = () => {
           wisdom: 10,
           charisma: 10,
           level: 1,
+          gold: 50,
         }}
       >
         <Tabs defaultActiveKey="1" items={items} />

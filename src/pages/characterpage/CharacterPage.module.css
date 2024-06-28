@@ -129,7 +129,9 @@
 .abilityTitle {
   font-weight: bold;
   font-size: large;
-  padding: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .abilityTitle svg {
@@ -232,7 +234,7 @@
   margin-bottom: 30px;
 }
 
-@media (max-width: 799px) {
+@media (max-width: 850px) {
   .skillGroup {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -249,7 +251,7 @@
   }
 }
 
-@media (min-width: 800px) and (max-width: 1599px) {
+@media (min-width: 851px) and (max-width: 1599px) {
   .allStats {
     display: flex;
     flex-direction: row;
@@ -267,7 +269,7 @@
 
   .skills {
     display: flex;
-    flex-basis: calc(100% / 3);
+    flex-basis: calc(100% / 2.8);
     flex-direction: column;
     border-right: 1px solid #c3c3c5d2;
     padding: 0 15px;

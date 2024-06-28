@@ -16,6 +16,9 @@ import classes from "./CharacterPage.module.css";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
+import { currencyForDisplay } from "../../app/actions/uitls";
+import { configConsumerProps } from "antd/es/config-provider";
+
 const CharacterPage = () => {
   const params = useParams();
 
@@ -45,6 +48,8 @@ const CharacterPage = () => {
     weaponsProficiency,
     languagesProficiency,
     toolsProficiency;
+
+  let coins;
 
   let checkIfProficient;
 
@@ -160,6 +165,9 @@ const CharacterPage = () => {
         2) /
       2;
 
+    coins = currencyForDisplay(characterData.gold);
+    console.log(coins);
+
     passivePerception = Math.floor(
       10 +
         calculateModifier(characterData.wisdom) +
@@ -190,7 +198,10 @@ const CharacterPage = () => {
               <span className={classes.gold}>
                 {" "}
                 <FontAwesomeIcon icon={faCoins} />
-                200gp, 56sp, 5cp
+                {coins.gp > 0 && `${coins.gp}gp`}
+                {coins.sp > 0 && `, ${coins.sp}sp`}
+                {coins.cp > 0 && `, ${coins.cp}cp`}
+                {coins.gp == 0 && coins.sp == 0 && coins.cp == 0 && "0gp"}
               </span>
             </h2>
             <div className={classes.charInfoContent}>
