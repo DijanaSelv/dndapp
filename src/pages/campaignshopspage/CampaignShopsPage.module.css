@@ -13,16 +13,9 @@
 }
 
 .shopCards {
-  width: auto;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 4fr));
   gap: 15px;
-  justify-content: flex-start;
-}
-
-.shopCards > div {
-  width: 24%;
 }
 
 /* TO MAINTAIN IMAGE RATIO 3:2 */
@@ -67,20 +60,4 @@
 .createShopLink:hover > span {
   color: #226f99;
   transition: all 0.3s;
-}
-
-@media (max-width: 1600px) {
-  .shopCards > div {
-    width: 32%;
-  }
-}
-@media (max-width: 1070px) {
-  .shopCards > div {
-    width: 48%;
-  }
-}
-@media (max-width: 750px) {
-  .shopCards > div {
-    width: 90%;
-  }
 }
