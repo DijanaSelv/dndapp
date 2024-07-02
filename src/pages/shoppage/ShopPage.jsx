@@ -41,7 +41,6 @@ const ShopPage = () => {
   const setShop = () => {
     Object.keys(shop.items).map((itemKey) => {
       const priceToDisplay = currencyForShopDisplay(shop.items[itemKey].price);
-      console.log(priceToDisplay);
 
       itemsList.push({
         id: itemKey,

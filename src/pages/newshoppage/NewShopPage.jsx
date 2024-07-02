@@ -149,12 +149,9 @@ const NewShopPage = () => {
   const addItemToShopHandler = async (record) => {
     const itemData = await getItems(record.url);
     const itemObj = createItemObjectForShop(itemData);
-    console.log(itemObj);
     setItemsList((prevState) => [...prevState, itemObj]);
-    //console.log(itemsList);
   };
   const removeItemFromShopHandler = async (record) => {
-    console.log(record);
     setItemsList((prevState) =>
       prevState.filter((obj) => {
         return obj.id !== record.id;
@@ -283,7 +280,6 @@ const NewShopPage = () => {
 
       itemsDataObject[item.id] = { ...item, price: priceToStore };
     });
-    console.log(itemsDataObject, "itemsDataObject");
 
     const shopData = {
       title,
@@ -294,8 +290,6 @@ const NewShopPage = () => {
         "https://cdn.pixabay.com/photo/2021/11/04/21/45/bag-6769430_1280.png",
       items: itemsDataObject,
     };
-
-    console.log(shopData, "shopData");
 
     //dispatch create shop
     dispatch(createShopsData(campaignId, shopData));
@@ -329,7 +323,6 @@ const NewShopPage = () => {
 
   const clickHandler = async (url) => {
     const data = await getItems(url);
-    /* console.log(data); */
     setClickedItem(data);
   };
 

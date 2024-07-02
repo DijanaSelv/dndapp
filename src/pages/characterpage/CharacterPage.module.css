@@ -251,6 +251,11 @@
   }
 }
 
+.bioSection {
+  margin-bottom: 15px;
+  padding-bottom: 20px;
+}
+
 @media (min-width: 851px) and (max-width: 1599px) {
   .allStats {
     display: flex;
