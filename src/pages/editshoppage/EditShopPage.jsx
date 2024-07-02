@@ -19,6 +19,10 @@ import { Button, Input, Select, Spin, Table, Tabs } from "antd";
 import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import classes from "../shoppage/ShopPage.module.css";
 import DeleteModal from "../../components/DeleteModal";
+import {
+  currencyForShopDisplay,
+  currencyToCopper,
+} from "../../app/actions/uitls";
 
 const EditShopPage = () => {
   const dispatch = useDispatch();
@@ -32,6 +36,8 @@ const EditShopPage = () => {
 
   //STATES TODO: should refactor into one state
   const [shopItemsData, setShopItemsData] = useState([]);
+  /* 
+  console.log(shopItemsData); */
   const [imageUrl, setImageUrl] = useState("");
   const [originalImageUrl, setOriginalImageUrl] = useState("");
   const [shopTitle, setShopTitle] = useState();
@@ -47,7 +53,6 @@ const EditShopPage = () => {
   const [selectCategories, setSelectCategories] = useState();
 
   const deleteButtonHandler = () => {
-    console.log("delete");
     setShowDeleteModal(true);
   };
 
@@ -66,7 +71,6 @@ const EditShopPage = () => {
 
   const clickHandler = async (url) => {
     const data = await getItems(url);
-    console.log(data);
     setClickedItem(data);
   };
 
@@ -167,15 +171,44 @@ const EditShopPage = () => {
       },
     },
     {
-      title: "price (gp)",
+      title: "price",
       dataIndex: "price",
-      render: (text, record) => (
-        <Input
-          type="number"
-          value={text > 0 ? text : ""}
-          onChange={(e) => handleItemChange(record.id, "price", e.target.value)}
-        ></Input>
-      ),
+      render: (text, record) => {
+        /* console.log(text); */
+        const priceToDisplay = currencyForShopDisplay(text);
+        const priceValue =
+          priceToDisplay.sp || priceToDisplay.cp || priceToDisplay.gp;
+        const priceUnit = Object.keys(priceToDisplay).filter(
+          (key) => priceToDisplay[key] !== 0
+        )[0];
+
+        /* console.log(priceUnit); */
+
+        return (
+          <div className={classes.priceAndCurrencyField}>
+            <Input
+              name="price"
+              type="number"
+              value={priceValue}
+              onChange={(e) =>
+                handleItemChange(record.id, "price", e.target.value, priceUnit)
+              }
+            />
+            <Select
+              name="currency"
+              defaultValue={priceUnit}
+              options={[
+                { value: "gp", label: "gp" },
+                { value: "sp", label: "sp" },
+                { value: "cp", label: "cp" },
+              ]}
+              onChange={(value) =>
+                handleItemChange(record.id, "currency", priceValue, value)
+              }
+            />
+          </div>
+        );
+      },
       sorter: {
         compare: (a, b) => a.price - b.price,
       },
@@ -254,7 +287,39 @@ const EditShopPage = () => {
   };
 
   // Update the item that is edited in input for price and amount
-  const handleItemChange = (itemId, field, value) => {
+
+  const handleItemChange = (itemId, field, value, currency) => {
+    if ((currency && field === "price") || (currency && field === "currency")) {
+      console.log(currency);
+      const gp = (currency === "gp" && +value) || 0;
+      const sp = (currency === "sp" && +value) || 0;
+      const cp = (currency === "cp" && +value) || 0;
+      console.log(gp, sp, cp);
+
+      const priceConverted = currencyToCopper(gp, sp, cp);
+      /* console.log(priceConverted); */
+      setShopItemsData((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? {
+                ...item,
+                price: Math.sign(value) === 1 ? priceConverted : 0,
+              }
+            : item
+        )
+      );
+    } else if (field === "amount") {
+      setShopItemsData((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? { ...item, amount: Math.sign(value) === 1 ? value : 0 }
+            : item
+        )
+      );
+    }
+  };
+
+  /*   const handleItemChange = (itemId, field, value) => {
     setShopItemsData((prevItems) =>
       prevItems.map((item) =>
         item.id === itemId
@@ -262,7 +327,7 @@ const EditShopPage = () => {
           : item
       )
     );
-  };
+  }; */
 
   const saveChangesHandler = () => {
     const updatedItems = {};

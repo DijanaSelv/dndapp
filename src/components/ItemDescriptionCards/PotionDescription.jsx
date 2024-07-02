@@ -18,9 +18,12 @@ const PotionDescription = ({ item }) => {
       {showDescription()}
 
       <p>
-        <span className={classes.categoryDesc}>Price:</span>{" "}
-        {cost?.quantity || "/"}
-        {cost?.unit}
+        {item.cost && (
+          <>
+            <span className={classes.categoryDesc}>Price: </span>
+            {item.cost?.quantity || "/"} {item.cost?.unit}
+          </>
+        )}
       </p>
     </div>
   );

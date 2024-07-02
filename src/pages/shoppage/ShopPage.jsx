@@ -11,6 +11,7 @@ import { LeftSquareOutlined } from "@ant-design/icons";
 import { Button, Table, Spin } from "antd";
 import classes from "./ShopPage.module.css";
 import DeleteModal from "../../components/DeleteModal";
+import { currencyForShopDisplay } from "../../app/actions/uitls";
 
 const ShopPage = () => {
   const params = useParams();
@@ -39,15 +40,18 @@ const ShopPage = () => {
   };
 
   const setShop = () => {
-    Object.keys(shop.items).map((itemKey) =>
+    Object.keys(shop.items).map((itemKey) => {
+      const priceToDisplay = currencyForShopDisplay(shop.items[itemKey].price);
+      console.log(priceToDisplay);
+
       itemsList.push({
         id: itemKey,
         name: shop.items[itemKey].name,
-        price: shop.items[itemKey].price,
+        price: priceToDisplay,
         amount: shop.items[itemKey].amount,
         url: shop.items[itemKey].url,
-      })
-    );
+      });
+    });
     setItemsData(itemsList);
   };
 
@@ -63,8 +67,10 @@ const ShopPage = () => {
   }, [shop]);
 
   //show item specs on click
-  const clickHandler = async (url) => {
+  const clickHandler = async (url, id) => {
     const data = await getItems(url);
+    //the cost in the api might be different from in the shop if the dm changed it. 1 option is to not show it, the other to fetch it from the shop item id and convert it to display price.
+    data.cost = null;
     setClickedItem(data);
   };
 
@@ -90,12 +96,18 @@ const ShopPage = () => {
       render: (text) => (text > 0 ? text : "∞"),
     },
     {
-      title: "price (gp)",
+      title: "price",
       dataIndex: "price",
       sorter: {
         compare: (a, b) => a.price - b.price,
       },
-      render: (text) => (text > 0 ? text : "/"),
+      render: (text) => {
+        return (
+          (text.gp && `${text.gp} gp`) ||
+          (text.sp && `${text.sp} sp`) ||
+          (text.cp && `${text.cp} cp`)
+        );
+      },
     },
   ];
 
@@ -135,7 +147,7 @@ const ShopPage = () => {
                   rowKey="id"
                   onRow={(record) => {
                     return {
-                      onClick: () => clickHandler(record.url),
+                      onClick: () => clickHandler(record.url, record.id),
                     };
                   }}
                   className={classes.tableOfItems}

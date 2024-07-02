@@ -16,7 +16,7 @@ import NotificationBox from "../../components/NotificationBox";
 
 import { nanoid } from "nanoid";
 
-import { Button, Input, Select, Table, Tabs } from "antd";
+import { Button, Form, Input, Select, Table, Tabs } from "antd";
 import {
   DeleteOutlined,
   MinusCircleOutlined,
@@ -24,6 +24,7 @@ import {
 } from "@ant-design/icons";
 import classes from "../shoppage/ShopPage.module.css";
 import DeleteModal from "../../components/DeleteModal";
+import { currencyToCopper } from "../../app/actions/uitls";
 
 const NewShopPage = () => {
   const dispatch = useDispatch();
@@ -119,14 +120,27 @@ const NewShopPage = () => {
     valueChangeHandler: imageUrlChangeHandler,
   } = useValidate((value) => true);
 
-  const handleItemChange = (itemId, field, value) => {
-    setItemsList((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId
-          ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
-          : item
-      )
-    );
+  const handleItemChange = (itemId, field, value, currency) => {
+    if (currency) {
+      setItemsList((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? {
+                ...item,
+                [field]: { [currency]: Math.sign(value) === 1 ? value : 0 },
+              }
+            : item
+        )
+      );
+    } else {
+      setItemsList((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
+            : item
+        )
+      );
+    }
   };
 
   //Manage added items
@@ -183,15 +197,37 @@ const NewShopPage = () => {
       },
     },
     {
-      title: "price (gp)",
+      title: "price",
       dataIndex: "price",
-      render: (text, record) => (
-        <Input
-          type="number"
-          value={text > 0 ? text : ""}
-          onChange={(e) => handleItemChange(record.id, "price", e.target.value)}
-        ></Input>
-      ),
+      render: (text, record) => {
+        const priceValue = text.gp || text.sp || text.cp;
+        const priceUnit = Object.keys(text)[0];
+
+        return (
+          <div className={classes.priceAndCurrencyField}>
+            <Input
+              name="price"
+              type="number"
+              value={priceValue}
+              onChange={(e) =>
+                handleItemChange(record.id, "price", e.target.value, priceUnit)
+              }
+            />
+            <Select
+              name="currency"
+              defaultValue={priceUnit}
+              options={[
+                { value: "gp", label: "gp" },
+                { value: "sp", label: "sp" },
+                { value: "cp", label: "cp" },
+              ]}
+              onChange={(value) =>
+                handleItemChange(record.id, "price", priceValue, value)
+              }
+            />
+          </div>
+        );
+      },
       sorter: {
         compare: (a, b) => a.price - b.price,
       },
@@ -237,7 +273,18 @@ const NewShopPage = () => {
   //EVENT HANDLERS
   const saveChangesHandler = () => {
     const itemsDataObject = {};
-    itemsList.map((item) => (itemsDataObject[item.id] = { ...item }));
+
+    itemsList.map((item) => {
+      const priceToStore = currencyToCopper(
+        item.price.gp,
+        item.price.sp,
+        item.price.cp
+      );
+
+      itemsDataObject[item.id] = { ...item, price: priceToStore };
+    });
+    console.log(itemsDataObject, "itemsDataObject");
+
     const shopData = {
       title,
       description,
@@ -245,8 +292,10 @@ const NewShopPage = () => {
       image:
         imageUrl ||
         "https://cdn.pixabay.com/photo/2021/11/04/21/45/bag-6769430_1280.png",
-      items: itemsList,
+      items: itemsDataObject,
     };
+
+    console.log(shopData, "shopData");
 
     //dispatch create shop
     dispatch(createShopsData(campaignId, shopData));
@@ -280,6 +329,7 @@ const NewShopPage = () => {
 
   const clickHandler = async (url) => {
     const data = await getItems(url);
+    /* console.log(data); */
     setClickedItem(data);
   };
 
