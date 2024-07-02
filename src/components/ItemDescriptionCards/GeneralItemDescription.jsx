@@ -42,8 +42,12 @@ const GeneralItemDescription = ({ item }) => {
         {item.weight || 0}
       </p>
       <p>
-        <span className={classes.categoryDesc}>Price: </span>{" "}
-        {item.cost?.quantity || "/"} {item.cost?.unit}
+        {item.cost && (
+          <>
+            <span className={classes.categoryDesc}>Price: </span>
+            {item.cost?.quantity || "/"} {item.cost?.unit}
+          </>
+        )}
       </p>
     </div>
   );

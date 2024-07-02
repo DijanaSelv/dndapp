@@ -1,13 +1,24 @@
-import { Input, Button, Select, Checkbox, Tabs, Form, InputNumber } from "antd";
+import {
+  Input,
+  Button,
+  Select,
+  Checkbox,
+  Tabs,
+  Form,
+  InputNumber,
+  Collapse,
+} from "antd";
 import { useEffect, useState } from "react";
 import { getItems } from "../../app/actions/dndApiActions";
 import { useForm } from "antd/es/form/Form";
 
+//css classes distinguish from the dnd character classes
 import cssClasses from "./NewCharacterPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { createCharacter } from "../../app/actions/databaseActions";
 import { useNavigate } from "react-router";
+import { currencyToCopper } from "../../app/actions/uitls";
 
 const NewCharacterPage = () => {
   const { TextArea } = Input;
@@ -50,6 +61,7 @@ const NewCharacterPage = () => {
 
   const createCharacterHandler = (values) => {
     //JSON parse so that undefined variables are removed (firebase does not accept undefined)
+    values["gold"] = currencyToCopper(values["gold"]);
     const data = JSON.parse(JSON.stringify(values));
     console.log(data);
     const id = nanoid(13);
@@ -164,62 +176,146 @@ const NewCharacterPage = () => {
       }));
   };
 
+  const collapseItems = [
+    {
+      key: "skills",
+      label: "Skills",
+      children: (
+        <Form.Item name="skills">
+          <Checkbox.Group
+            className={cssClasses.checkboxGroupContainer}
+            options={optionsData.proficiencies.skills}
+          />
+        </Form.Item>
+      ),
+    },
+    {
+      key: "tools",
+      label: "Tools & Kits",
+      children: (
+        <Form.Item name="tools">
+          <Checkbox.Group
+            className={cssClasses.checkboxGroupContainer}
+            options={optionsData.proficiencies.tools}
+          />
+        </Form.Item>
+      ),
+    },
+    {
+      key: "armor",
+      label: "Armor",
+      children: (
+        <Form.Item name="armor">
+          <Checkbox.Group
+            className={cssClasses.checkboxGroupContainer}
+            options={optionsData.proficiencies.armor}
+          />
+        </Form.Item>
+      ),
+    },
+    {
+      key: "supplies",
+      label: "Supplies",
+      children: (
+        <Form.Item name="supplies">
+          <Checkbox.Group
+            className={cssClasses.checkboxGroupContainer}
+            options={optionsData.proficiencies.supplies}
+          />
+        </Form.Item>
+      ),
+    },
+    {
+      key: "saving throws",
+      label: "Saving Throws",
+      children: (
+        <Form.Item name="saving throws">
+          <Checkbox.Group
+            className={cssClasses.checkboxGroupContainer}
+            options={optionsData.proficiencies.savingThrows}
+          />
+        </Form.Item>
+      ),
+    },
+    {
+      key: "weapons",
+      label: "Weapons & Instruments",
+      children: (
+        <Form.Item name="weapons">
+          <Checkbox.Group
+            className={cssClasses.checkboxGroupContainer}
+            options={optionsData.proficiencies.weaponsInstruments}
+          />
+        </Form.Item>
+      ),
+    },
+    {
+      key: "languages",
+      label: "Languages",
+      children: (
+        <Form.Item name="languages">
+          <Checkbox.Group
+            className={cssClasses.checkboxGroupContainer}
+            options={optionsData.languages}
+          />
+        </Form.Item>
+      ),
+    },
+  ];
+
   const items = [
     {
       key: "1",
       label: "General",
       children: (
         <>
-          <Form.Item
-            name="name"
-            label="Name:"
-            style={{ width: "250px" }}
-            rules={[
-              {
-                required: true,
-                message: "Please name your character",
-              },
-            ]}
-          >
-            <Input placeholder="The name of your character"></Input>
-          </Form.Item>
+          <div className={cssClasses.nameRaceClassContainer}>
+            {" "}
+            <Form.Item
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please name your character",
+                },
+              ]}
+            >
+              <h3>* Name</h3>
+              <Input placeholder="The name of your character"></Input>
+            </Form.Item>
+            <Form.Item
+              name="race"
+              rules={[
+                {
+                  required: true,
+                  message: "Please pick a race",
+                },
+              ]}
+            >
+              <h3>* Race</h3>
+              <Select placeholder="Select a race" options={optionsData.races} />
+            </Form.Item>
+            <Form.Item
+              name="class"
+              rules={[
+                {
+                  required: true,
+                  message: "Please pick a class",
+                },
+              ]}
+            >
+              <h3>* Class</h3>
+              <Select
+                placeholder="Select a class"
+                options={optionsData.classes}
 
-          <Form.Item
-            name="race"
-            label="Race:"
-            rules={[
-              {
-                required: true,
-                message: "Please pick a race",
-              },
-            ]}
-          >
-            <Select
-              placeholder="Select a race"
-              options={optionsData.races}
-              style={{ width: "250px" }}
-            />
-          </Form.Item>
+                /* onSelect={(value) => findSubclassesHandler(value)} */
+              />
+            </Form.Item>
+          </div>
 
-          <Form.Item
-            name="class"
-            label="Class:"
-            rules={[
-              {
-                required: true,
-                message: "Please pick a class",
-              },
-            ]}
-          >
-            <Select
-              placeholder="Select a class"
-              options={optionsData.classes}
-              style={{ width: "250px" }}
-              onSelect={(value) => findSubclassesHandler(value)}
-            />
-          </Form.Item>
-
-          {optionsData.subClasses.length != 0 && (
+          {/* The database only has one subclass per class */}
+          {/* {optionsData.subClasses.length != 0 && (
             <Form.Item name="subclass" label="Subclass:">
               <Select
                 placeholder="Subclass (optional)"
@@ -227,27 +323,30 @@ const NewCharacterPage = () => {
                 style={{ width: "250px" }}
               />
             </Form.Item>
-          )}
-          <p>Physical appearance:</p>
-          <Form.Item name="height">
-            <Input addonBefore="Height"></Input>
-          </Form.Item>
-          <Form.Item name="weight">
-            <Input addonBefore="Weight"></Input>
-          </Form.Item>
-          <Form.Item name="age">
-            <Input addonBefore="Age"></Input>
-          </Form.Item>
-          <Form.Item name="eyes">
-            <Input addonBefore="Eyes"></Input>
-          </Form.Item>
-          <Form.Item name="skin">
-            <Input addonBefore="Skin"></Input>
-          </Form.Item>
-          <Form.Item name="hair">
-            <Input addonBefore="Hair"></Input>
-          </Form.Item>
-          <p>Any other physical peculiarities?</p>
+          )} */}
+          <h3>Physical appearance:</h3>
+          <div className={cssClasses.physicalAppearanceContainer}>
+            {" "}
+            <Form.Item name="height">
+              <Input addonBefore="Height"></Input>
+            </Form.Item>
+            <Form.Item name="weight">
+              <Input addonBefore="Weight"></Input>
+            </Form.Item>
+            <Form.Item name="age">
+              <Input addonBefore="Age"></Input>
+            </Form.Item>
+            <Form.Item name="eyes">
+              <Input addonBefore="Eyes"></Input>
+            </Form.Item>
+            <Form.Item name="skin">
+              <Input addonBefore="Skin"></Input>
+            </Form.Item>
+            <Form.Item name="hair">
+              <Input addonBefore="Hair"></Input>
+            </Form.Item>
+          </div>
+          <h3>Any other physical peculiarities?</h3>
           <Form.Item name="physical description">
             <TextArea placeholder="describe your character"></TextArea>
           </Form.Item>
@@ -263,7 +362,6 @@ const NewCharacterPage = () => {
           <Form.Item
             name="level"
             label="Level:"
-            style={{ width: "250px" }}
             rules={[
               {
                 required: true,
@@ -274,58 +372,29 @@ const NewCharacterPage = () => {
             <InputNumber min="1" max="20"></InputNumber>
           </Form.Item>
           <h3>Ability Scores:</h3>
-          <Form.Item name="strength" rules={[abilityScoreRules]}>
-            <Input addonBefore="Strength" type="number"></Input>
-          </Form.Item>
-          <Form.Item name="dexterity" rules={[abilityScoreRules]}>
-            <Input addonBefore="Dexterity" type="number"></Input>
-          </Form.Item>
-          <Form.Item name="constitution" rules={[abilityScoreRules]}>
-            <Input addonBefore="Constitution" type="number"></Input>
-          </Form.Item>
-          <Form.Item name="intelligence" rules={[abilityScoreRules]}>
-            <Input addonBefore="Intelligence" type="number"></Input>
-          </Form.Item>
-          <Form.Item name="wisdom" rules={[abilityScoreRules]}>
-            <Input addonBefore="Wisdom" type="number"></Input>
-          </Form.Item>
-          <Form.Item name="charisma" rules={[abilityScoreRules]}>
-            <Input addonBefore="Charisma" type="number"></Input>
-          </Form.Item>
+          <div className={cssClasses.abilityScoresContainer}>
+            <Form.Item name="strength" rules={[abilityScoreRules]}>
+              <Input addonBefore="Strength" type="number"></Input>
+            </Form.Item>
+            <Form.Item name="dexterity" rules={[abilityScoreRules]}>
+              <Input addonBefore="Dexterity" type="number"></Input>
+            </Form.Item>
+            <Form.Item name="constitution" rules={[abilityScoreRules]}>
+              <Input addonBefore="Constitution" type="number"></Input>
+            </Form.Item>
+            <Form.Item name="intelligence" rules={[abilityScoreRules]}>
+              <Input addonBefore="Intelligence" type="number"></Input>
+            </Form.Item>
+            <Form.Item name="wisdom" rules={[abilityScoreRules]}>
+              <Input addonBefore="Wisdom" type="number"></Input>
+            </Form.Item>
+            <Form.Item name="charisma" rules={[abilityScoreRules]}>
+              <Input addonBefore="Charisma" type="number"></Input>
+            </Form.Item>
+          </div>
 
           <h3>Proficiencies:</h3>
-
-          {/* ovie kje bidat clickable to expand the radio buttons for every section */}
-
-          <Form.Item name="skills" label="Skills:">
-            <Checkbox.Group options={optionsData.proficiencies.skills} />
-          </Form.Item>
-
-          <Form.Item name="tools" label="Tools & Kits:">
-            <Checkbox.Group options={optionsData.proficiencies.tools} />
-          </Form.Item>
-
-          <Form.Item name="armor" label="Armor:">
-            <Checkbox.Group options={optionsData.proficiencies.armor} />
-          </Form.Item>
-
-          <Form.Item name="supplies" label="Supplies:">
-            <Checkbox.Group options={optionsData.proficiencies.supplies} />
-          </Form.Item>
-
-          <Form.Item name="saving throws" label="Saving throws:">
-            <Checkbox.Group options={optionsData.proficiencies.savingThrows} />
-          </Form.Item>
-
-          <Form.Item name="weapons" label="Weapons & Instruments:">
-            <Checkbox.Group
-              options={optionsData.proficiencies.weaponsInstruments}
-            />
-          </Form.Item>
-
-          <Form.Item name="languages" label="Languages:">
-            <Checkbox.Group options={optionsData.languages} />
-          </Form.Item>
+          <Collapse items={collapseItems} />
         </>
       ),
     },
@@ -338,7 +407,6 @@ const NewCharacterPage = () => {
             <Select
               placeholder="School of Magic"
               options={optionsData.magicSchools}
-              style={{ width: "250px" }}
             />
           </Form.Item>
         </>
@@ -357,11 +425,14 @@ const NewCharacterPage = () => {
             <Select
               placeholder="Select alignment"
               options={optionsData.alignments}
-              style={{ width: "250px" }}
+
               /* onSelect={(value) => console.log(value)} */
             />
           </Form.Item>
 
+          <Form.Item name="gold" label="Starting gold:">
+            <Input addonBefore="gp" type="number"></Input>
+          </Form.Item>
           {/* <p>Backstory</p> */}
           <Form.Item
             name="backstory"
@@ -419,6 +490,7 @@ const NewCharacterPage = () => {
           wisdom: 10,
           charisma: 10,
           level: 1,
+          gold: 50,
         }}
       >
         <Tabs defaultActiveKey="1" items={items} />

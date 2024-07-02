@@ -17,7 +17,9 @@ export const createItemObjectForShop = (itemData) => {
     amount: "",
     id: itemData.index,
     name: itemData.name,
-    price: itemData.cost?.quantity || "N/A",
+    price: itemData.cost?.quantity
+      ? { [itemData.cost.unit]: itemData.cost.quantity }
+      : "N/A",
     url: itemData.url,
   };
 

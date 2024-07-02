@@ -15,7 +15,7 @@ import React from "react";
 
 const SkillsModifierContainer = (props) => {
   const { skill, checkIfProficient, modifier, type, value, name } = props;
-  /* console.log(skill, modifier, checkIfProficient); */
+
   const abilities = {
     strength: {
       icon: <FontAwesomeIcon icon={faHandFist} />,

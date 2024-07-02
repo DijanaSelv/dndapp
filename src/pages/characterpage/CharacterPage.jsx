@@ -16,6 +16,9 @@ import classes from "./CharacterPage.module.css";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
+import { currencyForDisplay } from "../../app/actions/uitls";
+import { configConsumerProps } from "antd/es/config-provider";
+
 const CharacterPage = () => {
   const params = useParams();
 
@@ -45,6 +48,8 @@ const CharacterPage = () => {
     weaponsProficiency,
     languagesProficiency,
     toolsProficiency;
+
+  let coins;
 
   let checkIfProficient;
 
@@ -160,6 +165,8 @@ const CharacterPage = () => {
         2) /
       2;
 
+    coins = currencyForDisplay(characterData.gold);
+
     passivePerception = Math.floor(
       10 +
         calculateModifier(characterData.wisdom) +
@@ -168,7 +175,7 @@ const CharacterPage = () => {
 
     //SKILL MODIFIERS - relevant ability modifier + proficiency modifier if applicable + expertise/feat when I include them voopshto
   }
-
+  console.log(characterData);
   const printCharacterHandler = () => {
     window.print();
   };
@@ -190,7 +197,10 @@ const CharacterPage = () => {
               <span className={classes.gold}>
                 {" "}
                 <FontAwesomeIcon icon={faCoins} />
-                200gp, 56sp, 5cp
+                {coins.gp > 0 && `${coins.gp}gp`}
+                {coins.sp > 0 && `, ${coins.sp}sp`}
+                {coins.cp > 0 && `, ${coins.cp}cp`}
+                {coins.gp == 0 && coins.sp == 0 && coins.cp == 0 && "0gp"}
               </span>
             </h2>
             <div className={classes.charInfoContent}>
@@ -340,6 +350,44 @@ const CharacterPage = () => {
                 <div className={classes.otherInfoGroup}>
                   <div> Add additional info for your character here</div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={classes.charInfoSection}>
+            <h3 className={classes.skillsTitle}>Biography</h3>
+            <div className={classes.bioInfoGroup}>
+              <div className={classes.bioSection}>
+                <h4>Physical description</h4>
+                <div>{characterData["physical description"]}</div>
+              </div>
+
+              <div className={classes.bioSection}>
+                <h4>Backstory</h4>
+                <div>{characterData.backstory}</div>
+              </div>
+
+              <div className={classes.bioSection}>
+                <h4>Personality</h4>
+                <div>{characterData.personality}</div>
+              </div>
+              <div className={classes.bioSection}>
+                <h4>Ideals</h4>
+                <div>{characterData.ideals}</div>
+              </div>
+              <div className={classes.bioSection}>
+                <h4>Bonds</h4>
+                <div>{characterData.bonds}</div>
+              </div>
+
+              <div className={classes.bioSection}>
+                <h4>Flaws</h4>
+                <div>{characterData.flaws}</div>
+              </div>
+
+              <div className={classes.bioSection}>
+                <h4>Allies & Organizations</h4>
+                <div>{characterData.allies}</div>
               </div>
             </div>
           </div>

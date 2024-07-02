@@ -26,6 +26,8 @@ const ItemDescriptionCard = ({ item }) => {
       content = <GeneralItemDescription item={item} />;
   }
 
+  //TODO: Ammunition category
+
   return content;
 };
 
