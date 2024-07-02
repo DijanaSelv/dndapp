@@ -36,8 +36,7 @@ const EditShopPage = () => {
 
   //STATES TODO: should refactor into one state
   const [shopItemsData, setShopItemsData] = useState([]);
-  /* 
-  console.log(shopItemsData); */
+
   const [imageUrl, setImageUrl] = useState("");
   const [originalImageUrl, setOriginalImageUrl] = useState("");
   const [shopTitle, setShopTitle] = useState();
@@ -174,15 +173,12 @@ const EditShopPage = () => {
       title: "price",
       dataIndex: "price",
       render: (text, record) => {
-        /* console.log(text); */
         const priceToDisplay = currencyForShopDisplay(text);
         const priceValue =
           priceToDisplay.sp || priceToDisplay.cp || priceToDisplay.gp;
         const priceUnit = Object.keys(priceToDisplay).filter(
           (key) => priceToDisplay[key] !== 0
         )[0];
-
-        /* console.log(priceUnit); */
 
         return (
           <div className={classes.priceAndCurrencyField}>
@@ -290,14 +286,11 @@ const EditShopPage = () => {
 
   const handleItemChange = (itemId, field, value, currency) => {
     if ((currency && field === "price") || (currency && field === "currency")) {
-      console.log(currency);
       const gp = (currency === "gp" && +value) || 0;
       const sp = (currency === "sp" && +value) || 0;
       const cp = (currency === "cp" && +value) || 0;
-      console.log(gp, sp, cp);
 
       const priceConverted = currencyToCopper(gp, sp, cp);
-      /* console.log(priceConverted); */
       setShopItemsData((prevItems) =>
         prevItems.map((item) =>
           item.id === itemId
@@ -339,6 +332,7 @@ const EditShopPage = () => {
       image: imageUrl,
       items: updatedItems,
     };
+
     dispatch(updateShopItems(newShopData, params.campaignId, shop.id));
     navigate(-1);
   };

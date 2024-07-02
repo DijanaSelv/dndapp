@@ -7,7 +7,6 @@ import { getItems } from "../../app/actions/dndApiActions";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 import { getShopsData } from "../../app/actions/databaseActions";
 
-import { LeftSquareOutlined } from "@ant-design/icons";
 import { Button, Table, Spin } from "antd";
 import classes from "./ShopPage.module.css";
 import DeleteModal from "../../components/DeleteModal";

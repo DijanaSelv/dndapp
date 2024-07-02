@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
 
 import classes from "../pages/shoppage/ShopPage.module.css";
+import { currencyToCopper } from "../app/actions/uitls";
 
 const AddOrRemoveItems = ({ itemToEdit, shop }) => {
   const dispatch = useDispatch();
@@ -17,6 +18,8 @@ const AddOrRemoveItems = ({ itemToEdit, shop }) => {
   const addItemHandler = async () => {
     const itemData = await getItems(itemToEdit.url);
     const item = createItemObjectForShop(itemData);
+    console.log(item);
+    item.price = currencyToCopper(item.price.gp, item.price.sp, item.price.cp);
     const payload = {
       item,
       shopId: shop.id,
