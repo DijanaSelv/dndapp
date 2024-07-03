@@ -1,7 +1,8 @@
 export const PROFICIENCIES = [
   {
-    key: "armor",
-    label: "",
+    key: "skills",
+    label: "Skills",
+    path: "proficiencies.skills",
   },
 ];
 

@@ -13,13 +13,21 @@
   border-bottom: 1px solid #ccd1dad2;
 }
 
+.nameRaceClassContainer label,
+.levelForm label,
+.bioContainer label {
+  font-weight: bold;
+  font-size: 16px !important;
+}
+
 .nameRaceClassContainer {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   gap: 4%;
 }
 
-.physicalAppearanceContainer {
+.physicalAppearanceContainer,
+.bioFirstRow {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 4%;
@@ -38,7 +46,8 @@
 }
 
 @media (max-width: 850px) {
-  .nameRaceClassContainer {
+  .nameRaceClassContainer,
+  .bioFirstRow {
     display: flex;
     flex-direction: column;
   }
