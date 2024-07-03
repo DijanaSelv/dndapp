@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+
 import {
   Input,
   Button,
@@ -8,16 +12,14 @@ import {
   InputNumber,
   Collapse,
 } from "antd";
-import { useEffect, useState } from "react";
-import { getItems } from "../../app/actions/dndApiActions";
 import { useForm } from "antd/es/form/Form";
-
+import { nanoid } from "nanoid";
 //css classes distinguish from the dnd character classes
 import cssClasses from "./NewCharacterPage.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { nanoid } from "nanoid";
+
+import { STARTING_GOLD } from "../../app/STATIC_STARTING_GOLD";
+import { getItems } from "../../app/actions/dndApiActions";
 import { createCharacter } from "../../app/actions/databaseActions";
-import { useNavigate } from "react-router";
 import { currencyToCopper } from "../../app/actions/uitls";
 
 const NewCharacterPage = () => {
@@ -26,6 +28,10 @@ const NewCharacterPage = () => {
   const navigate = useNavigate();
   const { uid } = useSelector((state) => state.userSlice.user);
   const { requestSuccess } = useSelector((state) => state.uiSlice);
+
+  const [goldValueTooltip, setGoldValueTooltip] = useState(
+    "Starting gold will be adjusted if you select your class"
+  );
 
   const [messageContent, setMessageContent] = useState("");
   const dispatch = useDispatch();
@@ -46,8 +52,18 @@ const NewCharacterPage = () => {
     },
   });
 
-  //VALIDATION RULES
+  //I will need class input for the starting gold calculation suggestion
 
+  const onValuesChangeHandler = (changedValues) => {
+    if (changedValues.class) {
+      const classInput = changedValues.class;
+      const updatedGold = STARTING_GOLD[classInput];
+      form.setFieldsValue({ gold: updatedGold });
+      setGoldValueTooltip(`This is the suggested amount for a ${classInput}`);
+    }
+  };
+
+  //VALIDATION RULES
   const abilityScoreRules = {
     required: true,
     type: "number",
@@ -59,11 +75,11 @@ const NewCharacterPage = () => {
     message: "must be between 1 and 20",
   };
 
+  //ON SUBMIT
   const createCharacterHandler = (values) => {
     //JSON parse so that undefined variables are removed (firebase does not accept undefined)
     values["gold"] = currencyToCopper(values["gold"]);
     const data = JSON.parse(JSON.stringify(values));
-    console.log(data);
     const id = nanoid(13);
     dispatch(createCharacter(data, uid, id));
   };
@@ -72,6 +88,7 @@ const NewCharacterPage = () => {
     setMessageContent("Please fill out all required fields.");
   };
 
+  //fetch from api
   const getCategoryOptions = async (category) => {
     let data = [];
     const apiData = await getItems(`/api/${category}`);
@@ -164,7 +181,7 @@ const NewCharacterPage = () => {
     requestSuccess && navigate("/");
   }, [requestSuccess]);
 
-  const findSubclassesHandler = async (classValue) => {
+  /* const findSubclassesHandler = async (classValue) => {
     form.setFieldValue("subclass", undefined);
     const subclassesData = await getCategoryOptions(
       `classes/${classValue}/subclasses`
@@ -174,8 +191,9 @@ const NewCharacterPage = () => {
         ...prev,
         subClasses: subclassesData,
       }));
-  };
+  }; */
 
+  //FORM CONTENT
   const collapseItems = [
     {
       key: "skills",
@@ -273,6 +291,7 @@ const NewCharacterPage = () => {
             {" "}
             <Form.Item
               name="name"
+              label="Name:"
               rules={[
                 {
                   required: true,
@@ -280,11 +299,11 @@ const NewCharacterPage = () => {
                 },
               ]}
             >
-              <h3>* Name</h3>
               <Input placeholder="The name of your character"></Input>
             </Form.Item>
             <Form.Item
               name="race"
+              label="Race:"
               rules={[
                 {
                   required: true,
@@ -292,11 +311,11 @@ const NewCharacterPage = () => {
                 },
               ]}
             >
-              <h3>* Race</h3>
               <Select placeholder="Select a race" options={optionsData.races} />
             </Form.Item>
             <Form.Item
               name="class"
+              label="Class:"
               rules={[
                 {
                   required: true,
@@ -304,7 +323,6 @@ const NewCharacterPage = () => {
                 },
               ]}
             >
-              <h3>* Class</h3>
               <Select
                 placeholder="Select a class"
                 options={optionsData.classes}
@@ -360,6 +378,7 @@ const NewCharacterPage = () => {
       children: (
         <>
           <Form.Item
+            className={cssClasses.levelForm}
             name="level"
             label="Level:"
             rules={[
@@ -416,24 +435,32 @@ const NewCharacterPage = () => {
       key: "4",
       label: "Bio",
       children: (
-        <>
-          <Form.Item
-            name="alignment"
-            label="Alignment:"
-            tooltip="ethical and moral compass"
-          >
-            <Select
-              placeholder="Select alignment"
-              options={optionsData.alignments}
+        <div className={cssClasses.bioContainer}>
+          <div className={cssClasses.bioFirstRow}>
+            <Form.Item
+              name="alignment"
+              label="Alignment:"
+              tooltip="ethical and moral compass"
+            >
+              <Select
+                placeholder="Select alignment"
+                options={optionsData.alignments}
+              />
+            </Form.Item>
 
-              /* onSelect={(value) => console.log(value)} */
-            />
-          </Form.Item>
+            <Form.Item
+              name="gold"
+              label="Starting gold:"
+              tooltip={goldValueTooltip}
+            >
+              <Input addonBefore="gp" type="number"></Input>
+            </Form.Item>
 
-          <Form.Item name="gold" label="Starting gold:">
-            <Input addonBefore="gp" type="number"></Input>
-          </Form.Item>
-          {/* <p>Backstory</p> */}
+            <Form.Item name="image" label="Image:">
+              <Input addonBefore="Url:"></Input>
+            </Form.Item>
+          </div>
+
           <Form.Item
             name="backstory"
             label="Backstory:"
@@ -462,13 +489,10 @@ const NewCharacterPage = () => {
             <TextArea placeholder="describe your character"></TextArea>
           </Form.Item>
 
-          <Form.Item name="image">
-            <Input addonBefore="Image"></Input>
-          </Form.Item>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
-        </>
+        </div>
       ),
     },
   ];
@@ -492,6 +516,7 @@ const NewCharacterPage = () => {
           level: 1,
           gold: 50,
         }}
+        onValuesChange={onValuesChangeHandler}
       >
         <Tabs defaultActiveKey="1" items={items} />
         <Button danger>Cancel</Button>
