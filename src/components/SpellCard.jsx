@@ -4,7 +4,7 @@ import { getItems } from "../app/actions/dndApiActions";
 import cssClasses from "../pages/newcharacterpage/NewCharacterPage.module.css";
 import { useState } from "react";
 
-const SpellCard = ({ spell, classInput }) => {
+const SpellCard = ({ spell }) => {
   return (
     <Card className={cssClasses.spellCard} title={spell.name}>
       {" "}
