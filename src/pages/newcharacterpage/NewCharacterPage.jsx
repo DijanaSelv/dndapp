@@ -21,6 +21,8 @@ import { STARTING_GOLD } from "../../app/STATIC_STARTING_GOLD";
 import { getItems } from "../../app/actions/dndApiActions";
 import { createCharacter } from "../../app/actions/databaseActions";
 import { currencyToCopper } from "../../app/actions/uitls";
+import SpellCard from "../../components/SpellCard";
+import SpellsFormData from "../../components/SpellsFormData";
 
 const NewCharacterPage = () => {
   const { TextArea } = Input;
@@ -43,6 +45,7 @@ const NewCharacterPage = () => {
     alignments: [],
     languages: [],
     magicSchools: [],
+    spells: [],
     proficiencies: {
       skills: [],
       tools: [],
@@ -50,6 +53,8 @@ const NewCharacterPage = () => {
       supplies: [],
       savingThrows: [],
     },
+    classSelected: null,
+    levelSelected: 1,
   });
 
   //I will need class input for the starting gold calculation suggestion
@@ -60,8 +65,19 @@ const NewCharacterPage = () => {
       const updatedGold = STARTING_GOLD[classInput];
       form.setFieldsValue({ gold: updatedGold });
       setGoldValueTooltip(`This is the suggested amount for a ${classInput}`);
+
+      //i need the state to pass the class to the spell cards component
+      setOptionsData((prev) => ({ ...prev, classSelected: classInput }));
+    }
+    if (changedValues.level) {
+      setOptionsData((prev) => ({
+        ...prev,
+        levelSelected: changedValues.level,
+      }));
     }
   };
+
+  console.log(form.getFieldValue("class"));
 
   //VALIDATION RULES
   const abilityScoreRules = {
@@ -113,6 +129,7 @@ const NewCharacterPage = () => {
       const languages = await getCategoryOptions("languages");
       const magicSchools = await getCategoryOptions("magic-schools");
       const proficiencies = await getCategoryOptions("proficiencies");
+      const spells = await getCategoryOptions("spells");
 
       setOptionsData((prev) => ({
         ...prev,
@@ -123,6 +140,7 @@ const NewCharacterPage = () => {
         languages,
         magicSchools,
         proficiencies,
+        spells,
       }));
 
       const armor = [];
@@ -159,6 +177,7 @@ const NewCharacterPage = () => {
           weaponsInstruments.push(proficiency);
         }
       }
+
       setOptionsData((prev) => ({
         ...prev,
         proficiencies: {
@@ -169,6 +188,7 @@ const NewCharacterPage = () => {
           other,
           weaponsInstruments,
           supplies,
+          spells,
         },
       }));
     } catch (error) {
@@ -181,19 +201,8 @@ const NewCharacterPage = () => {
     requestSuccess && navigate("/");
   }, [requestSuccess]);
 
-  /* const findSubclassesHandler = async (classValue) => {
-    form.setFieldValue("subclass", undefined);
-    const subclassesData = await getCategoryOptions(
-      `classes/${classValue}/subclasses`
-    );
-    subclassesData.length != 0 &&
-      setOptionsData((prev) => ({
-        ...prev,
-        subClasses: subclassesData,
-      }));
-  }; */
-
   //FORM CONTENT
+
   const collapseItems = [
     {
       key: "skills",
@@ -422,12 +431,38 @@ const NewCharacterPage = () => {
       label: "Spells",
       children: (
         <>
-          <Form.Item name="school">
-            <Select
-              placeholder="School of Magic"
-              options={optionsData.magicSchools}
-            />
-          </Form.Item>
+          {optionsData.levelSelected >= 2 &&
+            optionsData.classSelected === "wizard" && (
+              <div>
+                <Form.Item
+                  name="school"
+                  label="Arcane Tradition:"
+                  tooltip="On lvl. 2 Wizards choose a school of magic that will shape their spellcasting abilities."
+                >
+                  <Select
+                    placeholder="School of Magic"
+                    options={optionsData.magicSchools}
+                  />
+                </Form.Item>
+              </div>
+            )}
+
+          <div>
+            {!optionsData.classSelected && <p>Please select a class.</p>}
+            {["barbarian", "fighter", "monk", "rogue"].includes(
+              optionsData.classSelected
+            ) && <p>The class you selected is not a spellcaster.</p>}
+            {/* TODO: fighter and rogue have a spellcasting subclass, maybe a button za niv, my subclass neshto neshto, i taka da mu se pojavat spells */}
+            {optionsData.classSelected &&
+              !["barbarian", "fighter", "monk", "rogue"].includes(
+                optionsData.classSelected
+              ) && (
+                <SpellsFormData
+                  spells={optionsData.spells}
+                  classInput={optionsData.classSelected}
+                />
+              )}
+          </div>
         </>
       ),
     },
