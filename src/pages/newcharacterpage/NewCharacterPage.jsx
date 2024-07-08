@@ -21,7 +21,6 @@ import { STARTING_GOLD } from "../../app/STATIC_STARTING_GOLD";
 import { getItems } from "../../app/actions/dndApiActions";
 import { createCharacter } from "../../app/actions/databaseActions";
 import { currencyToCopper } from "../../app/actions/uitls";
-import SpellCard from "../../components/SpellCard";
 import SpellsFormData from "../../components/SpellsFormData";
 
 const NewCharacterPage = () => {
@@ -420,7 +419,10 @@ const NewCharacterPage = () => {
           </div>
 
           <h3>Proficiencies:</h3>
-          <Collapse items={collapseItems} />
+          <Collapse
+            items={collapseItems}
+            className={cssClasses.collapseComponent}
+          />
         </>
       ),
     },

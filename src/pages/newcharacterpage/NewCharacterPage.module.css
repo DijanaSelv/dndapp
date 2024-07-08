@@ -44,20 +44,6 @@
   grid-template-columns: repeat(auto-fill, minmax(180px, 5fr));
   gap: 10px;
 }
-.spellsGroupContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 2fr));
-  gap: 10px;
-}
-
-.spellsGroupContainer label > span:nth-child(2) {
-  height: 100%;
-  width: 100%;
-}
-
-.spellCard {
-  height: 100%;
-}
 
 .pageInfo {
   font-size: 20px;
@@ -82,3 +68,44 @@
 
 @media (min-width: 851px) and (max-width: 1599px) {
 }
+
+/* Spell Cards */
+
+.spellCollapseComponent {
+  border: none;
+}
+/* .spellCollapseComponent .ant-collapse-header {
+  border: 1px solid black !important;
+} */
+
+.spellsGroupContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 2fr));
+  gap: 10px;
+}
+
+.spellsGroupContainer label > span:nth-child(2) {
+  height: 100%;
+  width: 100%;
+}
+
+.spellsGroupContainer label > span:nth-child(1) {
+  display: none;
+}
+
+.spellCard {
+  height: 100%;
+}
+
+.spellSpecsContainer {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  background-color: rgb(243, 243, 243);
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+/* .spellsGroupContainer .ant-checkbox-wrapper-checked .ant-card {
+  border: 1px solid red !important;
+}
+ */

@@ -3,14 +3,20 @@ import { Form, Checkbox, Progress, Collapse } from "antd";
 import cssClasses from "../pages/newcharacterpage/NewCharacterPage.module.css";
 import SpellCard from "./SpellCard";
 import { getItems } from "../app/actions/dndApiActions";
-import { SPELL_SLOTS } from "../app/STATIC_SPELL_LEVELS";
+import { SPELL_SLOTS, SPELLS_INSTRUCTION } from "../app/STATIC_SPELL_LEVELS";
 
 const SpellsFormData = ({ spells, classInput, levelInput }) => {
   const [spellsData, setSpellsData] = useState([]);
   const [fetchedSpells, setFetchedSpells] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSpells, setSelectedSpells] = useState({
+    cantrips: 0,
+    spells: 0,
+  });
+  const classInstructions = SPELLS_INSTRUCTION[classInput];
   //get spell slots for that class
   const classSpellSlots = SPELL_SLOTS[classInput];
+
   //se what the max level of spells is for this class and selected level (-1 because cantrip is first in the array) for warlock is stored differently
   const spellLevelsAvailable =
     classInput === "warlock"
@@ -74,6 +80,18 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
     }
   }, [spells, classInput, levelInput, spellsData]);
 
+  //LIMIT number of spells that can be selected
+  const onChangeHandler = (e, lvl) => {
+    e.preventDefault();
+    if (lvl == 0) {
+      /* const selectedCantrips = values.length;
+      setSelectedSpells((prev) => ({ ...prev, cantrips: selectedCantrips })); */
+    } else {
+      /*  e.target.checked = false; */
+    }
+    /* console.log(e.target, lvl); */
+  };
+
   //create a checkbox group for each level of spells
   const collapseItems = Object.keys(fetchedSpells).map((lvl) => ({
     key: `${lvl}`,
@@ -86,6 +104,8 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
             label: <SpellCard spell={spell} />,
             value: spell.index,
           }))}
+          /* onClick={(values) => onChangeHandler(values, lvl)} */
+          /* onChange={(values) => onChangeHandler(values, lvl)} */
         />
       </>
     ),
@@ -93,9 +113,10 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
 
   return (
     <>
+      <p>{classInput && classInstructions}</p>
       {loading ? (
         <>
-          <p className={cssClasses.pageInfo}>Loading...</p>
+          <p className={cssClasses.pageInfo}>Loading spells...</p>
           <Progress
             percent={100}
             status="active"
@@ -106,7 +127,10 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
         </>
       ) : (
         <Form.Item name="spells" label="Spells:">
-          <Collapse items={collapseItems} />
+          <Collapse
+            items={collapseItems}
+            className={cssClasses.spellCollapseComponent}
+          />
         </Form.Item>
       )}
     </>
