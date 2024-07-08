@@ -3,11 +3,18 @@ import { Form, Checkbox, Progress, Collapse } from "antd";
 import cssClasses from "../pages/newcharacterpage/NewCharacterPage.module.css";
 import SpellCard from "./SpellCard";
 import { getItems } from "../app/actions/dndApiActions";
+import { SPELL_SLOTS } from "../app/STATIC_SPELL_LEVELS";
 
-const SpellsFormData = ({ spells, classInput }) => {
+const SpellsFormData = ({ spells, classInput, levelInput }) => {
+  const [spellsData, setSpellsData] = useState([]);
   const [fetchedSpells, setFetchedSpells] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  //get spell slots for that class
+  const classSpellSlots = SPELL_SLOTS[classInput];
+  //se what the max level of spells is for this class and selected level (-1 because cantrip is first in the array)
+  const spellLevelsAvailable = classSpellSlots[levelInput].length - 1;
+  /*   console.log(classSpellSlots, spellLevelsAvailable);
+   */
   const getSpellData = async (spell) => {
     try {
       const spellData = await getItems(spell.url);
@@ -18,6 +25,9 @@ const SpellsFormData = ({ spells, classInput }) => {
     }
   };
 
+  //fetch the spells from the api
+  console.log(spellsData);
+
   useEffect(() => {
     const fetchSpellsData = async () => {
       setLoading(true);
@@ -25,71 +35,54 @@ const SpellsFormData = ({ spells, classInput }) => {
       const spellsArray = await Promise.all(
         spells.map((spell) => getSpellData(spell))
       );
-      //filter them by whether they apply for the selected class
-      const validSpellsArray = spellsArray.filter((spell) => {
+      setSpellsData(spellsArray);
+      console.log("spells fetched");
+      setLoading(false);
+    };
+    fetchSpellsData();
+  }, [spells]);
+
+  useEffect(() => {
+    if (classInput && spellsData.length > 0) {
+      //filter them by whether they apply for the selected class.
+
+      setLoading(true);
+      const validSpellsArray = spellsData.filter((spell) => {
         const classesList = spell.classes.map((cls) => cls.index);
         return classesList.includes(classInput);
       });
 
       //create 9 new arrays for each spell lvl
-      const levelOneSpells = validSpellsArray.filter(
-        (spell) => spell.level === 1
-      );
-      const levelTwoSpells = validSpellsArray.filter(
-        (spell) => spell.level === 2
-      );
-      const levelThreeSpells = validSpellsArray.filter(
-        (spell) => spell.level === 3
-      );
-      const levelFourSpells = validSpellsArray.filter(
-        (spell) => spell.level === 4
-      );
-      const levelFiveSpells = validSpellsArray.filter(
-        (spell) => spell.level === 5
-      );
-      const levelSixSpells = validSpellsArray.filter(
-        (spell) => spell.level === 6
-      );
-      const levelSevenSpells = validSpellsArray.filter(
-        (spell) => spell.level === 7
-      );
-      const levelEightSpells = validSpellsArray.filter(
-        (spell) => spell.level === 8
-      );
-      const levelNineSpells = validSpellsArray.filter(
-        (spell) => spell.level === 9
-      );
+
+      const leveledArray = validSpellsArray.reduce((acc, current) => {
+        const spellLevel = current.level || 0;
+
+        if (!acc[spellLevel] && spellLevel <= spellLevelsAvailable) {
+          acc[spellLevel] = [];
+        }
+        if (acc[spellLevel]) {
+          acc[spellLevel].push(current);
+        }
+        return acc;
+      }, {});
+
+      //update state with sorted spells
+
+      setFetchedSpells(leveledArray);
 
       // design the cards
 
-      //calculate the available spell slots of the character
-
-      // display available slots for the player
-
       //limit number of selectable spells per level
 
-      //update state with sorted spells
-      setFetchedSpells({
-        1: levelOneSpells,
-        2: levelTwoSpells,
-        3: levelThreeSpells,
-        4: levelFourSpells,
-        5: levelFiveSpells,
-        6: levelSixSpells,
-        7: levelSevenSpells,
-        8: levelEightSpells,
-        9: levelNineSpells,
-      });
       setLoading(false);
-    };
-
-    fetchSpellsData();
-  }, [spells, classInput]);
+    }
+  }, [spells, classInput, levelInput, spellsData]);
 
   //create a checkbox group for each level of spells
+
   const collapseItems = Object.keys(fetchedSpells).map((lvl) => ({
     key: `${lvl}`,
-    label: `Level ${lvl}`,
+    label: `${lvl == 0 ? `Cantrips` : `Level ${lvl}`}`,
     children: fetchedSpells[lvl] && (
       <>
         <Checkbox.Group

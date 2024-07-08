@@ -77,8 +77,6 @@ const NewCharacterPage = () => {
     }
   };
 
-  console.log(form.getFieldValue("class"));
-
   //VALIDATION RULES
   const abilityScoreRules = {
     required: true,
@@ -460,6 +458,7 @@ const NewCharacterPage = () => {
                 <SpellsFormData
                   spells={optionsData.spells}
                   classInput={optionsData.classSelected}
+                  levelInput={optionsData.levelSelected}
                 />
               )}
           </div>
