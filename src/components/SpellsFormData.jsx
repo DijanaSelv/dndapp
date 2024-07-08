@@ -11,10 +11,12 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
   const [loading, setLoading] = useState(true);
   //get spell slots for that class
   const classSpellSlots = SPELL_SLOTS[classInput];
-  //se what the max level of spells is for this class and selected level (-1 because cantrip is first in the array)
-  const spellLevelsAvailable = classSpellSlots[levelInput].length - 1;
-  /*   console.log(classSpellSlots, spellLevelsAvailable);
-   */
+  //se what the max level of spells is for this class and selected level (-1 because cantrip is first in the array) for warlock is stored differently
+  const spellLevelsAvailable =
+    classInput === "warlock"
+      ? classSpellSlots[levelInput][3]
+      : classSpellSlots[levelInput].length - 1;
+
   const getSpellData = async (spell) => {
     try {
       const spellData = await getItems(spell.url);
@@ -25,10 +27,8 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
     }
   };
 
-  //fetch the spells from the api
-  console.log(spellsData);
-
   useEffect(() => {
+    //fetch the spells from the api (only the first time)
     const fetchSpellsData = async () => {
       setLoading(true);
       //deal with all promises as one
@@ -36,7 +36,6 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
         spells.map((spell) => getSpellData(spell))
       );
       setSpellsData(spellsArray);
-      console.log("spells fetched");
       setLoading(false);
     };
     fetchSpellsData();
@@ -53,10 +52,8 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
       });
 
       //create 9 new arrays for each spell lvl
-
       const leveledArray = validSpellsArray.reduce((acc, current) => {
         const spellLevel = current.level || 0;
-
         if (!acc[spellLevel] && spellLevel <= spellLevelsAvailable) {
           acc[spellLevel] = [];
         }
@@ -67,7 +64,6 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
       }, {});
 
       //update state with sorted spells
-
       setFetchedSpells(leveledArray);
 
       // design the cards
@@ -79,7 +75,6 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
   }, [spells, classInput, levelInput, spellsData]);
 
   //create a checkbox group for each level of spells
-
   const collapseItems = Object.keys(fetchedSpells).map((lvl) => ({
     key: `${lvl}`,
     label: `${lvl == 0 ? `Cantrips` : `Level ${lvl}`}`,
