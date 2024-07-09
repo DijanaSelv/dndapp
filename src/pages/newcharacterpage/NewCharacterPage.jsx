@@ -419,10 +419,7 @@ const NewCharacterPage = () => {
           </div>
 
           <h3>Proficiencies:</h3>
-          <Collapse
-            items={collapseItems}
-            className={cssClasses.collapseComponent}
-          />
+          <Collapse items={collapseItems} />
         </>
       ),
     },
@@ -461,6 +458,7 @@ const NewCharacterPage = () => {
                   spells={optionsData.spells}
                   classInput={optionsData.classSelected}
                   levelInput={optionsData.levelSelected}
+                  key="spellsForm"
                 />
               )}
           </div>
