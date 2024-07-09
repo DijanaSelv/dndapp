@@ -4,7 +4,8 @@
 
 .mainWrapper {
   color: #333131;
-  margin: 0 25%;
+  margin: auto;
+  width: 1500px;
 }
 
 .sectionLink {
@@ -84,42 +85,23 @@ a {
   height: 100%;
   object-fit: cover;
 }
-@media (max-width: 1270px) {
+
+/* Width of the whole content wrapper */
+@media (max-width: 1550px) {
   .mainWrapper {
-    margin: 0 15%;
+    width: 1000px;
   }
 }
-/* @media (max-width: 2270px) {
+@media (max-width: 1050px) {
   .mainWrapper {
-    margin: 0 20%;
-  }
-    ul > div {
-    width: 32%;
+    width: 800px;
   }
 }
-@media (max-width: 1600px) {
-    ul > div {
-    width: 32%;
-  }
-}
-@media (max-width: 1270px) {
+@media (max-width: 850px) {
   .mainWrapper {
-    margin: 0 15%;
-  }
-    ul > div {
-    width: 48%;
+    width: 450px;
   }
 }
-@media (max-width: 1070px) {
-    ul > div {
-    width: 48%;
-  }
-}
-@media (max-width: 650px) {
-    ul > div {
-    width: 90%;
-  }
-} */
 
 /* CHARACTER CARDS ARE A BIT DIFFERENT */
 

@@ -12,13 +12,11 @@ export const SPELLS_AVAILABLE = {
   ],
 };
 
-//~~~~~~~~~~~~~~~~~~~~~CLASSES THAT PREPARE SPELLS FROM ALL AVAILABLE
-
 export const SPELLS_INSTRUCTION = {
   druid:
     "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Wisdom modifier and class level.",
   paladin:
-    "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Charisma modifier and class level.",
+    "Paladins get to learn spells when they reach level 2. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Charisma modifier and class level.",
   cleric:
     "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Wisdom modifier and class level.",
   bard: "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest.",
@@ -27,10 +25,12 @@ export const SPELLS_INSTRUCTION = {
   warlock:
     "You learn spells from your class spell list that are avialable for you to cast at all times. On a gained level you can replace old spells with new ones. You cast spells by using your spell slots avialable.",
   ranger:
-    "The rangers gets to learn new spells when they reach level 2. You learn spells from your class spell list that are available for you to cast at all times. On a gained level you can replace one old spell with a new one. ",
+    "The rangers get to learn new spells when they reach level 2. You learn spells from your class spell list that are available for you to cast at all times. On a gained level you can replace one old spell with a new one. ",
   wizard:
     "You learn spells from your class spell list. Then on every long break you prepare your spells that will be available for you to cast.",
 };
+
+//~~~~~~~~~~~~~~~~~~~~~CLASSES THAT PREPARE SPELLS FROM ALL AVAILABLE
 
 //DRUID:
 //PREPARE spells - wis mod + druid level. Can change on long rest.

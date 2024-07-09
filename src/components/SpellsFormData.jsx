@@ -83,6 +83,8 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
   //LIMIT number of spells that can be selected
   const onChangeHandler = (e, lvl) => {
     e.preventDefault();
+    /* e.target.closest; */
+    e.target.className += `${cssClasses.spellsFull}`;
     if (lvl == 0) {
       /* const selectedCantrips = values.length;
       setSelectedSpells((prev) => ({ ...prev, cantrips: selectedCantrips })); */

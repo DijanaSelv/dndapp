@@ -66,22 +66,29 @@
   }
 }
 
-@media (min-width: 851px) and (max-width: 1599px) {
-}
-
 /* Spell Cards */
+
+.motionWrapper {
+  height: 100%;
+}
 
 .spellCollapseComponent {
   border: none;
+  border-radius: 0px;
+  border-top: 1px solid rgba(0, 0, 0, 0.151);
 }
-/* .spellCollapseComponent .ant-collapse-header {
-  border: 1px solid black !important;
-} */
 
 .spellsGroupContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 2fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 4fr));
   gap: 10px;
+  /* prevent text select on mouse drag */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .spellsGroupContainer label > span:nth-child(2) {
@@ -89,6 +96,7 @@
   width: 100%;
 }
 
+/* hide the checkbox */
 .spellsGroupContainer label > span:nth-child(1) {
   display: none;
 }
@@ -97,15 +105,51 @@
   height: 100%;
 }
 
-.spellSpecsContainer {
+.spellSpecContainer {
   display: grid;
   grid-template-columns: 1fr 2fr;
   background-color: rgb(243, 243, 243);
   border: 1px solid white;
   border-radius: 5px;
+  padding-left: 5px;
 }
 
-/* .spellsGroupContainer .ant-checkbox-wrapper-checked .ant-card {
-  border: 1px solid red !important;
+.cardDescriptionContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
- */
+
+/* Can't select specific ant classes with css module, we need to access global classes */
+/* Selected spells */
+
+:global(.css-dev-only-do-not-override-zl9ks2.ant-checkbox-wrapper) .spellCard {
+  transition: color 0.2s;
+}
+
+:global(.css-dev-only-do-not-override-zl9ks2.ant-checkbox-wrapper)
+  .spellSpecsContainer {
+  transition: all 0.2s;
+}
+
+:global(.css-dev-only-do-not-override-zl9ks2.ant-checkbox-wrapper-checked)
+  .spellCard {
+  border: 1px solid rgb(155, 155, 155);
+  background-color: #eef4f8a8;
+  transition: all 0.2s;
+}
+
+:global(.css-dev-only-do-not-override-zl9ks2.ant-checkbox-wrapper-checked) * {
+  color: black;
+}
+:global(.css-dev-only-do-not-override-zl9ks2.ant-checkbox-wrapper-checked)
+  .spellSpecContainer {
+  border-color: #eef4f8a8;
+  background-color: #dfe1e2;
+  transition: all 0.2s;
+}
+
+/* When they can't select any more spells */
+.spellCard:has(.spellsFull) {
+  background-color: antiquewhite;
+}
