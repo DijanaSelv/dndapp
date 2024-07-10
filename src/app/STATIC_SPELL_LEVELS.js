@@ -12,37 +12,18 @@ export const SPELLS_AVAILABLE = {
   ],
 };
 
-export const SPELLS_INSTRUCTION = {
-  druid:
-    "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Wisdom modifier and class level.",
-  paladin:
-    "Paladins get to learn spells when they reach level 2. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Charisma modifier and class level.",
-  cleric:
-    "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Wisdom modifier and class level.",
-  bard: "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest.",
-  sorcerer:
-    "You learn spells from you class spell list that are available for you to cast at all times. You can use sorcery points to gain additional spell slots, or sacrifice spell slots to gain additional sorcery points.",
-  warlock:
-    "You learn spells from your class spell list that are avialable for you to cast at all times. On a gained level you can replace old spells with new ones. You cast spells by using your spell slots avialable.",
-  ranger:
-    "The rangers get to learn new spells when they reach level 2. You learn spells from your class spell list that are available for you to cast at all times. On a gained level you can replace one old spell with a new one. ",
-  wizard:
-    "You learn spells from your class spell list. Then on every long break you prepare your spells that will be available for you to cast.",
-};
-
 //~~~~~~~~~~~~~~~~~~~~~CLASSES THAT PREPARE SPELLS FROM ALL AVAILABLE
 
 //DRUID:
 //PREPARE spells - wis mod + druid level. Can change on long rest.
 //can change cantrips on lvl 4, 8, 12, 16, 19
-
-//PALADIN:
-//PREPARES spells from available ones. Char mod + 1/2 paladin level rounded down (min 1 spell)
-
 //CLERIC: all spells available for which he has spell slots ( 3 cantrips).
 //SPELLS TO PREAPRE - wis mod + cleric level. Can change prepared spells on long rest.
 //CANTRIPS are not prepared but learnt
 //On lvl 4, 8, 12,16, 19 they can replace a cantrip with a new one.
+
+//PALADIN:
+//PREPARES spells from available ones. Char mod + 1/2 paladin level rounded down (min 1 spell)
 
 //BARD:
 //KNOWS Spells There is a limit to how many spells they know. (SPELLS KNOWN)
@@ -252,4 +233,22 @@ export const SPELL_SLOTS = {
     19: [0, 4, 3, 3, 3, 1],
     20: [0, 4, 3, 3, 3, 1],
   },
+};
+
+export const SPELLS_INSTRUCTION = {
+  druid:
+    "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Wisdom modifier and class level.",
+  paladin:
+    "Paladins get to learn spells when they reach level 2. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Charisma modifier and class level.",
+  cleric:
+    "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest. The number of prepapred spells depend on your Wisdom modifier and class level.",
+  bard: "You learn cantrips that are avialable to you at all times. You can prepare spells from your class spell list and modify them every long rest.",
+  sorcerer:
+    "You learn spells from you class spell list that are available for you to cast at all times. You can use sorcery points to gain additional spell slots, or sacrifice spell slots to gain additional sorcery points.",
+  warlock:
+    "You learn spells from your class spell list that are avialable for you to cast at all times. On a gained level you can replace old spells with new ones. You cast spells by using your spell slots avialable.",
+  ranger:
+    "The rangers get to learn new spells when they reach level 2. You learn spells from your class spell list that are available for you to cast at all times. On a gained level you can replace one old spell with a new one. ",
+  wizard:
+    "You learn spells from your class spell list. Then on every long break you prepare your spells that will be available for you to cast.",
 };

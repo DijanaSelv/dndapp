@@ -45,6 +45,7 @@ const NewCharacterPage = () => {
     languages: [],
     magicSchools: [],
     spells: [],
+    spellsSelected: 0,
     proficiencies: {
       skills: [],
       tools: [],
@@ -54,6 +55,8 @@ const NewCharacterPage = () => {
     },
     classSelected: null,
     levelSelected: 1,
+    wisdomSelected: 10,
+    charismaSelected: 10,
   });
 
   //I will need class input for the starting gold calculation suggestion
@@ -72,6 +75,18 @@ const NewCharacterPage = () => {
       setOptionsData((prev) => ({
         ...prev,
         levelSelected: changedValues.level,
+      }));
+    }
+    if (changedValues.wisdom) {
+      setOptionsData((prev) => ({
+        ...prev,
+        wisdomSelected: changedValues.wisdom,
+      }));
+    }
+    if (changedValues.charisma) {
+      setOptionsData((prev) => ({
+        ...prev,
+        charismaSelected: changedValues.charisma,
       }));
     }
   };
@@ -399,22 +414,22 @@ const NewCharacterPage = () => {
           <h3>Ability Scores:</h3>
           <div className={cssClasses.abilityScoresContainer}>
             <Form.Item name="strength" rules={[abilityScoreRules]}>
-              <Input addonBefore="Strength" type="number"></Input>
+              <InputNumber addonBefore="Strength"></InputNumber>
             </Form.Item>
             <Form.Item name="dexterity" rules={[abilityScoreRules]}>
-              <Input addonBefore="Dexterity" type="number"></Input>
+              <InputNumber addonBefore="Dexterity"></InputNumber>
             </Form.Item>
             <Form.Item name="constitution" rules={[abilityScoreRules]}>
-              <Input addonBefore="Constitution" type="number"></Input>
+              <InputNumber addonBefore="Constitution"></InputNumber>
             </Form.Item>
             <Form.Item name="intelligence" rules={[abilityScoreRules]}>
-              <Input addonBefore="Intelligence" type="number"></Input>
+              <InputNumber addonBefore="Intelligence"></InputNumber>
             </Form.Item>
             <Form.Item name="wisdom" rules={[abilityScoreRules]}>
-              <Input addonBefore="Wisdom" type="number"></Input>
+              <InputNumber addonBefore="Wisdom"></InputNumber>
             </Form.Item>
             <Form.Item name="charisma" rules={[abilityScoreRules]}>
-              <Input addonBefore="Charisma" type="number"></Input>
+              <InputNumber addonBefore="Charisma"></InputNumber>
             </Form.Item>
           </div>
 
@@ -444,24 +459,15 @@ const NewCharacterPage = () => {
               </div>
             )}
 
-          <div>
-            {!optionsData.classSelected && <p>Please select a class.</p>}
-            {["barbarian", "fighter", "monk", "rogue"].includes(
-              optionsData.classSelected
-            ) && <p>The class you selected is not a spellcaster.</p>}
-            {/* TODO: fighter and rogue have a spellcasting subclass, maybe a button za niv, my subclass neshto neshto, i taka da mu se pojavat spells */}
-            {optionsData.classSelected &&
-              !["barbarian", "fighter", "monk", "rogue"].includes(
-                optionsData.classSelected
-              ) && (
-                <SpellsFormData
-                  spells={optionsData.spells}
-                  classInput={optionsData.classSelected}
-                  levelInput={optionsData.levelSelected}
-                  key="spellsForm"
-                />
-              )}
-          </div>
+          <SpellsFormData
+            spells={optionsData.spells}
+            getFieldValue={form.getFieldValue}
+            wisdomInput={optionsData.wisdomSelected}
+            charismaInput={optionsData.charismaSelected}
+            classInput={optionsData.classSelected}
+            levelInput={optionsData.levelSelected}
+            key="spellsForm"
+          />
         </>
       ),
     },
