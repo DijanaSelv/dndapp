@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Checkbox, Progress, Collapse, Tooltip } from "antd";
+import { Form, Checkbox, Progress, Collapse } from "antd";
 import cssClasses from "../pages/newcharacterpage/NewCharacterPage.module.css";
 import SpellCard from "./SpellCard";
 import { getItems } from "../app/actions/dndApiActions";
@@ -9,8 +9,6 @@ import {
   SPELLS_INSTRUCTION,
 } from "../app/STATIC_SPELL_LEVELS";
 import { useForm } from "antd/es/form/Form";
-import { isDifferentPointerPosition } from "@testing-library/user-event/dist/cjs/system/pointer/shared.js";
-import { isDisabled } from "@testing-library/user-event/dist/cjs/utils/index.js";
 
 const SpellsFormData = ({
   spells,
@@ -20,7 +18,6 @@ const SpellsFormData = ({
   wisdomInput,
   charismaInput,
 }) => {
-  const [form] = useForm();
   const [spellsData, setSpellsData] = useState([]);
   const [fetchedSpells, setFetchedSpells] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -116,7 +113,7 @@ const SpellsFormData = ({
         key: `${lvl}`,
         label: `${lvl == 0 ? `Cantrips` : `Level ${lvl}`}`,
         children: leveledArray[lvl] && (
-          <Form.Item name={`spells${lvl}`} label="Spells:">
+          <Form.Item name={`spells${lvl}`}>
             <Checkbox.Group
               className={cssClasses.spellsGroupContainer}
               options={leveledArray[lvl].map((spell) => ({
@@ -127,10 +124,6 @@ const SpellsFormData = ({
                   !selectedSpells.includes(spell.index) &&
                   !canSelectMoreSpells,
               }))}
-              onClick={(spell) => {
-                console.log(selectedSpells);
-                console.log(selectedSpells.includes(spell.index));
-              }}
               onChange={(values) => onValuesChangeHandler(values, lvl)}
             />
           </Form.Item>
@@ -139,7 +132,24 @@ const SpellsFormData = ({
 
       setContent(
         <>
-          <p>{classInstructions}</p>
+          <div className={cssClasses.messageWrapper}>
+            <h3 className={cssClasses.messageSubtitle}>
+              Selected class: {classInput.toUpperCase()}
+            </h3>
+            <div className={cssClasses.messageContent}>{classInstructions}</div>
+            <div className={cssClasses.messageContent}>
+              You have a certain amount of cantrips and spells you can set for
+              your character. As you level up you will be able to add more.
+            </div>
+          </div>
+          <div className={cssClasses.spellCountInfoWrapper}>
+            <div className={cssClasses.spellCountContent}>
+              <div>Cantrips available:</div>
+              <div className={cssClasses.countNumbers}>0 / 3</div>
+              <div>Spells available:</div>
+              <div>{`${selectedSpells.length} / ${spellsAllowed}`}</div>
+            </div>
+          </div>
           <Collapse
             items={collapseItems}
             className={cssClasses.spellCollapseComponent}
@@ -162,6 +172,7 @@ const SpellsFormData = ({
     wisdomInput,
     charismaInput,
     selectedSpells,
+    canSelectMoreSpells,
   ]);
 
   useEffect(() => {
@@ -187,23 +198,17 @@ const SpellsFormData = ({
   const onValuesChangeHandler = (values, lvl) => {
     //find how many spells have been selected (excluding cantrips )
 
-    const selectedSpells = Object.keys(fetchedSpells)
+    const spellsList = Object.keys(fetchedSpells)
       .slice(1)
       .map((level) => getFieldValue(`spells${level}`))
       .flat();
-    setSelectedSpells(selectedSpells);
+    console.log(spellsList);
 
-    const selectedSpellsCount = selectedSpells.length;
+    const selectedSpellsCount = spellsList.length;
+    setSelectedSpells(spellsList);
 
     setCanSelectMoreSpells(selectedSpellsCount < spellsAllowed);
   };
-
-  /*   const onClickHandler = (e) => {
-    console.log(spellsAllowed, canSelectMoreSpells);
-     if (!canSelectMoreSpells) {
-      e.preventDefault();
-    }
-  }; */
 
   return (
     <>
