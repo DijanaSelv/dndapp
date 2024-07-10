@@ -14,7 +14,7 @@ const SpellCard = ({ spell }) => {
         className={cssClasses.spellCard}
         title={spell.name}
         extra={<p>{spell.school.index}</p>}
-        onClick={() => console.log(spell)}
+        /* onClick={() => console.log(spell)} */
         size="small"
       >
         {/*  <Meta
