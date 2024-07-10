@@ -13,15 +13,10 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
     cantrips: 0,
     spells: 0,
   });
-  const classInstructions = SPELLS_INSTRUCTION[classInput];
-  //get spell slots for that class
-  const classSpellSlots = SPELL_SLOTS[classInput];
 
-  //se what the max level of spells is for this class and selected level (-1 because cantrip is first in the array) for warlock is stored differently
-  const spellLevelsAvailable =
-    classInput === "warlock"
-      ? classSpellSlots[levelInput][3]
-      : classSpellSlots[levelInput].length - 1;
+  const [content, setContent] = useState(
+    <p>Please select a class for your character.</p>
+  );
 
   const getSpellData = async (spell) => {
     try {
@@ -33,8 +28,8 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
     }
   };
 
+  /* ~~~~~~~~~~~~~~fetch spells the first time only */
   useEffect(() => {
-    //fetch the spells from the api (only the first time)
     const fetchSpellsData = async () => {
       setLoading(true);
       //deal with all promises as one
@@ -44,18 +39,33 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
       setSpellsData(spellsArray);
       setLoading(false);
     };
-    fetchSpellsData();
+    spells.length > 0 && fetchSpellsData();
   }, [spells]);
 
+  /* ~~~~~~~~~~~~~~~~~~~~~~~~change content according to what has been selected */
   useEffect(() => {
-    if (classInput && spellsData.length > 0) {
+    // 1. there is a selected class that is a spellcaster
+    if (
+      classInput &&
+      !["barbarian", "fighter", "monk", "rogue"].includes(classInput) &&
+      spellsData.length > 0
+    ) {
       //filter them by whether they apply for the selected class.
-
       setLoading(true);
       const validSpellsArray = spellsData.filter((spell) => {
         const classesList = spell.classes.map((cls) => cls.index);
         return classesList.includes(classInput);
       });
+
+      const classInstructions = SPELLS_INSTRUCTION[classInput];
+      //get spell slots for that class
+      const classSpellSlots = SPELL_SLOTS[classInput];
+
+      //se what the max level of spells is for this class and selected level (-1 because cantrip is first in the array) for warlock is stored differently
+      const spellLevelsAvailable =
+        classInput === "warlock"
+          ? classSpellSlots[levelInput][3]
+          : classSpellSlots[levelInput].length - 1;
 
       //create 9 new arrays for each spell lvl
       const leveledArray = validSpellsArray.reduce((acc, current) => {
@@ -72,11 +82,47 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
       //update state with sorted spells
       setFetchedSpells(leveledArray);
 
-      // design the cards
-
-      //limit number of selectable spells per level
+      //TODO: limit number of selectable spells per level
 
       setLoading(false);
+
+      const collapseItems = Object.keys(leveledArray).map((lvl) => ({
+        key: `${lvl}`,
+        label: `${lvl == 0 ? `Cantrips` : `Level ${lvl}`}`,
+        children: leveledArray[lvl] && (
+          <>
+            <Checkbox.Group
+              className={cssClasses.spellsGroupContainer}
+              options={leveledArray[lvl].map((spell) => ({
+                label: <SpellCard spell={spell} />,
+                value: spell.index,
+              }))}
+              /* onClick={(values) => onChangeHandler(values, lvl)} */
+              /* onChange={(values) => onChangeHandler(values, lvl)} */
+            />
+          </>
+        ),
+      }));
+
+      setContent(
+        <>
+          <p>{classInstructions}</p>
+          <Form.Item name="spells" label="Spells:">
+            <Collapse
+              items={collapseItems}
+              className={cssClasses.spellCollapseComponent}
+            />
+          </Form.Item>
+        </>
+      );
+    }
+
+    //2/ the class is not a spellcaster.
+    if (
+      classInput &&
+      ["barbarian", "fighter", "monk", "rogue"].includes(classInput)
+    ) {
+      setContent(<p>The class you selected is not a spellcaster.</p>);
     }
   }, [spells, classInput, levelInput, spellsData]);
 
@@ -94,29 +140,11 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
     /* console.log(e.target, lvl); */
   };
 
-  //create a checkbox group for each level of spells
-  const collapseItems = Object.keys(fetchedSpells).map((lvl) => ({
-    key: `${lvl}`,
-    label: `${lvl == 0 ? `Cantrips` : `Level ${lvl}`}`,
-    children: fetchedSpells[lvl] && (
-      <>
-        <Checkbox.Group
-          className={cssClasses.spellsGroupContainer}
-          options={fetchedSpells[lvl].map((spell) => ({
-            label: <SpellCard spell={spell} />,
-            value: spell.index,
-          }))}
-          /* onClick={(values) => onChangeHandler(values, lvl)} */
-          /* onChange={(values) => onChangeHandler(values, lvl)} */
-        />
-      </>
-    ),
-  }));
-
   return (
     <>
-      <p>{classInput && classInstructions}</p>
-      {loading ? (
+      {loading &&
+      classInput &&
+      !["barbarian", "fighter", "monk", "rogue"].includes(classInput) ? (
         <>
           <p className={cssClasses.pageInfo}>Loading spells...</p>
           <Progress
@@ -128,12 +156,7 @@ const SpellsFormData = ({ spells, classInput, levelInput }) => {
           />
         </>
       ) : (
-        <Form.Item name="spells" label="Spells:">
-          <Collapse
-            items={collapseItems}
-            className={cssClasses.spellCollapseComponent}
-          />
-        </Form.Item>
+        content
       )}
     </>
   );

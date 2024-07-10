@@ -445,22 +445,12 @@ const NewCharacterPage = () => {
             )}
 
           <div>
-            {!optionsData.classSelected && <p>Please select a class.</p>}
-            {["barbarian", "fighter", "monk", "rogue"].includes(
-              optionsData.classSelected
-            ) && <p>The class you selected is not a spellcaster.</p>}
-            {/* TODO: fighter and rogue have a spellcasting subclass, maybe a button za niv, my subclass neshto neshto, i taka da mu se pojavat spells */}
-            {optionsData.classSelected &&
-              !["barbarian", "fighter", "monk", "rogue"].includes(
-                optionsData.classSelected
-              ) && (
-                <SpellsFormData
-                  spells={optionsData.spells}
-                  classInput={optionsData.classSelected}
-                  levelInput={optionsData.levelSelected}
-                  key="spellsForm"
-                />
-              )}
+            <SpellsFormData
+              spells={optionsData.spells}
+              classInput={optionsData.classSelected}
+              levelInput={optionsData.levelSelected}
+              key="spellsForm"
+            />
           </div>
         </>
       ),
