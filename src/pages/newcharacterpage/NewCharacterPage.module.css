@@ -180,11 +180,25 @@
 }
 
 .spellCountInfoWrapper {
-  width: 65%;
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+  border-bottom: 2px solid blue;
+  border-image: radial-gradient(
+      circle,
+      #2b5ea0,
+      #5379b6,
+      #6e85b3,
+      #a4b6dd,
+      #ffffff
+    )
+    1;
 }
 
 .spellCountContent {
@@ -194,4 +208,8 @@
   grid-template-columns: 3fr 1fr;
   column-gap: 20px;
   gap: 10px;
+}
+
+.spellsFull {
+  color: red;
 }

@@ -20,10 +20,14 @@ const SpellsFormData = ({
   const [spellsData, setSpellsData] = useState([]);
   const [fetchedSpells, setFetchedSpells] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [spellsAllowed, setSpellsAllowed] = useState(0);
   const [canSelectMoreSpells, setCanSelectMoreSpells] = useState(true);
   const [selectedSpells, setSelectedSpells] = useState([]);
 
+  const [cantripsAllowed, setCantripsAllowed] = useState(0);
+  const [canSelectMoreCantrips, setCanSelectMoreCantrips] = useState(true);
+  const [selectedCantrips, setSelectedCantrips] = useState([]);
   const [content, setContent] = useState(
     <p>Please select a class for your character.</p>
   );
@@ -104,9 +108,11 @@ const SpellsFormData = ({
                 label: <SpellCard spell={spell} />,
                 value: spell.index,
                 disabled:
-                  lvl != 0 &&
-                  !selectedSpells.includes(spell.index) &&
-                  !canSelectMoreSpells,
+                  lvl == 0
+                    ? !selectedCantrips.includes(spell.index) &&
+                      !canSelectMoreCantrips
+                    : !selectedSpells.includes(spell.index) &&
+                      !canSelectMoreSpells,
               }))}
               onChange={(values) =>
                 onValuesChangeHandler(values, lvl, leveledArray)
@@ -130,10 +136,38 @@ const SpellsFormData = ({
           </div>
           <div className={cssClasses.spellCountInfoWrapper}>
             <div className={cssClasses.spellCountContent}>
-              <div>Cantrips available:</div>
-              <div className={cssClasses.countNumbers}>0 / 3</div>
-              <div>Spells available:</div>
-              <div>{`${selectedSpells.length} / ${spellsAllowed}`}</div>
+              <div
+                className={`${
+                  selectedCantrips.length == cantripsAllowed &&
+                  cssClasses.spellsFull
+                }`}
+              >
+                {selectedCantrips.length == cantripsAllowed
+                  ? "Cantrips full:"
+                  : "Cantrips selected:"}
+              </div>
+              <div
+                className={`${cssClasses.countNumbers} ${
+                  selectedCantrips.length == cantripsAllowed &&
+                  cssClasses.spellsFull
+                }`}
+              >{`${selectedCantrips.length} / ${cantripsAllowed}`}</div>
+              <div
+                className={` ${
+                  selectedSpells.length == spellsAllowed &&
+                  cssClasses.spellsFull
+                }`}
+              >
+                {selectedSpells.length == spellsAllowed
+                  ? "Spells full:"
+                  : "Spells selected:"}
+              </div>
+              <div
+                className={`${cssClasses.countNumbers} ${
+                  selectedSpells.length == spellsAllowed &&
+                  cssClasses.spellsFull
+                }`}
+              >{`${selectedSpells.length} / ${spellsAllowed}`}</div>
             </div>
           </div>
           <Collapse
@@ -159,6 +193,8 @@ const SpellsFormData = ({
     charismaInput,
     selectedSpells,
     canSelectMoreSpells,
+    selectedCantrips,
+    canSelectMoreCantrips,
   ]);
 
   useEffect(() => {
@@ -175,25 +211,29 @@ const SpellsFormData = ({
       } else if (classInput === "warlock") {
         setSpellsAllowed(SPELL_SLOTS["warlock"].levelInput[1]);
       }
-
+      setCantripsAllowed(SPELL_SLOTS[classInput][levelInput][0]);
       setCanSelectMoreSpells(true);
     }
   }, [classInput, wisdomInput, charismaInput, levelInput]);
 
-  console.log(fetchedSpells, "fetched spells");
   //LIMIT number of spells that can be selected
   const onValuesChangeHandler = (values, lvl, leveledSpells) => {
     //leveled spells are passed because fetchedSpells are not updated here the first click (this function is technically asynch finction and uses previous render before fetched spells was updated i zato e ova problem.)
-    const spellsList = Object.keys(leveledSpells)
-      .slice(1)
-      .map((level) => getFieldValue(`spells${level}`))
-      .flat()
-      .filter((spell) => spell !== undefined);
+    if (lvl == 0) {
+      setSelectedCantrips(values);
+      setCanSelectMoreCantrips(values.length < cantripsAllowed);
+    } else {
+      const spellsList = Object.keys(leveledSpells)
+        .slice(1)
+        .map((level) => getFieldValue(`spells${level}`))
+        .flat()
+        .filter((spell) => spell !== undefined);
 
-    const selectedSpellsCount = spellsList.length;
-    setSelectedSpells(spellsList);
+      const selectedSpellsCount = spellsList.length;
+      setSelectedSpells(spellsList);
 
-    setCanSelectMoreSpells(selectedSpellsCount < spellsAllowed);
+      setCanSelectMoreSpells(selectedSpellsCount < spellsAllowed);
+    }
   };
 
   return (
