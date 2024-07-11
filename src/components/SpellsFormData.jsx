@@ -8,7 +8,6 @@ import {
   SPELLS_AVAILABLE,
   SPELLS_INSTRUCTION,
 } from "../app/STATIC_SPELL_LEVELS";
-import { useForm } from "antd/es/form/Form";
 
 const SpellsFormData = ({
   spells,
@@ -72,18 +71,6 @@ const SpellsFormData = ({
       //get spell slots for that class
       const classSpellSlots = SPELL_SLOTS[classInput];
 
-      /*       if (["bard", "sorcerer", "ranger", "wizard"].includes(classInput)) {
-        numberOfSpellsAllowed = SPELLS_AVAILABLE[classInput][levelInput - 1];
-      } else if (["druid", "cleric", " bard"].includes(classInput)) {
-        const wisMod = Math.floor((wisdomInput - 10) / 2);
-        numberOfSpellsAllowed = levelInput + wisMod;
-      } else if (classInput === "paladin") {
-        const charMod = Math.floor((charismaInput - 10) / 2);
-        numberOfSpellsAllowed = charMod + Math.floor(levelInput / 2) || 1;
-      } else if (classInput === "warlock") {
-        numberOfSpellsAllowed = SPELL_SLOTS["warlock"].levelInput[1];
-      } */
-
       //se what the max level of spells is for this class and selected level (-1 because cantrip is first in the array) for warlock is stored differently
       const spellLevelsAvailable =
         classInput === "warlock"
@@ -104,9 +91,6 @@ const SpellsFormData = ({
 
       //update state with sorted spells
       setFetchedSpells(leveledArray);
-
-      //TODO: limit number of selectable spells per level
-
       setLoading(false);
 
       const collapseItems = Object.keys(leveledArray).map((lvl) => ({
@@ -124,7 +108,9 @@ const SpellsFormData = ({
                   !selectedSpells.includes(spell.index) &&
                   !canSelectMoreSpells,
               }))}
-              onChange={(values) => onValuesChangeHandler(values, lvl)}
+              onChange={(values) =>
+                onValuesChangeHandler(values, lvl, leveledArray)
+              }
             />
           </Form.Item>
         ),
@@ -194,15 +180,15 @@ const SpellsFormData = ({
     }
   }, [classInput, wisdomInput, charismaInput, levelInput]);
 
+  console.log(fetchedSpells, "fetched spells");
   //LIMIT number of spells that can be selected
-  const onValuesChangeHandler = (values, lvl) => {
-    //find how many spells have been selected (excluding cantrips )
-
-    const spellsList = Object.keys(fetchedSpells)
+  const onValuesChangeHandler = (values, lvl, leveledSpells) => {
+    //leveled spells are passed because fetchedSpells are not updated here the first click (this function is technically asynch finction and uses previous render before fetched spells was updated i zato e ova problem.)
+    const spellsList = Object.keys(leveledSpells)
       .slice(1)
       .map((level) => getFieldValue(`spells${level}`))
-      .flat();
-    console.log(spellsList);
+      .flat()
+      .filter((spell) => spell !== undefined);
 
     const selectedSpellsCount = spellsList.length;
     setSelectedSpells(spellsList);
