@@ -21,6 +21,7 @@ import SpellCard from "../../components/SpellCard";
 import { useEffect, useState } from "react";
 import { getItems } from "../../app/actions/dndApiActions";
 import { SPELL_SLOTS } from "../../app/STATIC_SPELL_LEVELS";
+import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 
 const CharacterPage = () => {
   const params = useParams();
@@ -231,6 +232,7 @@ const CharacterPage = () => {
   useEffect(() => {
     if (spellsData) {
       const component = spellsData.map((oneLevelArray, i) => {
+        const numberOfSlots = spellSlots[oneLevelArray[0].level];
         return (
           <div className={classes.spellLevelContainer} key={i}>
             <div className={classes.spellTitleContainer}>
@@ -240,16 +242,19 @@ const CharacterPage = () => {
               <div className={classes.spellSlotsContainer}>
                 <span>Spell Slots:</span>
                 <p className={classes.spellSlotsCheck}>
-                  <Checkbox />
-                  <Checkbox />
-                  <Checkbox />
-                  <Checkbox />
+                  {/* Make array of the number of spell slots for that level and map it to geerate that many spell slot checkboxes */}
+                  {Array.from({
+                    length: numberOfSlots,
+                  }).map((_, i) => (
+                    <Checkbox key={`${oneLevelArray[0].level}-${i}`} />
+                  ))}
                 </p>
               </div>
             </div>
             <div className={classes.spellLabelsContainer}>
               {oneLevelArray.map((spell) => (
                 <Tooltip
+                  mouseEnterDelay="0.8"
                   key={`tooltip${spell.index}`}
                   overlayInnerStyle={{
                     width: "450px",
@@ -445,7 +450,14 @@ const CharacterPage = () => {
             </div>
           </div>
 
-          <h3 className={classes.skillsTitle}>Spells</h3>
+          <h3 className={classes.skillsTitle}>
+            Spells{" "}
+            <Tooltip title="keep hovering on each spell to see more details">
+              {" "}
+              <FontAwesomeIcon icon={faCircleQuestion} />
+            </Tooltip>
+          </h3>
+
           <div className={classes.spellsSection}>{spellsComponent}</div>
 
           <div className={classes.charInfoSection}>

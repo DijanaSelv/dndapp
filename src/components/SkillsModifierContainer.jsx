@@ -90,7 +90,7 @@ const SkillsModifierContainer = (props) => {
         <Tooltip title={skillsTooltip} trigger={"click"}>
           <p className={classes.abilityTitle}>
             {" "}
-            <FontAwesomeIcon icon={faHandFist} />
+            {abilities[name].icon}
             {name[0].toUpperCase() + name.slice(1)}
           </p>
         </Tooltip>
