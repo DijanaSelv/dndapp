@@ -11,13 +11,16 @@ import {
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { Button, Progress } from "antd";
+import { Button, Checkbox, Progress, Tooltip } from "antd";
 import classes from "./CharacterPage.module.css";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
 import { currencyForDisplay } from "../../app/actions/uitls";
-import { configConsumerProps } from "antd/es/config-provider";
+import SpellCard from "../../components/SpellCard";
+import { useEffect, useState } from "react";
+import { getItems } from "../../app/actions/dndApiActions";
+import { SPELL_SLOTS } from "../../app/STATIC_SPELL_LEVELS";
 
 const CharacterPage = () => {
   const params = useParams();
@@ -28,6 +31,9 @@ const CharacterPage = () => {
     (state) => state.userSlice.user.characters[cid]
   );
   const { isLoading } = useSelector((state) => state.uiSlice);
+
+  const [spellsData, setSpellsData] = useState();
+  const [spellsComponent, setSpellsComponent] = useState();
 
   /* CALCULATIONS AND FORMATTING OF STATS */
   let formattedAlignment;
@@ -47,8 +53,9 @@ const CharacterPage = () => {
     armorProficiency,
     weaponsProficiency,
     languagesProficiency,
-    toolsProficiency;
-
+    toolsProficiency,
+    spellLevels,
+    spellSlots;
   let coins;
 
   let checkIfProficient;
@@ -58,6 +65,7 @@ const CharacterPage = () => {
   if (!isLoading) {
     classDice = HIT_DICE[characterData.class];
     const level = characterData.level;
+    spellSlots = SPELL_SLOTS[characterData.class][level];
     proficiencyBonus = Math.floor((level - 1) / 4 + 2);
 
     //modifier is ability -10/2 and proficiency bonus added if proficient in skill
@@ -73,6 +81,7 @@ const CharacterPage = () => {
         ? proficiencyBonus
         : 0;
     };
+
     const calculateModifier = (ability, proficiencyName) => {
       let proficiency = proficiencyName
         ? checkIfProficient(proficiencyName)
@@ -101,12 +110,14 @@ const CharacterPage = () => {
     toolsProficiency = listProficiencies("tools");
 
     //alignment capitalized and dash removed
-    const words = characterData.alignment.split("-");
+    const words = characterData.alignment?.split("-") || "";
     formattedAlignment = words
-      .map((word) => {
-        return word[0].toUpperCase() + word.slice(1);
-      })
-      .join(" ");
+      ? words
+          .map((word) => {
+            return word[0].toUpperCase() + word.slice(1);
+          })
+          .join(" ")
+      : "";
 
     //hp calculated 1. find dice type from class, const. modifier, formula: (maxdice+level*dice +2*level + 2*level+const modifier -2)/2
 
@@ -157,6 +168,20 @@ const CharacterPage = () => {
       "saving-throw-cha": charismaModifier,
     };
 
+    //first (spells) is spells0 = cantrips.
+    spellLevels = [
+      "spells",
+      "spells1",
+      "spells2",
+      "spells3",
+      "spells4",
+      "spells5",
+      "spells6",
+      "spells7",
+      "spells8",
+      "spells9",
+    ];
+
     hitPoints =
       (classDice +
         level * classDice +
@@ -175,15 +200,81 @@ const CharacterPage = () => {
 
     //SKILL MODIFIERS - relevant ability modifier + proficiency modifier if applicable + expertise/feat when I include them voopshto
   }
-  console.log(characterData);
   const printCharacterHandler = () => {
     window.print();
   };
 
+  useEffect(() => {
+    if (!isLoading) {
+      const allLeveledSpells = spellLevels
+        .map((lvl) => characterData[lvl])
+        .filter((level) => level !== undefined);
+
+      const getSpellsData = async () => {
+        const allSpellsData = await Promise.all(
+          allLeveledSpells.map(
+            async (oneLevelSpells) =>
+              await Promise.all(
+                oneLevelSpells.map(
+                  async (spell) => await getItems(`/api/spells/${spell}`)
+                )
+              )
+          )
+        );
+
+        setSpellsData(allSpellsData);
+      };
+      getSpellsData();
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (spellsData) {
+      const component = spellsData.map((oneLevelArray, i) => {
+        return (
+          <div className={classes.spellLevelContainer} key={i}>
+            <div className={classes.spellTitleContainer}>
+              <h4 className={classes.spellTitle}>
+                Level {oneLevelArray[0].level}
+              </h4>{" "}
+              <div className={classes.spellSlotsContainer}>
+                <span>Spell Slots:</span>
+                <p className={classes.spellSlotsCheck}>
+                  <Checkbox />
+                  <Checkbox />
+                  <Checkbox />
+                  <Checkbox />
+                </p>
+              </div>
+            </div>
+            <div className={classes.spellLabelsContainer}>
+              {oneLevelArray.map((spell) => (
+                <Tooltip
+                  key={`tooltip${spell.index}`}
+                  overlayInnerStyle={{
+                    width: "450px",
+                  }}
+                  placement="bottom"
+                  arrow={false}
+                  title={<SpellCard spell={spell} />}
+                >
+                  <div className={classes.spellLabel} ley={spell.index}>
+                    {spell.name}
+                  </div>
+                </Tooltip>
+              ))}
+            </div>
+          </div>
+        );
+      });
+      setSpellsComponent(component);
+    }
+  }, [spellsData]);
+
   return (
     <>
       {!isLoading ? (
-        <>
+        <div className={classes.characterPageContent}>
           <div className={classes.charInfoSection}>
             <h2 className={classes.sectionTitle}>
               {" "}
@@ -354,6 +445,9 @@ const CharacterPage = () => {
             </div>
           </div>
 
+          <h3 className={classes.skillsTitle}>Spells</h3>
+          <div className={classes.spellsSection}>{spellsComponent}</div>
+
           <div className={classes.charInfoSection}>
             <h3 className={classes.skillsTitle}>Biography</h3>
             <div className={classes.bioInfoGroup}>
@@ -391,7 +485,7 @@ const CharacterPage = () => {
               </div>
             </div>
           </div>
-        </>
+        </div>
       ) : (
         <>
           <p className={classes.pageInfo}>Loading...</p>

@@ -8,7 +8,6 @@ import {
   SPELLS_AVAILABLE,
   SPELLS_INSTRUCTION,
 } from "../app/STATIC_SPELL_LEVELS";
-import { useForm } from "antd/es/form/Form";
 
 const SpellsFormData = ({
   spells,
@@ -19,12 +18,16 @@ const SpellsFormData = ({
   charismaInput,
 }) => {
   const [spellsData, setSpellsData] = useState([]);
-  const [fetchedSpells, setFetchedSpells] = useState([]);
+  /*   const [fetchedSpells, setFetchedSpells] = useState([]); */
   const [loading, setLoading] = useState(true);
+
   const [spellsAllowed, setSpellsAllowed] = useState(0);
   const [canSelectMoreSpells, setCanSelectMoreSpells] = useState(true);
   const [selectedSpells, setSelectedSpells] = useState([]);
 
+  const [cantripsAllowed, setCantripsAllowed] = useState(0);
+  const [canSelectMoreCantrips, setCanSelectMoreCantrips] = useState(true);
+  const [selectedCantrips, setSelectedCantrips] = useState([]);
   const [content, setContent] = useState(
     <p>Please select a class for your character.</p>
   );
@@ -72,18 +75,6 @@ const SpellsFormData = ({
       //get spell slots for that class
       const classSpellSlots = SPELL_SLOTS[classInput];
 
-      /*       if (["bard", "sorcerer", "ranger", "wizard"].includes(classInput)) {
-        numberOfSpellsAllowed = SPELLS_AVAILABLE[classInput][levelInput - 1];
-      } else if (["druid", "cleric", " bard"].includes(classInput)) {
-        const wisMod = Math.floor((wisdomInput - 10) / 2);
-        numberOfSpellsAllowed = levelInput + wisMod;
-      } else if (classInput === "paladin") {
-        const charMod = Math.floor((charismaInput - 10) / 2);
-        numberOfSpellsAllowed = charMod + Math.floor(levelInput / 2) || 1;
-      } else if (classInput === "warlock") {
-        numberOfSpellsAllowed = SPELL_SLOTS["warlock"].levelInput[1];
-      } */
-
       //se what the max level of spells is for this class and selected level (-1 because cantrip is first in the array) for warlock is stored differently
       const spellLevelsAvailable =
         classInput === "warlock"
@@ -103,10 +94,7 @@ const SpellsFormData = ({
       }, {});
 
       //update state with sorted spells
-      setFetchedSpells(leveledArray);
-
-      //TODO: limit number of selectable spells per level
-
+      /*       setFetchedSpells(leveledArray); */
       setLoading(false);
 
       const collapseItems = Object.keys(leveledArray).map((lvl) => ({
@@ -120,11 +108,15 @@ const SpellsFormData = ({
                 label: <SpellCard spell={spell} />,
                 value: spell.index,
                 disabled:
-                  lvl != 0 &&
-                  !selectedSpells.includes(spell.index) &&
-                  !canSelectMoreSpells,
+                  lvl == 0
+                    ? !selectedCantrips.includes(spell.index) &&
+                      !canSelectMoreCantrips
+                    : !selectedSpells.includes(spell.index) &&
+                      !canSelectMoreSpells,
               }))}
-              onChange={(values) => onValuesChangeHandler(values, lvl)}
+              onChange={(values) =>
+                onValuesChangeHandler(values, lvl, leveledArray)
+              }
             />
           </Form.Item>
         ),
@@ -144,10 +136,38 @@ const SpellsFormData = ({
           </div>
           <div className={cssClasses.spellCountInfoWrapper}>
             <div className={cssClasses.spellCountContent}>
-              <div>Cantrips available:</div>
-              <div className={cssClasses.countNumbers}>0 / 3</div>
-              <div>Spells available:</div>
-              <div>{`${selectedSpells.length} / ${spellsAllowed}`}</div>
+              <div
+                className={`${
+                  selectedCantrips.length == cantripsAllowed &&
+                  cssClasses.spellsFull
+                }`}
+              >
+                {selectedCantrips.length == cantripsAllowed
+                  ? "Cantrips full:"
+                  : "Cantrips selected:"}
+              </div>
+              <div
+                className={`${cssClasses.countNumbers} ${
+                  selectedCantrips.length == cantripsAllowed &&
+                  cssClasses.spellsFull
+                }`}
+              >{`${selectedCantrips.length} / ${cantripsAllowed}`}</div>
+              <div
+                className={` ${
+                  selectedSpells.length == spellsAllowed &&
+                  cssClasses.spellsFull
+                }`}
+              >
+                {selectedSpells.length == spellsAllowed
+                  ? "Spells full:"
+                  : "Spells selected:"}
+              </div>
+              <div
+                className={`${cssClasses.countNumbers} ${
+                  selectedSpells.length == spellsAllowed &&
+                  cssClasses.spellsFull
+                }`}
+              >{`${selectedSpells.length} / ${spellsAllowed}`}</div>
             </div>
           </div>
           <Collapse
@@ -173,41 +193,49 @@ const SpellsFormData = ({
     charismaInput,
     selectedSpells,
     canSelectMoreSpells,
+    selectedCantrips,
+    canSelectMoreCantrips,
   ]);
 
   useEffect(() => {
     if (classInput) {
-      if (["bard", "sorcerer", "ranger", "wizard"].includes(classInput)) {
-        setSpellsAllowed(SPELLS_AVAILABLE[classInput][levelInput - 1]);
-      } else if (["druid", "cleric", " bard"].includes(classInput)) {
-        const wisMod = Math.floor((wisdomInput - 10) / 2);
+      if (!["barbarian", "fighter", "monk", "rogue"].includes(classInput)) {
+        if (["bard", "sorcerer", "ranger", "wizard"].includes(classInput)) {
+          setSpellsAllowed(SPELLS_AVAILABLE[classInput][levelInput - 1]);
+        } else if (["druid", "cleric", " bard"].includes(classInput)) {
+          const wisMod = Math.floor((wisdomInput - 10) / 2);
 
-        setSpellsAllowed(levelInput + wisMod);
-      } else if (classInput === "paladin") {
-        const charMod = Math.floor((+charismaInput - 10) / 2);
-        setSpellsAllowed(charMod + Math.floor(levelInput / 2) || 1);
-      } else if (classInput === "warlock") {
-        setSpellsAllowed(SPELL_SLOTS["warlock"].levelInput[1]);
+          setSpellsAllowed(levelInput + wisMod);
+        } else if (classInput === "paladin") {
+          const charMod = Math.floor((+charismaInput - 10) / 2);
+          setSpellsAllowed(charMod + Math.floor(levelInput / 2) || 1);
+        } else if (classInput === "warlock") {
+          setSpellsAllowed(SPELL_SLOTS["warlock"].levelInput[1]);
+        }
+        setCantripsAllowed(SPELL_SLOTS[classInput][levelInput][0]);
+        setCanSelectMoreSpells(true);
       }
-
-      setCanSelectMoreSpells(true);
     }
   }, [classInput, wisdomInput, charismaInput, levelInput]);
 
   //LIMIT number of spells that can be selected
-  const onValuesChangeHandler = (values, lvl) => {
-    //find how many spells have been selected (excluding cantrips )
+  const onValuesChangeHandler = (values, lvl, leveledSpells) => {
+    //leveled spells are passed because fetchedSpells are not updated here the first click (this function is technically asynch finction and uses previous render before fetched spells was updated i zato e ova problem.)
+    if (lvl == 0) {
+      setSelectedCantrips(values);
+      setCanSelectMoreCantrips(values.length < cantripsAllowed);
+    } else {
+      const spellsList = Object.keys(leveledSpells)
+        .slice(1)
+        .map((level) => getFieldValue(`spells${level}`))
+        .flat()
+        .filter((spell) => spell !== undefined);
 
-    const spellsList = Object.keys(fetchedSpells)
-      .slice(1)
-      .map((level) => getFieldValue(`spells${level}`))
-      .flat();
-    console.log(spellsList);
+      const selectedSpellsCount = spellsList.length;
+      setSelectedSpells(spellsList);
 
-    const selectedSpellsCount = spellsList.length;
-    setSelectedSpells(spellsList);
-
-    setCanSelectMoreSpells(selectedSpellsCount < spellsAllowed);
+      setCanSelectMoreSpells(selectedSpellsCount < spellsAllowed);
+    }
   };
 
   return (

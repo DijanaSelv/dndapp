@@ -83,7 +83,6 @@
   grid-template-columns: repeat(auto-fill, minmax(350px, 4fr));
   gap: 10px;
   /* prevent text select on mouse drag */
-  -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -118,6 +117,11 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding-top: 10px;
+}
+
+.higherLevel {
+  margin-top: 25px;
 }
 
 /* Can't select specific ant classes with css module, we need to access global classes */
@@ -163,11 +167,11 @@
   border-bottom: 2px solid blue;
   border-image: radial-gradient(
       circle,
-      #224674,
-      #496593,
+      #2b5ea0,
+      #5379b6,
       #6e85b3,
-      #93a7d4,
-      #b9cbf6
+      #a4b6dd,
+      #ffffff
     )
     1;
   width: 65%;
@@ -180,11 +184,25 @@
 }
 
 .spellCountInfoWrapper {
-  width: 65%;
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+  border-bottom: 2px solid blue;
+  border-image: radial-gradient(
+      circle,
+      #2b5ea0,
+      #5379b6,
+      #6e85b3,
+      #a4b6dd,
+      #ffffff
+    )
+    1;
 }
 
 .spellCountContent {
@@ -194,4 +212,8 @@
   grid-template-columns: 3fr 1fr;
   column-gap: 20px;
   gap: 10px;
+}
+
+.spellsFull {
+  color: red;
 }

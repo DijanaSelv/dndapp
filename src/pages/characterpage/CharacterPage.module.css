@@ -1,4 +1,4 @@
-.charInfoSection * {
+.characterPageContent * {
   font-family: "Texturina";
   cursor: default;
 }
@@ -232,6 +232,46 @@
 
 .otherInfoGroup {
   margin-bottom: 30px;
+}
+
+/* SPELLS SECTION */
+
+.spellsSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 3fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+.spellTitleContainer {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(218, 224, 235);
+  border-radius: 5px;
+  padding: 2px 10px;
+}
+
+.spellSlotsContainer {
+  display: flex;
+}
+.spellSlotsContainer label {
+  padding-left: 5px;
+}
+
+.spellLabelsContainer {
+  margin-top: 10px;
+}
+
+.spellLabel {
+  padding-left: 3px;
+  margin: 5px;
+}
+.spellLabel:hover {
+  background-color: rgb(241, 246, 255);
+  border-radius: 5px;
+}
+
+.spellsSection :global(.ant-checkbox-checked) :global(.ant-checkbox-inner) {
+  background-color: #0e3042;
 }
 
 @media (max-width: 850px) {
