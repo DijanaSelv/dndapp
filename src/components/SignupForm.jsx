@@ -196,29 +196,6 @@ const SignupForm = () => {
             </p>
           )}
       </div>
-      <Select
-        className={classes.selector}
-        defaultValue="Years of experience"
-        onChange={handleChange}
-        options={[
-          {
-            label: "less than 1",
-            value: "<1",
-          },
-          {
-            label: "1-4",
-            value: "1-4",
-          },
-          {
-            label: "5-9",
-            value: "5-9",
-          },
-          {
-            label: "10+",
-            value: "10+",
-          },
-        ]}
-      />
 
       <Button
         disabled={!formIsValid}

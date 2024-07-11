@@ -18,7 +18,7 @@ const SpellsFormData = ({
   charismaInput,
 }) => {
   const [spellsData, setSpellsData] = useState([]);
-  const [fetchedSpells, setFetchedSpells] = useState([]);
+  /*   const [fetchedSpells, setFetchedSpells] = useState([]); */
   const [loading, setLoading] = useState(true);
 
   const [spellsAllowed, setSpellsAllowed] = useState(0);
@@ -94,7 +94,7 @@ const SpellsFormData = ({
       }, {});
 
       //update state with sorted spells
-      setFetchedSpells(leveledArray);
+      /*       setFetchedSpells(leveledArray); */
       setLoading(false);
 
       const collapseItems = Object.keys(leveledArray).map((lvl) => ({
@@ -199,20 +199,22 @@ const SpellsFormData = ({
 
   useEffect(() => {
     if (classInput) {
-      if (["bard", "sorcerer", "ranger", "wizard"].includes(classInput)) {
-        setSpellsAllowed(SPELLS_AVAILABLE[classInput][levelInput - 1]);
-      } else if (["druid", "cleric", " bard"].includes(classInput)) {
-        const wisMod = Math.floor((wisdomInput - 10) / 2);
+      if (!["barbarian", "fighter", "monk", "rogue"].includes(classInput)) {
+        if (["bard", "sorcerer", "ranger", "wizard"].includes(classInput)) {
+          setSpellsAllowed(SPELLS_AVAILABLE[classInput][levelInput - 1]);
+        } else if (["druid", "cleric", " bard"].includes(classInput)) {
+          const wisMod = Math.floor((wisdomInput - 10) / 2);
 
-        setSpellsAllowed(levelInput + wisMod);
-      } else if (classInput === "paladin") {
-        const charMod = Math.floor((+charismaInput - 10) / 2);
-        setSpellsAllowed(charMod + Math.floor(levelInput / 2) || 1);
-      } else if (classInput === "warlock") {
-        setSpellsAllowed(SPELL_SLOTS["warlock"].levelInput[1]);
+          setSpellsAllowed(levelInput + wisMod);
+        } else if (classInput === "paladin") {
+          const charMod = Math.floor((+charismaInput - 10) / 2);
+          setSpellsAllowed(charMod + Math.floor(levelInput / 2) || 1);
+        } else if (classInput === "warlock") {
+          setSpellsAllowed(SPELL_SLOTS["warlock"].levelInput[1]);
+        }
+        setCantripsAllowed(SPELL_SLOTS[classInput][levelInput][0]);
+        setCanSelectMoreSpells(true);
       }
-      setCantripsAllowed(SPELL_SLOTS[classInput][levelInput][0]);
-      setCanSelectMoreSpells(true);
     }
   }, [classInput, wisdomInput, charismaInput, levelInput]);
 

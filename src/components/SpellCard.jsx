@@ -1,10 +1,5 @@
 import { Card } from "antd";
-import { getItems } from "../app/actions/dndApiActions";
-
 import cssClasses from "../pages/newcharacterpage/NewCharacterPage.module.css";
-import { useState } from "react";
-import Meta from "antd/es/card/Meta";
-
 import { motion } from "framer-motion";
 
 const SpellCard = ({ spell }) => {
@@ -14,7 +9,7 @@ const SpellCard = ({ spell }) => {
         className={cssClasses.spellCard}
         title={spell.name}
         extra={<p>{spell.school.index}</p>}
-        /* onClick={() => console.log(spell)} */
+        onClick={() => console.log(spell)}
         size="small"
       >
         {/*  <Meta
@@ -52,7 +47,13 @@ const SpellCard = ({ spell }) => {
               </>
             ))}
           </div>
-          <p>Higher Level to the bottom of the card</p>
+          {spell["higher_level"].length ? (
+            <p className={cssClasses.higherLevel}>
+              Higher level: {spell["higher_level"]}
+            </p>
+          ) : (
+            ""
+          )}
         </div>
       </Card>
     </motion.div>
