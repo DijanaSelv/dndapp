@@ -264,10 +264,13 @@
 .spellLabel {
   padding-left: 3px;
   margin: 5px;
+  transition: all 0.2s;
 }
 .spellLabel:hover {
   background-color: rgb(241, 246, 255);
   border-radius: 5px;
+  transform: scale(1.05);
+  transition: all 0.2s;
 }
 
 .spellsSection :global(.ant-checkbox-checked) :global(.ant-checkbox-inner) {

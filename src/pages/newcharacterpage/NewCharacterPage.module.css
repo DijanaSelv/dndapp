@@ -34,9 +34,25 @@
 }
 
 .abilityScoresContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5%;
+  display: flex;
+  justify-content: space-evenly;
+}
+.abilityScoresContainer :global(.ant-form-item-label) {
+  display: flex;
+  justify-content: center;
+}
+
+.abilityScoresContainer :global(.ant-input-number) {
+  width: 100px;
+  height: 50px;
+  border-radius: 0 0 50px 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.abilityScoresContainer :global(.ant-input-number-input-wrap) {
+  width: 45px;
+  font-size: large;
 }
 
 .checkboxGroupContainer {
@@ -63,6 +79,16 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4%;
+  }
+
+  .abilityScoresContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .abilityScoresContainer :global(.ant-form-item) {
+    display: flex;
+    justify-content: center;
   }
 }
 

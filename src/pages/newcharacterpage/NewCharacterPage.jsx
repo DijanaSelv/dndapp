@@ -413,23 +413,23 @@ const NewCharacterPage = () => {
           </Form.Item>
           <h3>Ability Scores:</h3>
           <div className={cssClasses.abilityScoresContainer}>
-            <Form.Item name="strength" rules={[abilityScoreRules]}>
-              <InputNumber addonBefore="Strength"></InputNumber>
+            <Form.Item name="strength" label="Strength">
+              <InputNumber min="1" max="20"></InputNumber>
             </Form.Item>
-            <Form.Item name="dexterity" rules={[abilityScoreRules]}>
-              <InputNumber addonBefore="Dexterity"></InputNumber>
+            <Form.Item name="dexterity" label="Dexterity">
+              <InputNumber min="1" max="20"></InputNumber>
             </Form.Item>
-            <Form.Item name="constitution" rules={[abilityScoreRules]}>
-              <InputNumber addonBefore="Constitution"></InputNumber>
+            <Form.Item name="constitution" label="Constitution">
+              <InputNumber min="1" max="20"></InputNumber>
             </Form.Item>
-            <Form.Item name="intelligence" rules={[abilityScoreRules]}>
-              <InputNumber addonBefore="Intelligence"></InputNumber>
+            <Form.Item name="intelligence" label="Intelligence">
+              <InputNumber min="1" max="20"></InputNumber>
             </Form.Item>
-            <Form.Item name="wisdom" rules={[abilityScoreRules]}>
-              <InputNumber addonBefore="Wisdom"></InputNumber>
+            <Form.Item name="wisdom" label="Wisdom">
+              <InputNumber min="1" max="20"></InputNumber>
             </Form.Item>
-            <Form.Item name="charisma" rules={[abilityScoreRules]}>
-              <InputNumber addonBefore="Charisma"></InputNumber>
+            <Form.Item name="charisma" label="Charisma">
+              <InputNumber min="1" max="20"></InputNumber>
             </Form.Item>
           </div>
 
