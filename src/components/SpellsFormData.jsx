@@ -210,7 +210,7 @@ const SpellsFormData = ({
           const charMod = Math.floor((+charismaInput - 10) / 2);
           setSpellsAllowed(charMod + Math.floor(levelInput / 2) || 1);
         } else if (classInput === "warlock") {
-          setSpellsAllowed(SPELL_SLOTS["warlock"].levelInput[1]);
+          setSpellsAllowed(SPELL_SLOTS["warlock"][levelInput][1]);
         }
         setCantripsAllowed(SPELL_SLOTS[classInput][levelInput][0]);
         setCanSelectMoreSpells(true);
