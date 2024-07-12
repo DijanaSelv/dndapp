@@ -29,7 +29,9 @@ const SpellsFormData = ({
   const [canSelectMoreCantrips, setCanSelectMoreCantrips] = useState(true);
   const [selectedCantrips, setSelectedCantrips] = useState([]);
   const [content, setContent] = useState(
-    <p>Please select a class for your character.</p>
+    <p className={cssClasses.messageWrapper}>
+      Please select a class for your character.
+    </p>
   );
 
   const getSpellData = async (spell) => {
@@ -183,7 +185,11 @@ const SpellsFormData = ({
       classInput &&
       ["barbarian", "fighter", "monk", "rogue"].includes(classInput)
     ) {
-      setContent(<p>The class you selected is not a spellcaster.</p>);
+      setContent(
+        <p className={cssClasses.messageWrapper}>
+          The class you selected is not a spellcaster.
+        </p>
+      );
     }
   }, [
     classInput,

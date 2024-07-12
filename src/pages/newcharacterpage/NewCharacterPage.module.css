@@ -13,6 +13,11 @@
   border-bottom: 1px solid #ccd1dad2;
 }
 
+.levelForm {
+  display: flex;
+  justify-content: center;
+}
+
 .nameRaceClassContainer label,
 .levelForm label,
 .bioContainer label {
@@ -33,16 +38,22 @@
   gap: 4%;
 }
 
+.levelAndAbilityScoresContainer {
+  display: flex;
+}
+
 .abilityScoresContainer {
   display: flex;
   justify-content: space-evenly;
 }
-.abilityScoresContainer :global(.ant-form-item-label) {
+.abilityScoresContainer :global(.ant-form-item-label),
+.levelForm :global(.ant-form-item-label) {
   display: flex;
   justify-content: center;
 }
 
-.abilityScoresContainer :global(.ant-input-number) {
+.abilityScoresContainer :global(.ant-input-number),
+.levelForm :global(.ant-input-number) {
   width: 100px;
   height: 50px;
   border-radius: 0 0 50px 50px;
@@ -50,9 +61,20 @@
   justify-content: center;
 }
 
-.abilityScoresContainer :global(.ant-input-number-input-wrap) {
+.abilityScoresContainer :global(.ant-input-number-input-wrap),
+.levelForm :global(.ant-input-number-input-wrap) {
   width: 45px;
   font-size: large;
+  font-family: "Texturina";
+}
+.abilityScoresContainer :global(.ant-input-number-input),
+.levelForm :global(.ant-input-number-input) {
+  font-family: "Texturina";
+  margin: auto;
+}
+.abilityScoresContainer :global(.ant-input-number-handler-wrap),
+.levelForm :global(.ant-input-number-handler-wrap) {
+  /*   display: none; */
 }
 
 .checkboxGroupContainer {
@@ -66,6 +88,15 @@
   font-family: "Texturina";
   margin-top: 30px;
   text-align: center;
+}
+
+.buttonsContainer {
+  margin: 15px 0;
+  display: flex;
+  justify-content: space-between;
+}
+.buttonsContainer button {
+  margin: 0px 15px;
 }
 
 @media (max-width: 850px) {
