@@ -9,17 +9,9 @@ const SpellCard = ({ spell }) => {
         className={cssClasses.spellCard}
         title={spell.name}
         extra={<p>{spell.school.index}</p>}
-        onClick={() => console.log(spell)}
+        /* onClick={() => console.log(spell)} */
         size="small"
       >
-        {/*  <Meta
-        description={
-          <p>
-            {spell.level == 0 ? "cantrip" : `lvl ${spell.level}`}{" "}
-            {spell.school.index}
-          </p>
-        }
-      />{" "} */}
         <div>
           <div className={cssClasses.spellSpecContainer}>
             <span>casting time: </span>
@@ -61,17 +53,3 @@ const SpellCard = ({ spell }) => {
 };
 
 export default SpellCard;
-
-/* 
-
-<Card title={spellData.name} className={cssClasses.spellCard}>
-              <p>
-                {spellData.level == 0 ? "cantrip" : `lvl ${spellData.level}`}{" "}
-                {spellData.school.index}
-              </p>
-              <p>{spellData.desc[0]}</p>
-              <p>It's been fetched.</p>
-              <p></p>
-            </Card>
-
-*/

@@ -273,6 +273,32 @@ const CharacterPage = () => {
             </span>
             <div className={` ${classes.spellCastingInfo}`}>
               {" "}
+              {characterData.class === "warlock" && (
+                <p>
+                  Spell slots{" "}
+                  {`(lvl.${SPELL_SLOTS["warlock"][characterData.level][3]})`}:{" "}
+                  <span className={classes.spellCastingValue}>
+                    {Array.from({
+                      length: SPELL_SLOTS["warlock"][characterData.level][2],
+                    }).map((_, i) => (
+                      <Checkbox key={`war-${i}`} />
+                    ))}
+                  </span>
+                </p>
+              )}
+              {characterData.class === "sorcerer" &&
+                characterData.level > 1 && (
+                  <p>
+                    Sorcery points {`(${characterData.level})`}:{" "}
+                    <span className={classes.spellCastingValue}>
+                      {Array.from({
+                        length: characterData.level,
+                      }).map((_, i) => (
+                        <Checkbox key={`sor-${i}`} />
+                      ))}
+                    </span>
+                  </p>
+                )}
               <p>
                 Spellcasting ability:{" "}
                 <span className={classes.spellCastingValue}>
@@ -309,27 +335,30 @@ const CharacterPage = () => {
                         ? "Cantrips"
                         : `Level ${oneLevelArray[0].level}`}
                     </h4>{" "}
-                    {oneLevelArray[0].level !== 0 && (
-                      <div className={classes.spellSlotsContainer}>
-                        <span>Spell Slots:</span>
-                        <p className={classes.spellSlotsCheck}>
-                          {/* Make array of the number of spell slots for that level and map it to geerate that many spell slot checkboxes */}
-                          {Array.from({
-                            length: numberOfSlots,
-                          }).map((_, i) => (
-                            <Checkbox key={`${oneLevelArray[0].level}-${i}`} />
-                          ))}
-                        </p>
-                      </div>
-                    )}
+                    {oneLevelArray[0].level !== 0 &&
+                      characterData.class !== "warlock" && (
+                        <div className={classes.spellSlotsContainer}>
+                          <span>Spell Slots:</span>
+                          <p className={classes.spellSlotsCheck}>
+                            {/* Make array of the number of spell slots for that level and map it to geerate that many spell slot checkboxes */}
+                            {Array.from({
+                              length: numberOfSlots,
+                            }).map((_, i) => (
+                              <Checkbox
+                                key={`${oneLevelArray[0].level}-${i}`}
+                              />
+                            ))}
+                          </p>
+                        </div>
+                      )}
                   </div>
                   <div className={classes.spellLabelsContainer}>
                     {oneLevelArray.map((spell) => (
                       <Tooltip
-                        mouseEnterDelay="0.8"
+                        mouseEnterDelay="0.7"
                         key={`tooltip${spell.index}`}
                         overlayInnerStyle={{
-                          width: "450px",
+                          width: "500px",
                         }}
                         placement="bottom"
                         arrow={false}
