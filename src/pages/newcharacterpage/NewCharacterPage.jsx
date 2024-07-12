@@ -22,6 +22,13 @@ import { getItems } from "../../app/actions/dndApiActions";
 import { createCharacter } from "../../app/actions/databaseActions";
 import { currencyToCopper } from "../../app/actions/uitls";
 import SpellsFormData from "../../components/SpellsFormData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowLeft,
+  faArrowLeftLong,
+  faArrowRight,
+  faArrowRightLong,
+} from "@fortawesome/free-solid-svg-icons";
 
 const NewCharacterPage = () => {
   const { TextArea } = Input;
@@ -59,7 +66,11 @@ const NewCharacterPage = () => {
     charismaSelected: 10,
   });
 
-  //I will need class input for the starting gold calculation suggestion
+  const [activeKey, setActiveKey] = useState(1);
+
+  const changeTabHandler = (newTab) => {
+    setActiveKey(newTab);
+  };
 
   const onValuesChangeHandler = (changedValues) => {
     if (changedValues.class) {
@@ -304,8 +315,8 @@ const NewCharacterPage = () => {
 
   const items = [
     {
-      key: "1",
-      label: "General",
+      key: 1,
+      label: <div onClick={() => changeTabHandler(1)}>General</div>,
       children: (
         <>
           <div className={cssClasses.nameRaceClassContainer}>
@@ -394,8 +405,10 @@ const NewCharacterPage = () => {
     },
 
     {
-      key: "2",
-      label: "Specs",
+      key: 2,
+      label: (
+        <div onClick={() => changeTabHandler(2)}>Abilities & Proficiencies</div>
+      ),
       children: (
         <>
           <Form.Item
@@ -439,8 +452,8 @@ const NewCharacterPage = () => {
       ),
     },
     {
-      key: "3",
-      label: "Spells",
+      key: 3,
+      label: <div onClick={() => changeTabHandler(3)}>Magic & Spells</div>,
       children: (
         <>
           {optionsData.levelSelected >= 2 &&
@@ -472,8 +485,8 @@ const NewCharacterPage = () => {
       ),
     },
     {
-      key: "4",
-      label: "Bio",
+      key: 4,
+      label: <div onClick={() => changeTabHandler(4)}>Biography</div>,
       children: (
         <div className={cssClasses.bioContainer}>
           <div className={cssClasses.bioFirstRow}>
@@ -528,10 +541,6 @@ const NewCharacterPage = () => {
           <Form.Item name="allies" label="Allies & Organizations:">
             <TextArea placeholder="describe your character"></TextArea>
           </Form.Item>
-
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
         </div>
       ),
     },
@@ -558,8 +567,31 @@ const NewCharacterPage = () => {
         }}
         onValuesChange={onValuesChangeHandler}
       >
-        <Tabs defaultActiveKey="1" items={items} />
-        <Button danger>Cancel</Button>
+        <Tabs
+          defaultActiveKey="1"
+          items={items}
+          activeKey={activeKey}
+          /* onChange={(key = setActiveKey(key))} */
+        />
+        <div className={cssClasses.buttonsContainer}>
+          {" "}
+          {activeKey === 4 && (
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          )}
+          {activeKey < 4 && (
+            <Button onClick={() => changeTabHandler(activeKey + 1)}>
+              Next <FontAwesomeIcon icon={faArrowRightLong} />
+            </Button>
+          )}
+          {activeKey > 1 && (
+            <Button onClick={() => changeTabHandler(activeKey - 1)}>
+              <FontAwesomeIcon icon={faArrowLeftLong} />
+              Back
+            </Button>
+          )}
+        </div>
         <p>{messageContent}</p>
       </Form>
     </>

@@ -55,7 +55,7 @@ a {
   /* width: auto; */
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 4fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 4fr));
   gap: 15px;
   /* padding: 0;
 
