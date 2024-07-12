@@ -56,8 +56,9 @@ const CharacterPage = () => {
     languagesProficiency,
     toolsProficiency,
     spellLevels,
-    spellSlots;
-  let coins;
+    spellSlots,
+    coins,
+    spellcastingAbilities;
 
   let checkIfProficient;
 
@@ -66,19 +67,25 @@ const CharacterPage = () => {
   if (!isLoading) {
     classDice = HIT_DICE[characterData.class];
     const level = characterData.level;
-    spellSlots = SPELL_SLOTS[characterData.class][level];
+    if (
+      !["barbarian", "fighter", "monk", "rogue"].includes(characterData.class)
+    ) {
+      spellSlots = SPELL_SLOTS[characterData.class][level];
+    }
     proficiencyBonus = Math.floor((level - 1) / 4 + 2);
 
     //modifier is ability -10/2 and proficiency bonus added if proficient in skill
 
     checkIfProficient = (proficiencyName, savingThrows) => {
       return savingThrows
-        ? Object.values(characterData["saving throws"]).includes(
+        ? characterData["saving throws"] &&
+          Object.values(characterData["saving throws"]).includes(
             proficiencyName
           )
           ? proficiencyBonus
           : 0
-        : Object.values(characterData.skills).includes(proficiencyName)
+        : characterData.skills &&
+          Object.values(characterData.skills).includes(proficiencyName)
         ? proficiencyBonus
         : 0;
     };
@@ -171,7 +178,7 @@ const CharacterPage = () => {
 
     //first (spells) is spells0 = cantrips.
     spellLevels = [
-      "spells",
+      "spells0",
       "spells1",
       "spells2",
       "spells3",
@@ -182,6 +189,17 @@ const CharacterPage = () => {
       "spells8",
       "spells9",
     ];
+
+    spellcastingAbilities = {
+      bard: "charisma",
+      cleric: "wisodm",
+      druid: "wisdom",
+      paladin: "charisma",
+      ranger: "wisdom",
+      sorcerer: "charisma",
+      warlock: "charisma",
+      wizard: "intelligence",
+    };
 
     hitPoints =
       (classDice +
@@ -198,8 +216,6 @@ const CharacterPage = () => {
         calculateModifier(characterData.wisdom) +
         checkIfProficient("skill-perception")
     );
-
-    //SKILL MODIFIERS - relevant ability modifier + proficiency modifier if applicable + expertise/feat when I include them voopshto
   }
   const printCharacterHandler = () => {
     window.print();
@@ -230,48 +246,107 @@ const CharacterPage = () => {
   }, [isLoading]);
 
   useEffect(() => {
-    if (spellsData) {
-      const component = spellsData.map((oneLevelArray, i) => {
-        const numberOfSlots = spellSlots[oneLevelArray[0].level];
-        return (
-          <div className={classes.spellLevelContainer} key={i}>
-            <div className={classes.spellTitleContainer}>
-              <h4 className={classes.spellTitle}>
-                Level {oneLevelArray[0].level}
-              </h4>{" "}
-              <div className={classes.spellSlotsContainer}>
-                <span>Spell Slots:</span>
-                <p className={classes.spellSlotsCheck}>
-                  {/* Make array of the number of spell slots for that level and map it to geerate that many spell slot checkboxes */}
-                  {Array.from({
-                    length: numberOfSlots,
-                  }).map((_, i) => (
-                    <Checkbox key={`${oneLevelArray[0].level}-${i}`} />
-                  ))}
-                </p>
-              </div>
+    if (
+      spellsData &&
+      !["barbarian", "fighter", "monk", "rogue"].includes(characterData.class)
+    ) {
+      const component = (characterData["spells0"] ||
+        characterData["spells1"] ||
+        characterData["spells2"] ||
+        characterData["spells3"] ||
+        characterData["spells4"] ||
+        characterData["spells5"] ||
+        characterData["spells6"] ||
+        characterData["spells7"] ||
+        characterData["spells8"] ||
+        characterData["spells9"]) && (
+        <>
+          {" "}
+          <h3 className={`${classes.skillsTitle} ${classes.spellsTitle}`}>
+            <span>
+              {" "}
+              Spells{" "}
+              <Tooltip title="keep hovering on each spell to see more details">
+                {" "}
+                <FontAwesomeIcon icon={faCircleQuestion} />
+              </Tooltip>
+            </span>
+            <div className={` ${classes.spellCastingInfo}`}>
+              {" "}
+              <p>
+                Spellcasting ability:{" "}
+                <span className={classes.spellCastingValue}>
+                  {spellcastingAbilities[characterData.class]}
+                </span>
+              </p>
+              <p>
+                Spell attack bonus: +
+                <span className={classes.spellCastingValue}>
+                  {abilitiesStatic[spellcastingAbilities[characterData.class]] +
+                    proficiencyBonus}
+                </span>
+              </p>
+              <p>
+                Saving throw DC: +
+                <span className={classes.spellCastingValue}>
+                  {8 +
+                    abilitiesStatic[
+                      spellcastingAbilities[characterData.class]
+                    ] +
+                    proficiencyBonus}
+                </span>
+              </p>
             </div>
-            <div className={classes.spellLabelsContainer}>
-              {oneLevelArray.map((spell) => (
-                <Tooltip
-                  mouseEnterDelay="0.8"
-                  key={`tooltip${spell.index}`}
-                  overlayInnerStyle={{
-                    width: "450px",
-                  }}
-                  placement="bottom"
-                  arrow={false}
-                  title={<SpellCard spell={spell} />}
-                >
-                  <div className={classes.spellLabel} ley={spell.index}>
-                    {spell.name}
+          </h3>
+          <div className={classes.spellsSection}>
+            {spellsData.map((oneLevelArray, i) => {
+              const numberOfSlots = spellSlots[oneLevelArray[0].level];
+              return (
+                <div className={classes.spellLevelContainer} key={i}>
+                  <div className={classes.spellTitleContainer}>
+                    <h4 className={classes.spellTitle}>
+                      {oneLevelArray[0].level == 0
+                        ? "Cantrips"
+                        : `Level ${oneLevelArray[0].level}`}
+                    </h4>{" "}
+                    {oneLevelArray[0].level !== 0 && (
+                      <div className={classes.spellSlotsContainer}>
+                        <span>Spell Slots:</span>
+                        <p className={classes.spellSlotsCheck}>
+                          {/* Make array of the number of spell slots for that level and map it to geerate that many spell slot checkboxes */}
+                          {Array.from({
+                            length: numberOfSlots,
+                          }).map((_, i) => (
+                            <Checkbox key={`${oneLevelArray[0].level}-${i}`} />
+                          ))}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                </Tooltip>
-              ))}
-            </div>
+                  <div className={classes.spellLabelsContainer}>
+                    {oneLevelArray.map((spell) => (
+                      <Tooltip
+                        mouseEnterDelay="0.8"
+                        key={`tooltip${spell.index}`}
+                        overlayInnerStyle={{
+                          width: "450px",
+                        }}
+                        placement="bottom"
+                        arrow={false}
+                        title={<SpellCard spell={spell} />}
+                      >
+                        <div className={classes.spellLabel} ley={spell.index}>
+                          {spell.name}
+                        </div>
+                      </Tooltip>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        );
-      });
+        </>
+      );
       setSpellsComponent(component);
     }
   }, [spellsData]);
@@ -450,53 +525,66 @@ const CharacterPage = () => {
             </div>
           </div>
 
-          <h3 className={classes.skillsTitle}>
-            Spells{" "}
-            <Tooltip title="keep hovering on each spell to see more details">
-              {" "}
-              <FontAwesomeIcon icon={faCircleQuestion} />
-            </Tooltip>
-          </h3>
+          {spellsComponent}
 
-          <div className={classes.spellsSection}>{spellsComponent}</div>
+          {(characterData["physical description"] ||
+            characterData.backstory ||
+            characterData.personality ||
+            characterData.ideals ||
+            characterData.bonds ||
+            characterData.flaws ||
+            characterData.allies) && (
+            <div className={classes.charInfoSection}>
+              <h3 className={classes.skillsTitle}>Biography</h3>
+              <div className={classes.bioInfoGroup}>
+                {characterData["physical description"] && (
+                  <div className={classes.bioSection}>
+                    <h4>Physical description</h4>
+                    <div>{characterData["physical description"]}</div>
+                  </div>
+                )}
 
-          <div className={classes.charInfoSection}>
-            <h3 className={classes.skillsTitle}>Biography</h3>
-            <div className={classes.bioInfoGroup}>
-              <div className={classes.bioSection}>
-                <h4>Physical description</h4>
-                <div>{characterData["physical description"]}</div>
-              </div>
+                {characterData.backstory && (
+                  <div className={classes.bioSection}>
+                    <h4>Backstory</h4>
+                    <div>{characterData.backstory}</div>
+                  </div>
+                )}
 
-              <div className={classes.bioSection}>
-                <h4>Backstory</h4>
-                <div>{characterData.backstory}</div>
-              </div>
+                {characterData.personality && (
+                  <div className={classes.bioSection}>
+                    <h4>Personality</h4>
+                    <div>{characterData.personality}</div>
+                  </div>
+                )}
+                {characterData.ideals && (
+                  <div className={classes.bioSection}>
+                    <h4>Ideals</h4>
+                    <div>{characterData.ideals}</div>
+                  </div>
+                )}
+                {characterData.bonds && (
+                  <div className={classes.bioSection}>
+                    <h4>Bonds</h4>
+                    <div>{characterData.bonds}</div>
+                  </div>
+                )}
 
-              <div className={classes.bioSection}>
-                <h4>Personality</h4>
-                <div>{characterData.personality}</div>
-              </div>
-              <div className={classes.bioSection}>
-                <h4>Ideals</h4>
-                <div>{characterData.ideals}</div>
-              </div>
-              <div className={classes.bioSection}>
-                <h4>Bonds</h4>
-                <div>{characterData.bonds}</div>
-              </div>
-
-              <div className={classes.bioSection}>
-                <h4>Flaws</h4>
-                <div>{characterData.flaws}</div>
-              </div>
-
-              <div className={classes.bioSection}>
-                <h4>Allies & Organizations</h4>
-                <div>{characterData.allies}</div>
+                {characterData.flaws && (
+                  <div className={classes.bioSection}>
+                    <h4>Flaws</h4>
+                    <div>{characterData.flaws}</div>
+                  </div>
+                )}
+                {characterData.allies && (
+                  <div className={classes.bioSection}>
+                    <h4>Allies & Organizations</h4>
+                    <div>{characterData.allies}</div>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
         <>
