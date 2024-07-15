@@ -11,29 +11,35 @@ const WeaponDescription = ({ item }) => {
     weight,
     cost,
     range,
+    desc,
   } = item;
 
-  const propertyList = item.properties.map((property) => property.index);
-  const specialList = item.special.map((special) => special);
+  const propertyList =
+    item.properties && item.properties.map((property) => property.index);
+  const specialList = item.special && item.special.map((special) => special);
 
   return (
     <div className={classes.itemDescription}>
       <h3>{name}</h3>
-      {properties.length > 0 && (
+      {properties && properties.length > 0 && (
         <p className={classes.itemspecs}>{propertyList.join(", ")}</p>
+      )}
+      {desc && desc.length > 0 && (
+        <p className={classes.itemspecs}>{desc[0]}</p>
       )}
       <p>
         <span className={classes.categoryDesc}>Category:</span>{" "}
-        {weapon_category}
+        {weapon_category || "/"}
       </p>
       <p>
-        <span className={classes.categoryDesc}>Type:</span> {weapon_range}
+        <span className={classes.categoryDesc}>Type:</span>{" "}
+        {weapon_range || "/"}
       </p>
 
       {range && (
         <p>
-          <span className={classes.categoryDesc}>Range</span> {range.normal}
-          {range.long ? `/${range.long}` : ""}
+          <span className={classes.categoryDesc}>Range:</span> {range.normal}
+          {range.long ? `/${range.long}` : " ft"}
         </p>
       )}
       {damage && (
@@ -49,14 +55,15 @@ const WeaponDescription = ({ item }) => {
           {item["two_handed_damage"].damage_type.index}
         </p>
       )}
-      {special.length > 0 && (
+      {special && special.length > 0 && (
         <p>
           <span className={classes.categoryDesc}>Special:</span>{" "}
           {specialList.join(", ")}
         </p>
       )}
+      {desc && desc.length > 0 && <p> {desc.join(". ")}</p>}
       <p>
-        <span className={classes.categoryDesc}>Weight:</span> {weight}
+        <span className={classes.categoryDesc}>Weight:</span> {weight || "/"}
       </p>
       <p>
         {item.cost && (

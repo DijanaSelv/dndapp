@@ -25,10 +25,9 @@ export const SPELLS_AVAILABLE = {
 //PALADIN:
 //PREPARES spells from available ones. Char mod + 1/2 paladin level rounded down (min 1 spell)
 
+//~~~~~~~~~~~~~~~~~~~LEARNS SPELLS
 //BARD:
 //KNOWS Spells There is a limit to how many spells they know. (SPELLS KNOWN)
-
-//~~~~~~~~~~~~~~~~~~~LEARNS SPELLS
 
 //SORCERER:
 //SORCERY POINTS equal to its level, except lvl 1 has zero. lvl 2 has 2 point and so on.

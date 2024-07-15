@@ -29,6 +29,7 @@ import {
   faArrowRight,
   faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
+import NewShopPage from "../newshoppage/NewShopPage";
 
 const NewCharacterPage = () => {
   const { TextArea } = Input;
@@ -64,6 +65,7 @@ const NewCharacterPage = () => {
     levelSelected: 1,
     wisdomSelected: 10,
     charismaSelected: 10,
+    equipment: [],
   });
 
   const [activeKey, setActiveKey] = useState(1);
@@ -118,9 +120,11 @@ const NewCharacterPage = () => {
   const createCharacterHandler = (values) => {
     //JSON parse so that undefined variables are removed (firebase does not accept undefined)
     values["gold"] = currencyToCopper(values["gold"]);
-    const data = JSON.parse(JSON.stringify(values));
+    const equipment = optionsData.equipment;
+    const data = { ...values, equipment };
+    const dataToSave = JSON.parse(JSON.stringify(data));
     const id = nanoid(13);
-    dispatch(createCharacter(data, uid, id));
+    dispatch(createCharacter(dataToSave, uid, id));
   };
 
   const notSubmittedHandler = () => {
@@ -544,6 +548,18 @@ const NewCharacterPage = () => {
         </div>
       ),
     },
+    {
+      key: 5,
+      label: <div onClick={() => changeTabHandler(5)}>Equipment</div>,
+      children: (
+        <Form.Item name="inventory">
+          <NewShopPage
+            characterEquipment={true}
+            setOptionsData={setOptionsData}
+          />
+        </Form.Item>
+      ),
+    },
   ];
 
   return (
@@ -575,12 +591,12 @@ const NewCharacterPage = () => {
         />
         <div className={cssClasses.buttonsContainer}>
           {" "}
-          {activeKey === 4 && (
+          {activeKey === 5 && (
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
           )}
-          {activeKey < 4 && (
+          {activeKey < 5 && (
             <Button onClick={() => changeTabHandler(activeKey + 1)}>
               Next <FontAwesomeIcon icon={faArrowRightLong} />
             </Button>
