@@ -103,6 +103,12 @@ a {
   }
 }
 
+@media print {
+  .mainWrapper {
+    width: 950px;
+    zoom: 65%;
+  }
+}
 /* CHARACTER CARDS ARE A BIT DIFFERENT */
 
 .characterCard {

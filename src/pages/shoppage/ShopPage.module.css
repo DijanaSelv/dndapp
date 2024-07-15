@@ -179,3 +179,28 @@
 .priceAndCurrencyField input {
   min-width: 80px;
 }
+
+/* FOR CREATE CHARACTER LAYOUT */
+
+.characterItemsContent {
+  display: flex;
+}
+.characterItemsLayout {
+  display: flex;
+  justify-content: space-evenly;
+  width: 75%;
+}
+.characterItemsLayout .tableDiv {
+  width: 45%;
+}
+
+.tableDiv h3 {
+  border-bottom: 1px solid #c3c3c5d2;
+  margin-bottom: 10px;
+}
+.characterItemsLayout .itemEdits {
+  margin-top: 0px;
+}
+.characterItemsContent .itemDescription {
+  margin-top: 40px;
+}

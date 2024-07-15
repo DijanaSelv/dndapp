@@ -25,8 +25,9 @@ import {
 import classes from "../shoppage/ShopPage.module.css";
 import DeleteModal from "../../components/DeleteModal";
 import { currencyToCopper } from "../../app/actions/uitls";
+import { prepareColComponentToken } from "antd/es/grid/style";
 
-const NewShopPage = () => {
+const NewShopPage = ({ characterEquipment, setOptionsData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { TextArea } = Input;
@@ -45,6 +46,7 @@ const NewShopPage = () => {
   const [displayItemsToAdd, setDisplayItemsToAdd] = useState();
   const [selectCategories, setSelectCategories] = useState();
   const [addingItemsLoading, setAddingItemsLoading] = useState();
+  /*   const [content, setContent] = useState(); */
 
   //On save shop, handle the sucess of the request and redirect
   useEffect(() => {
@@ -159,7 +161,22 @@ const NewShopPage = () => {
     );
   };
 
+  useEffect(() => {
+    //setoptionsdata
+    characterEquipment &&
+      setOptionsData((prev) => ({
+        ...prev,
+        equipment: itemsList.map((item) => ({
+          name: item.name,
+          url: item.url,
+        })),
+      }));
+  }, [itemsList]);
+
   let formIsValid = false;
+  const chooseItem = {
+    equipment_category: { index: "choose" },
+  };
 
   if (title && itemsList.length) {
     formIsValid = true;
@@ -193,7 +210,7 @@ const NewShopPage = () => {
         compare: (a, b) => a.amount - b.amount,
       },
     },
-    {
+    !characterEquipment && {
       title: "price",
       dataIndex: "price",
       render: (text, record) => {
@@ -238,7 +255,7 @@ const NewShopPage = () => {
         </a>
       ),
     },
-  ];
+  ].filter(Boolean);
 
   const columnsForAdd = [
     {
@@ -402,7 +419,7 @@ const NewShopPage = () => {
     },
   ];
 
-  return (
+  const content = !characterEquipment ? (
     <div className={classes.content}>
       {notification && <NotificationBox />}
       <DeleteModal />
@@ -457,9 +474,86 @@ const NewShopPage = () => {
           />
         </div>
         {<img src={imageUrl || null} style={{ width: "200px" }} />}
-        {clickedItem && <ItemDescriptionCard item={clickedItem} />}
+        {clickedItem ? (
+          <ItemDescriptionCard item={clickedItem} />
+        ) : (
+          <ItemDescriptionCard item={chooseItem} />
+        )}
+      </div>
+    </div>
+  ) : (
+    <div className={classes.characterItemsContent}>
+      <div className={classes.characterItemsLayout}>
+        <div className={classes.tableDiv}>
+          <h3>Your Inventory:</h3>
+          <div className={classes.itemEdits}>
+            <Button onClick={removeAllItemsHandler}>
+              <DeleteOutlined />
+              Remove All
+            </Button>
+          </div>
+          <Table
+            locale={{
+              emptyText:
+                "The shop is currently empty. Add items in the next tab.",
+            }}
+            loading={isLoading}
+            columns={columnsForEdit}
+            dataSource={itemsList}
+            pagination={false}
+            size={"small"}
+            rowKey="id"
+            onRow={(record) => {
+              return {
+                onClick: () => clickHandler(record.url),
+              };
+            }}
+            className={classes.tableOfItems}
+          />
+        </div>
+        <div className={classes.tableDiv}>
+          <h3>Find and add items here:</h3>
+          <div className={classes.itemEdits}>
+            <Button onClick={addAllItemsHandler}>
+              {" "}
+              <PlusCircleOutlined />
+              Add All{" "}
+            </Button>
+            <Select
+              defaultValue="Adventuring Gear"
+              options={memoizedCategories}
+              style={{ width: "250px" }}
+              onSelect={(value) => selectHandler(value)}
+            />
+          </div>
+          <Table
+            loading={isLoading || addingItemsLoading}
+            columns={columnsForAdd}
+            dataSource={displayItemsToAdd}
+            size={"small"}
+            rowKey="id"
+            onRow={(record) => {
+              return {
+                onClick: () => clickHandler(record.url),
+              };
+            }}
+            pagination={{
+              defaultPageSize: 25,
+            }}
+            className={classes.tableOfItems}
+          />
+        </div>
+      </div>
+      <div className={classes.editDetails}>
+        {clickedItem ? (
+          <ItemDescriptionCard item={clickedItem} />
+        ) : (
+          <ItemDescriptionCard item={chooseItem} />
+        )}
       </div>
     </div>
   );
+
+  return <>{content}</>;
 };
 export default NewShopPage;

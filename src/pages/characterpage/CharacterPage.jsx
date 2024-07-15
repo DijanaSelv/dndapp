@@ -9,9 +9,10 @@ import {
   faPersonRunning,
   faDice,
   faPrint,
+  faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { Button, Checkbox, Progress, Tooltip } from "antd";
+import { Button, Checkbox, Progress, Table, Tooltip } from "antd";
 import classes from "./CharacterPage.module.css";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
@@ -22,6 +23,7 @@ import { useEffect, useState } from "react";
 import { getItems } from "../../app/actions/dndApiActions";
 import { SPELL_SLOTS } from "../../app/STATIC_SPELL_LEVELS";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
+import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 
 const CharacterPage = () => {
   const params = useParams();
@@ -34,7 +36,9 @@ const CharacterPage = () => {
   const { isLoading } = useSelector((state) => state.uiSlice);
 
   const [spellsData, setSpellsData] = useState();
+  const [equipmentData, setEquipmentData] = useState();
   const [spellsComponent, setSpellsComponent] = useState();
+  const [equipmentComponent, setEquipmentComponent] = useState();
 
   /* CALCULATIONS AND FORMATTING OF STATS */
   let formattedAlignment;
@@ -192,7 +196,7 @@ const CharacterPage = () => {
 
     spellcastingAbilities = {
       bard: "charisma",
-      cleric: "wisodm",
+      cleric: "wisdom",
       druid: "wisdom",
       paladin: "charisma",
       ranger: "wisdom",
@@ -242,6 +246,15 @@ const CharacterPage = () => {
         setSpellsData(allSpellsData);
       };
       getSpellsData();
+
+      const getItemsData = async () => {
+        const allEquipmentData = await Promise.all(
+          characterData.equipment.map((item) => getItems(item.url))
+        );
+        console.log(allEquipmentData);
+        setEquipmentData(allEquipmentData);
+      };
+      characterData.equipment && getItemsData();
     }
   }, [isLoading]);
 
@@ -313,8 +326,9 @@ const CharacterPage = () => {
                 </span>
               </p>
               <p>
-                Saving throw DC: +
+                Saving throw DC:
                 <span className={classes.spellCastingValue}>
+                  {" "}
                   {8 +
                     abilitiesStatic[
                       spellcastingAbilities[characterData.class]
@@ -379,6 +393,295 @@ const CharacterPage = () => {
       setSpellsComponent(component);
     }
   }, [spellsData]);
+
+  useEffect(() => {
+    if (equipmentData) {
+      const weapons = equipmentData.filter(
+        (item) => item["equipment_category"].index === "weapon"
+      );
+
+      const armor = equipmentData.filter(
+        (item) => item["equipment_category"].index === "armor"
+      );
+      const otherItems = equipmentData.filter(
+        (item) =>
+          item["equipment_category"].index !== "armor" &&
+          item["equipment_category"].index !== "weapon"
+      );
+
+      //The basic attack bonus formula is: Ability Modifier + Proficiency + Enchanted Item Bonus + Class Features = Attack Bonus.
+      const weaponsColumn = [
+        {
+          title: "name",
+          dataIndex: "name",
+          key: "name",
+          render: (text, record) => (
+            <Tooltip
+              overlayClassName={classes.equipmentTooltip}
+              mouseEnterDelay="0.7"
+              overlayInnerStyle={{
+                width: "400px",
+              }}
+              title={
+                <ItemDescriptionCard
+                  className={classes.equipmentTooltip}
+                  item={record}
+                />
+              }
+            >
+              {text}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "range",
+          dataIndex: "range",
+          key: "range",
+          render: (range) =>
+            range ? (
+              <p>{`${range.normal}${range.long ? `/${range.long}` : " ft"}`}</p>
+            ) : (
+              "/"
+            ),
+        },
+        {
+          title: "attack",
+          dataIndex: "weapon_range",
+          key: "attack",
+          render: (range, record) => {
+            if (range) {
+              let modifier;
+              //check what type of weapon it is to select hte right modifier
+              if (range === "Melee") {
+                modifier = strengthModifier;
+              } else if (range === "Ranged") {
+                modifier = dexterityModifier;
+              } else {
+                modifier =
+                  strengthModifier > dexterityModifier
+                    ? strengthModifier
+                    : dexterityModifier;
+              }
+
+              //check if the character is proficient in the weapon
+              let isProficient = 0;
+              if (weaponsProficiency.includes(record.name)) {
+                isProficient = proficiencyBonus;
+              }
+              if (weaponsProficiency.includes(record["weapon_category"])) {
+                isProficient = proficiencyBonus;
+              }
+
+              return <p>+{modifier + isProficient} vs. AC</p>;
+            } else {
+              return "/";
+            }
+          },
+        },
+        {
+          //When attacking with a weapon, you add your ability modifier—the same modifier used for the attack roll—to the damage.
+          title: "damage",
+          dataIndex: "damage",
+          key: "damage",
+          render: (damage, record) => {
+            if (damage) {
+              let modifier;
+              //check what type of weapon it is to select hte right modifier
+              if (record["weapon_range"] === "Melee") {
+                modifier = strengthModifier;
+              } else if (record["weapon_range"] === "Ranged") {
+                modifier = dexterityModifier;
+              } else {
+                modifier =
+                  strengthModifier > dexterityModifier
+                    ? strengthModifier
+                    : dexterityModifier;
+              }
+
+              return (
+                <p>
+                  {damage["damage_dice"]}
+                  {modifier ? `+${modifier}` : ""} {damage["damage_type"].index}
+                </p>
+              );
+            } else {
+              return "/";
+            }
+          },
+        },
+      ];
+
+      const armorColumn = [
+        {
+          title: "name",
+          dataIndex: "name",
+          key: "name",
+          render: (text, record) => (
+            <Tooltip
+              overlayClassName={classes.equipmentTooltip}
+              mouseEnterDelay="0.7"
+              overlayInnerStyle={{
+                "min-width": "200px",
+                "max-width": "600px",
+              }}
+              title={
+                <ItemDescriptionCard
+                  className={classes.equipmentTooltipCard}
+                  item={record}
+                />
+              }
+            >
+              {text}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "category",
+          dataIndex: "armor_category",
+          key: "category",
+          render: (text, record) =>
+            text ? (
+              <p>
+                {text}
+                {!armorProficiency.includes(text) && (
+                  <Tooltip title="You're not proficient in this category and can not equip this item.">
+                    {" "}
+                    <FontAwesomeIcon
+                      icon={faTriangleExclamation}
+                      style={{ color: "#8b0000" }}
+                    />{" "}
+                  </Tooltip>
+                )}
+              </p>
+            ) : (
+              "/"
+            ),
+        },
+        {
+          title: "AC",
+          dataIndex: "armor_class",
+          key: "AC",
+          render: (text, record) => (text ? <p>{text.base}</p> : "/"),
+        },
+      ];
+
+      const otherItemsColumn = [
+        {
+          title: "name",
+          dataIndex: "name",
+          key: "name",
+          render: (text, record) => (
+            <Tooltip
+              overlayClassName={classes.equipmentTooltip}
+              mouseEnterDelay="0.7"
+              overlayInnerStyle={{
+                "min-width": "200px",
+                "max-width": "600px",
+              }}
+              title={
+                <ItemDescriptionCard
+                  className={classes.equipmentTooltipCard}
+                  item={record}
+                />
+              }
+            >
+              {text}
+            </Tooltip>
+          ),
+        },
+      ];
+      const component = (
+        <div className={classes.equipmentSection}>
+          <h3 className={`${classes.skillsTitle} ${classes.spellsTitle}`}>
+            <span>
+              {" "}
+              Inventory{" "}
+              <Tooltip title="duble click on weapons and armor to equip them">
+                {" "}
+                <FontAwesomeIcon icon={faCircleQuestion} />
+              </Tooltip>
+            </span>
+          </h3>
+          <div className={classes.tablesContainer}>
+            {weapons.length > 0 && (
+              <div className={classes.equipmentCategoryContent}>
+                <h4>
+                  Weapons{" "}
+                  <Tooltip title="hover over the names to see more details">
+                    {" "}
+                    <FontAwesomeIcon icon={faCircleQuestion} />
+                  </Tooltip>
+                </h4>
+
+                <Table
+                  className={classes.equipmentTable}
+                  columns={weaponsColumn}
+                  dataSource={weapons}
+                  size="small"
+                  pagination={false}
+                  /* pagination={{
+                pageSize: 20,
+              }} */
+                  scroll={{
+                    y: 400,
+                  }}
+                />
+              </div>
+            )}
+            {armor.length > 0 && (
+              <div className={classes.equipmentCategoryContent}>
+                <h4>
+                  Armor{" "}
+                  <Tooltip title="hover over the names to see more details">
+                    {" "}
+                    <FontAwesomeIcon icon={faCircleQuestion} />
+                  </Tooltip>
+                </h4>
+                <Table
+                  className={classes.equipmentTable}
+                  columns={armorColumn}
+                  dataSource={armor}
+                  size="small"
+                  pagination={false}
+                  /* pagination={{
+                pageSize: 20,
+              }} */
+                  scroll={{
+                    y: 400,
+                  }}
+                />
+              </div>
+            )}
+            {otherItems.length > 0 && (
+              <div className={classes.equipmentCategoryContent}>
+                <h4>
+                  Other Items{" "}
+                  <Tooltip title="hover over the names to see more details">
+                    {" "}
+                    <FontAwesomeIcon icon={faCircleQuestion} />
+                  </Tooltip>
+                </h4>
+                <Table
+                  className={classes.equipmentTable}
+                  columns={otherItemsColumn}
+                  dataSource={otherItems}
+                  size="small"
+                  pagination={false}
+                  /* pagination={{
+                pageSize: 20,
+              }} */
+                  scroll={{
+                    y: 400,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      );
+      setEquipmentComponent(component);
+    }
+  }, [equipmentData]);
 
   return (
     <>
@@ -555,6 +858,7 @@ const CharacterPage = () => {
           </div>
 
           {spellsComponent}
+          {equipmentComponent}
 
           {(characterData["physical description"] ||
             characterData.backstory ||

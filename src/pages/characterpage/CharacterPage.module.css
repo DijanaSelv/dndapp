@@ -3,6 +3,10 @@
   cursor: default;
 }
 
+.characterPageContent {
+  padding-bottom: 30px;
+}
+
 .pageInfo {
   font-size: 20px;
   font-family: "Texturina";
@@ -303,6 +307,35 @@
 .charInfoSection:has(.bioInfoGroup) {
   padding: 0 15px;
 }
+
+/* EQUIPMENT */
+
+.equipmentSection {
+  padding-bottom: 20px;
+}
+
+.tablesContainer {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+}
+.equipmentTooltip div {
+  padding: 5px !important;
+  margin: 0;
+  width: 100%;
+}
+
+.equipmentTable {
+  margin-bottom: 30px;
+}
+
+.equipmentSection h4 {
+  margin-bottom: 10px;
+  background-color: rgb(218, 224, 235);
+  border-radius: 5px;
+  padding: 2px 10px;
+}
+
 @media (max-width: 850px) {
   .skillGroup {
     display: grid;
@@ -329,6 +362,11 @@
   }
   .spellCastingInfo p {
     padding-left: 0px;
+  }
+
+  .tablesContainer {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -379,9 +417,17 @@
   .spellCastingInfo p {
     padding-left: 0px;
   }
+
+  .tablesContainer {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 @media (min-width: 1600px), print {
+  /*   .equipmentTable {
+    width: 45%;
+  } */
   .allStats {
     display: flex;
     flex-direction: row;
@@ -413,13 +459,18 @@
   .proficiency {
     margin: 0 -10px 15px -10px;
   }
+
+  .spellTitleContainer {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }
 
 @media print {
-  body {
+  /*   body {
     zoom: 75%;
-    margin: 0 -15%;
-  }
+        width: 1600px;
+  } */
 
   .skillGroup {
     display: flex;
