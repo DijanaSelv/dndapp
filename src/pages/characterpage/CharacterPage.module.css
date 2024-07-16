@@ -1,6 +1,11 @@
 .characterPageContent * {
   font-family: "Texturina";
   cursor: default;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .characterPageContent {
@@ -117,8 +122,7 @@
 }
 .singleStat:hover svg,
 .singleStat:hover .statLabel {
-  color: #2778a3;
-  color: rgba(1, 58, 88, 0.993);
+  color: #013a58fd;
   transition: all 0.2s;
 }
 
@@ -343,11 +347,50 @@
 .equipmentTable tr td {
   transition: all 0.2s !important;
 }
+
+.equipmentTable tr:hover * {
+  cursor: pointer;
+}
 .equipmentTable tr:hover td {
   background-color: rgb(241, 246, 255) !important;
   border-radius: 5px;
-  /* transform: scale(1.05); */
+  /* cursor: pointer; */
   transition: all 0.2s !important;
+}
+.equippedItemSpan {
+  padding-left: 10px;
+}
+
+.itemNameSpan {
+  padding-right: 10px;
+}
+
+/* EQUIPPED ITEMS */
+
+.equippedItemContainer {
+  display: flex;
+  padding: 10px;
+  font: larger;
+  border-bottom: 1px dashed #d3d3d4d2;
+  transition: all 0.2s;
+}
+
+.equippedItemContainer span {
+  padding-right: 30px;
+}
+
+.equippedItemContainer h4 {
+  width: 110px;
+}
+
+.equippedItemContainer:hover {
+  color: #2778a3;
+  transform: scale(1.05);
+  transition: all 0.2s;
+}
+
+.selectedItemRow {
+  background-color: rgb(252, 241, 220);
 }
 
 @media (max-width: 850px) {

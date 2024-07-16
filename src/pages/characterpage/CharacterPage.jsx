@@ -10,20 +10,26 @@ import {
   faDice,
   faPrint,
   faTriangleExclamation,
+  faShieldAlt,
+  faHand,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Button, Checkbox, Progress, Table, Tooltip } from "antd";
 import classes from "./CharacterPage.module.css";
 import { useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { currencyForDisplay } from "../../app/actions/uitls";
 import SpellCard from "../../components/SpellCard";
 import { useEffect, useState } from "react";
 import { getItems } from "../../app/actions/dndApiActions";
 import { SPELL_SLOTS } from "../../app/STATIC_SPELL_LEVELS";
-import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
+import {
+  faCircleQuestion,
+  faHandBackFist,
+} from "@fortawesome/free-regular-svg-icons";
 import ItemDescriptionCard from "../../components/ItemDescriptionCard";
+import { updateEquippedItems } from "../../app/actions/databaseActions";
 
 const CharacterPage = () => {
   const params = useParams();
@@ -33,12 +39,15 @@ const CharacterPage = () => {
   const characterData = useSelector(
     (state) => state.userSlice.user.characters[cid]
   );
+  const uid = useSelector((state) => state.userSlice.user.uid);
   const { isLoading } = useSelector((state) => state.uiSlice);
+  const dispatch = useDispatch();
 
   const [spellsData, setSpellsData] = useState();
   const [equipmentData, setEquipmentData] = useState();
   const [spellsComponent, setSpellsComponent] = useState();
   const [equipmentComponent, setEquipmentComponent] = useState();
+  const [acScore, setAcScore] = useState();
 
   /* CALCULATIONS AND FORMATTING OF STATS */
   let formattedAlignment;
@@ -251,7 +260,7 @@ const CharacterPage = () => {
         const allEquipmentData = await Promise.all(
           characterData.equipment.map((item) => getItems(item.url))
         );
-        console.log(allEquipmentData);
+
         setEquipmentData(allEquipmentData);
       };
       characterData.equipment && getItemsData();
@@ -394,7 +403,84 @@ const CharacterPage = () => {
     }
   }, [spellsData]);
 
+  const calculateAttackWeaponBonus = (range, record) => {
+    let modifier;
+    //check what type of weapon it is to select hte right modifier
+    if (range === "Melee") {
+      modifier = strengthModifier;
+    } else if (range === "Ranged") {
+      modifier = dexterityModifier;
+    } else {
+      modifier =
+        strengthModifier > dexterityModifier
+          ? strengthModifier
+          : dexterityModifier;
+    }
+
+    //check if the character is proficient in the weapon
+    let isProficient = 0;
+    if (weaponsProficiency.includes(record.name)) {
+      isProficient = proficiencyBonus;
+    }
+    if (weaponsProficiency.includes(record["weapon_category"])) {
+      isProficient = proficiencyBonus;
+    }
+
+    return modifier + isProficient;
+  };
+
+  const calculateDamageModifier = (record) => {
+    let modifier;
+    //check what type of weapon it is to select hte right modifier
+    if (record["weapon_range"] === "Melee") {
+      modifier = strengthModifier;
+    } else if (record["weapon_range"] === "Ranged") {
+      modifier = dexterityModifier;
+    } else {
+      modifier =
+        strengthModifier > dexterityModifier
+          ? strengthModifier
+          : dexterityModifier;
+    }
+    return modifier;
+  };
+
   useEffect(() => {
+    //set AC score
+    if (characterData) {
+      //BASE ARMOR CLASS
+      //if no  equipped items AC = 10 + dex. mod
+      //barbarian +  con mod
+      //monk + con and wis mod
+      const barbarianModifier =
+        characterData.class === "barbarian" ? constitutionModifier : 0;
+      const monkModifier = characterData.class === "monk" ? wisdomModifier : 0;
+      const baseAC = 10 + dexterityModifier + barbarianModifier + monkModifier;
+
+      //if equipped
+      //armor_class base + dex mod if dex. bonus is true
+      //+ shield if it's true
+      //dex modifier if there is limit it can be +2 max. (max_bonus)
+      if (characterData.equipped?.armor || characterData.equipped?.shield) {
+        const armor = characterData.equipped.armor;
+        const shield = characterData.equipped.shield;
+        const dexterityBonus = armor["armor_class"]["dex_bonus"]
+          ? armor["armor_class"]["max_bonus"]
+            ? dexterityModifier > 2
+              ? 2
+              : dexterityModifier
+            : dexterityModifier
+          : 0;
+        const shieldBonus = shield["armor_class"] || 0;
+        const acWithArmor =
+          armor["armor_class"]?.base + dexterityBonus + shieldBonus;
+        setAcScore(acWithArmor);
+      } else {
+        setAcScore(baseAC);
+      }
+    }
+
+    //SET EQUIPMENT TABLES sorted by category
     if (equipmentData) {
       const weapons = equipmentData.filter(
         (item) => item["equipment_category"].index === "weapon"
@@ -429,7 +515,10 @@ const CharacterPage = () => {
                 />
               }
             >
-              {text}
+              {<span className={classes.itemNameSpan}>{text}</span>}
+              {record.name === characterData.equipped?.weapon?.name && (
+                <FontAwesomeIcon icon={faHand} />
+              )}
             </Tooltip>
           ),
         },
@@ -450,29 +539,8 @@ const CharacterPage = () => {
           key: "attack",
           render: (range, record) => {
             if (range) {
-              let modifier;
-              //check what type of weapon it is to select hte right modifier
-              if (range === "Melee") {
-                modifier = strengthModifier;
-              } else if (range === "Ranged") {
-                modifier = dexterityModifier;
-              } else {
-                modifier =
-                  strengthModifier > dexterityModifier
-                    ? strengthModifier
-                    : dexterityModifier;
-              }
-
-              //check if the character is proficient in the weapon
-              let isProficient = 0;
-              if (weaponsProficiency.includes(record.name)) {
-                isProficient = proficiencyBonus;
-              }
-              if (weaponsProficiency.includes(record["weapon_category"])) {
-                isProficient = proficiencyBonus;
-              }
-
-              return <p>+{modifier + isProficient} vs. AC</p>;
+              const attackBonus = calculateAttackWeaponBonus(range, record);
+              return <p>+{attackBonus} vs. AC</p>;
             } else {
               return "/";
             }
@@ -485,19 +553,7 @@ const CharacterPage = () => {
           key: "damage",
           render: (damage, record) => {
             if (damage) {
-              let modifier;
-              //check what type of weapon it is to select hte right modifier
-              if (record["weapon_range"] === "Melee") {
-                modifier = strengthModifier;
-              } else if (record["weapon_range"] === "Ranged") {
-                modifier = dexterityModifier;
-              } else {
-                modifier =
-                  strengthModifier > dexterityModifier
-                    ? strengthModifier
-                    : dexterityModifier;
-              }
-
+              const modifier = calculateDamageModifier(record);
               return (
                 <p>
                   {damage["damage_dice"]}
@@ -521,8 +577,8 @@ const CharacterPage = () => {
               overlayClassName={classes.equipmentTooltip}
               mouseEnterDelay="0.7"
               overlayInnerStyle={{
-                "min-width": "200px",
-                "max-width": "600px",
+                minWidth: "200px",
+                maxWidth: "600px",
               }}
               title={
                 <ItemDescriptionCard
@@ -531,7 +587,11 @@ const CharacterPage = () => {
                 />
               }
             >
-              {text}
+              {<span className={classes.itemNameSpan}>{text}</span>}
+              {(record.name === characterData.equipped?.armor?.name ||
+                record.name === characterData.equipped?.shield?.name) && (
+                <FontAwesomeIcon icon={faShieldAlt} />
+              )}
             </Tooltip>
           ),
         },
@@ -543,15 +603,16 @@ const CharacterPage = () => {
             text ? (
               <p>
                 {text}
-                {!armorProficiency.includes(text) && (
-                  <Tooltip title="You're not proficient in this category and can not equip this item.">
-                    {" "}
-                    <FontAwesomeIcon
-                      icon={faTriangleExclamation}
-                      style={{ color: "#8b0000" }}
-                    />{" "}
-                  </Tooltip>
-                )}
+                {!armorProficiency.includes(text) ||
+                  (!armorProficiency.includes("All") && (
+                    <Tooltip title="You're not proficient in this category and can not equip this item.">
+                      {" "}
+                      <FontAwesomeIcon
+                        icon={faTriangleExclamation}
+                        style={{ color: "#8b0000" }}
+                      />{" "}
+                    </Tooltip>
+                  ))}
               </p>
             ) : (
               "/"
@@ -561,7 +622,15 @@ const CharacterPage = () => {
           title: "AC",
           dataIndex: "armor_class",
           key: "AC",
-          render: (text, record) => (text ? <p>{text.base}</p> : "/"),
+          render: (text, record) =>
+            text ? (
+              <p>
+                {text.base}
+                {text["dex_bonus"] && "+ dex. modifier"}
+              </p>
+            ) : (
+              "/"
+            ),
         },
       ];
 
@@ -575,8 +644,8 @@ const CharacterPage = () => {
               overlayClassName={classes.equipmentTooltip}
               mouseEnterDelay="0.7"
               overlayInnerStyle={{
-                "min-width": "200px",
-                "max-width": "600px",
+                minWidth: "200px",
+                maxWidth: "600px",
               }}
               title={
                 <ItemDescriptionCard
@@ -621,6 +690,24 @@ const CharacterPage = () => {
                   dataSource={weapons}
                   size="small"
                   pagination={false}
+                  onRow={(record, index) => {
+                    return {
+                      onDoubleClick: (event) => {
+                        if (
+                          record.name !== characterData.equipped?.weapon?.name
+                        ) {
+                          dispatch(
+                            updateEquippedItems(record, uid, cid, "weapon")
+                          );
+                        }
+                      },
+                    };
+                  }}
+                  rowClassName={(record) =>
+                    record.name === characterData.equipped?.weapon?.name
+                      ? classes.selectedItemRow
+                      : null
+                  }
                   /* pagination={{
                 pageSize: 20,
               }} */
@@ -645,6 +732,53 @@ const CharacterPage = () => {
                   dataSource={armor}
                   size="small"
                   pagination={false}
+                  onRow={(record, index) => {
+                    return {
+                      onDoubleClick: (event) => {
+                        //SHIELD PROFICIENCY IS IN WEAPONS IN THE API
+                        if (record["armor_category"] === "Shield") {
+                          if (
+                            //check if shiled is not already equipped
+                            !characterData.equipped?.shield ||
+                            record.name !== characterData.equipped?.shield?.name
+                          ) {
+                            if (
+                              //check if character is proficient
+                              !record["armor_category"] ||
+                              weaponsProficiency.includes("Shield")
+                            ) {
+                              dispatch(
+                                updateEquippedItems(record, uid, cid, "shield")
+                              );
+                            }
+                          }
+                        }
+                        //ALL OTHER ARMOR PROFICIENCIES
+                        else if (
+                          !characterData.equipped?.armor ||
+                          record.name !== characterData.equipped?.armor?.name
+                        ) {
+                          if (
+                            !record["armor_category"] ||
+                            armorProficiency.includes(
+                              record["armor_category"]
+                            ) ||
+                            armorProficiency.includes("All")
+                          ) {
+                            dispatch(
+                              updateEquippedItems(record, uid, cid, "armor")
+                            );
+                          }
+                        }
+                      },
+                    };
+                  }}
+                  rowClassName={(record) =>
+                    record.name === characterData.equipped?.armor?.name ||
+                    record.name === characterData.equipped?.shield?.name
+                      ? classes.selectedItemRow
+                      : null
+                  }
                   /* pagination={{
                 pageSize: 20,
               }} */
@@ -683,7 +817,7 @@ const CharacterPage = () => {
       );
       setEquipmentComponent(component);
     }
-  }, [equipmentData]);
+  }, [equipmentData, characterData]);
 
   return (
     <>
@@ -738,7 +872,7 @@ const CharacterPage = () => {
                       <FontAwesomeIcon icon={faShield} />
                       AC:
                     </span>
-                    <span className={classes.statValue}>14</span>
+                    <span className={classes.statValue}>{acScore}</span>
                   </div>
                   <div className={classes.singleStat}>
                     <span className={classes.statLabel}>
@@ -845,11 +979,118 @@ const CharacterPage = () => {
                 </div>
               </div>
               <div className={`${classes.skills} ${classes.equippedSection}`}>
-                <h3 className={classes.skillsTitle}>Equipped items</h3>
+                <h3 className={classes.skillsTitle}>Equipped Items</h3>
                 <div className={classes.otherInfoGroup}>
-                  <div> Crossbow heavy Ova treba table da e nekoj</div>
-                  <div> Crossbow heavy Ova treba table da e nekoj</div>
-                  <div> Crossbow heavy Ova treba table da e nekoj</div>
+                  {characterData.equipped?.armor && (
+                    <Tooltip
+                      overlayClassName={classes.equipmentTooltip}
+                      mouseEnterDelay="0.7"
+                      placement="bottom"
+                      overlayInnerStyle={{
+                        minWidth: "300px",
+                        maxWidth: "600px",
+                      }}
+                      title={
+                        <ItemDescriptionCard
+                          className={classes.equipmentTooltipCard}
+                          item={characterData.equipped.armor}
+                        />
+                      }
+                    >
+                      <div className={classes.equippedItemContainer}>
+                        {" "}
+                        <h4>
+                          <FontAwesomeIcon icon={faShieldAlt} /> Armor:{" "}
+                        </h4>{" "}
+                        <span>{characterData.equipped.armor.name}</span>
+                        <span>
+                          AC: {characterData.equipped.armor["armor_class"].base}{" "}
+                          {characterData.equipped.armor["armor_class"][
+                            "dex_bonus"
+                          ] && "+ dex. modifier"}
+                        </span>
+                      </div>
+                    </Tooltip>
+                  )}
+                  {characterData.equipped?.shield && (
+                    <Tooltip
+                      overlayClassName={classes.equipmentTooltip}
+                      mouseEnterDelay="0.7"
+                      placement="bottom"
+                      overlayInnerStyle={{
+                        minWidth: "300px",
+                        maxWidth: "600px",
+                      }}
+                      title={
+                        <ItemDescriptionCard
+                          className={classes.equipmentTooltipCard}
+                          item={characterData.equipped.shield}
+                        />
+                      }
+                    >
+                      <div className={classes.equippedItemContainer}>
+                        {" "}
+                        <h4>
+                          <FontAwesomeIcon icon={faShieldAlt} /> Shield:{" "}
+                        </h4>{" "}
+                        <span>{characterData.equipped.shield.name}</span>
+                        <span>
+                          AC: +
+                          {characterData.equipped.shield["armor_class"].base}{" "}
+                          {characterData.equipped.shield["armor_class"][
+                            "dex_bonus"
+                          ] && "+ dex. modifier"}
+                        </span>
+                      </div>
+                    </Tooltip>
+                  )}
+                  {characterData.equipped?.weapon && (
+                    <Tooltip
+                      overlayClassName={classes.equipmentTooltip}
+                      mouseEnterDelay="0.7"
+                      placement="bottom"
+                      overlayInnerStyle={{
+                        minWidth: "300px",
+                        maxWidth: "600px",
+                      }}
+                      title={
+                        <ItemDescriptionCard
+                          className={classes.equipmentTooltipCard}
+                          item={characterData.equipped.weapon}
+                        />
+                      }
+                    >
+                      <div className={classes.equippedItemContainer}>
+                        {" "}
+                        <h4>
+                          {" "}
+                          <FontAwesomeIcon icon={faHand} /> Weapon:{" "}
+                        </h4>{" "}
+                        <span>{characterData.equipped.weapon.name}</span>
+                        <span>
+                          attack (+
+                          {calculateAttackWeaponBonus(
+                            characterData.equipped.weapon["weapon_range"],
+                            characterData.equipped.weapon
+                          ) || 0}{" "}
+                          vs. AC)
+                        </span>
+                        <span>
+                          dmg ({" "}
+                          {characterData.equipped.weapon.damage["damage_dice"]}{" "}
+                          +
+                          {calculateDamageModifier(
+                            characterData.equipped.weapon
+                          ) || 0}{" "}
+                          {
+                            characterData.equipped.weapon.damage["damage_type"]
+                              .index
+                          }
+                          )
+                        </span>
+                      </div>
+                    </Tooltip>
+                  )}
                 </div>
                 <h3 className={classes.skillsTitle}>Features and Traits</h3>
                 <div className={classes.otherInfoGroup}>
