@@ -513,3 +513,20 @@ export const createCharacter = (data, uid, id) => {
     dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
+
+export const updateEquippedItems = (data, uid, id, category) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const charRef = ref(
+        db,
+        "users/" + uid + "/characters/" + id + "/equipped/" + category
+      );
+      await update(charRef, { ...data });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};

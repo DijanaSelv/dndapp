@@ -1,6 +1,11 @@
 .characterPageContent * {
   font-family: "Texturina";
   cursor: default;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .characterPageContent {
@@ -117,8 +122,7 @@
 }
 .singleStat:hover svg,
 .singleStat:hover .statLabel {
-  color: #2778a3;
-  color: rgba(1, 58, 88, 0.993);
+  color: #013a58fd;
   transition: all 0.2s;
 }
 
@@ -197,6 +201,10 @@
   margin-bottom: 20px;
   border-bottom: 1px solid #c3c3c5d2;
   color: black;
+}
+
+.skillsTitle p {
+  font-size: medium;
 }
 .skillGroup {
   margin-bottom: 30px;
@@ -314,19 +322,19 @@
   padding-bottom: 20px;
 }
 
-.tablesContainer {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 10px;
+.equipmentContainer {
+  display: flex;
+  flex-direction: column;
 }
+
 .equipmentTooltip div {
   padding: 5px !important;
   margin: 0;
   width: 100%;
 }
 
-.equipmentTable {
-  margin-bottom: 30px;
+.equipmentCategoryContent {
+  margin-bottom: 20px;
 }
 
 .equipmentSection h4 {
@@ -334,6 +342,55 @@
   background-color: rgb(218, 224, 235);
   border-radius: 5px;
   padding: 2px 10px;
+}
+
+.equipmentTable tr td {
+  transition: all 0.2s !important;
+}
+
+.equipmentTable tr:hover * {
+  cursor: pointer;
+}
+.equipmentTable tr:hover td {
+  background-color: rgb(241, 246, 255) !important;
+  border-radius: 5px;
+  /* cursor: pointer; */
+  transition: all 0.2s !important;
+}
+.equippedItemSpan {
+  padding-left: 10px;
+}
+
+.itemNameSpan {
+  padding-right: 10px;
+}
+
+/* EQUIPPED ITEMS */
+
+.equippedItemContainer {
+  display: flex;
+  padding: 10px;
+  font: larger;
+  border-bottom: 1px dashed #d3d3d4d2;
+  transition: all 0.2s;
+}
+
+.equippedItemContainer span {
+  padding-right: 30px;
+}
+
+.equippedItemContainer h4 {
+  width: 110px;
+}
+
+.equippedItemContainer:hover {
+  color: #2778a3;
+  transform: scale(1.05);
+  transition: all 0.2s;
+}
+
+.selectedItemRow {
+  background-color: rgb(252, 241, 220);
 }
 
 @media (max-width: 850px) {
@@ -363,14 +420,9 @@
   .spellCastingInfo p {
     padding-left: 0px;
   }
-
-  .tablesContainer {
-    display: flex;
-    flex-direction: column;
-  }
 }
 
-@media (min-width: 851px) and (max-width: 1599px) {
+@media (min-width: 851px) and (max-width: 1550px) {
   .allStats {
     display: flex;
     flex-direction: row;
@@ -405,33 +457,29 @@
     margin: 0 -10px 15px -10px;
   }
 
-  .spellsTitle {
-    flex-direction: column;
-  }
-
-  .spellCastingInfo {
-    margin-top: 10px;
-    flex-direction: column;
-    border-top: 1px solid #c3c3c5d2;
-  }
   .spellCastingInfo p {
-    padding-left: 0px;
+    padding-left: 20px;
+  }
+  .equipmentContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    justify-content: space-around;
   }
 
-  .tablesContainer {
-    display: flex;
-    flex-wrap: wrap;
+  .equipmentCategoryContent {
+    width: 49%;
+  }
+  .weaponsCategoryContent {
+    width: 100%;
   }
 }
 
-@media (min-width: 1600px), print {
-  /*   .equipmentTable {
-    width: 45%;
-  } */
+@media (min-width: 1551px), print {
   .allStats {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+
     padding-bottom: 20px;
   }
 
@@ -464,14 +512,23 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
+
+  .equipmentContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .equipmentCategoryContent {
+    width: 25%;
+  }
+  .weaponsCategoryContent {
+    width: 49%;
+  }
 }
 
 @media print {
-  /*   body {
-    zoom: 75%;
-        width: 1600px;
-  } */
-
   .skillGroup {
     display: flex;
     flex-direction: column;
