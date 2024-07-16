@@ -602,9 +602,11 @@ const CharacterPage = () => {
               </Tooltip>
             </span>
           </h3>
-          <div className={classes.tablesContainer}>
+          <div className={classes.equipmentContainer}>
             {weapons.length > 0 && (
-              <div className={classes.equipmentCategoryContent}>
+              <div
+                className={`${classes.equipmentCategoryContent} ${classes.weaponsCategoryContent}`}
+              >
                 <h4>
                   Weapons{" "}
                   <Tooltip title="hover over the names to see more details">
