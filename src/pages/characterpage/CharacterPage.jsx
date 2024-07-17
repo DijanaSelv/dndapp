@@ -457,23 +457,33 @@ const CharacterPage = () => {
       const monkModifier = characterData.class === "monk" ? wisdomModifier : 0;
       const baseAC = 10 + dexterityModifier + barbarianModifier + monkModifier;
 
-      //if equipped
-      //armor_class base + dex mod if dex. bonus is true
+      //if equipped and there is armor class value of the items: armor_class base + dex mod if dex. bonus is true
       //+ shield if it's true
       //dex modifier if there is limit it can be +2 max. (max_bonus)
-      if (characterData.equipped?.armor || characterData.equipped?.shield) {
-        const armor = characterData.equipped.armor;
-        const shield = characterData.equipped.shield;
-        const dexterityBonus = armor["armor_class"]["dex_bonus"]
-          ? armor["armor_class"]["max_bonus"]
-            ? dexterityModifier > 2
-              ? 2
+
+      if (
+        (characterData.equipped?.armor &&
+          characterData.equipped?.armor["armor_class"]) ||
+        (characterData.equipped?.shield &&
+          characterData.equipped?.shield["armor_class"])
+      ) {
+        const armor = characterData.equipped.armor || null;
+        const shield = characterData.equipped.shield || null;
+        const dexterityBonus =
+          armor && armor["armor_class"]["dex_bonus"]
+            ? armor["armor_class"]["max_bonus"]
+              ? dexterityModifier > 2
+                ? 2
+                : dexterityModifier
               : dexterityModifier
-            : dexterityModifier
-          : 0;
-        const shieldBonus = shield["armor_class"] || 0;
-        const acWithArmor =
-          armor["armor_class"]?.base + dexterityBonus + shieldBonus;
+            : 0;
+        const shieldBonus = (shield && shield["armor_class"]?.base) || 0;
+
+        //if there is no armor but yes shield shield bonus is added to base AC.
+        const acWithArmor = armor
+          ? armor["armor_class"]?.base
+          : baseAC + dexterityBonus + shieldBonus;
+
         setAcScore(acWithArmor);
       } else {
         setAcScore(baseAC);
@@ -599,12 +609,13 @@ const CharacterPage = () => {
           title: "category",
           dataIndex: "armor_category",
           key: "category",
-          render: (text, record) =>
-            text ? (
+          render: (text, record) => {
+            return text ? (
               <p>
                 {text}
-                {!armorProficiency.includes(text) ||
-                  (!armorProficiency.includes("All") && (
+                {!armorProficiency.includes(text) &&
+                  !weaponsProficiency.includes(record["armor_category"]) &&
+                  !armorProficiency.includes("All") && (
                     <Tooltip title="You're not proficient in this category and can not equip this item.">
                       {" "}
                       <FontAwesomeIcon
@@ -612,11 +623,12 @@ const CharacterPage = () => {
                         style={{ color: "#8b0000" }}
                       />{" "}
                     </Tooltip>
-                  ))}
+                  )}
               </p>
             ) : (
               "/"
-            ),
+            );
+          },
         },
         {
           title: "AC",
@@ -699,6 +711,10 @@ const CharacterPage = () => {
                           dispatch(
                             updateEquippedItems(record, uid, cid, "weapon")
                           );
+                        } else {
+                          dispatch(
+                            updateEquippedItems(null, uid, cid, "weapon")
+                          );
                         }
                       },
                     };
@@ -752,13 +768,21 @@ const CharacterPage = () => {
                               );
                             }
                           }
+                          //if shield is equip it remove it from equipped items
+                          else {
+                            dispatch(
+                              updateEquippedItems(null, uid, cid, "shield")
+                            );
+                          }
                         }
                         //ALL OTHER ARMOR PROFICIENCIES
+                        //check if equipped other type of armor
                         else if (
                           !characterData.equipped?.armor ||
                           record.name !== characterData.equipped?.armor?.name
                         ) {
                           if (
+                            //check if proficient
                             !record["armor_category"] ||
                             armorProficiency.includes(
                               record["armor_category"]
@@ -769,6 +793,11 @@ const CharacterPage = () => {
                               updateEquippedItems(record, uid, cid, "armor")
                             );
                           }
+                        } else {
+                          //if equipped, remove it
+                          dispatch(
+                            updateEquippedItems(null, uid, cid, "armor")
+                          );
                         }
                       },
                     };
@@ -1002,13 +1031,16 @@ const CharacterPage = () => {
                         <h4>
                           <FontAwesomeIcon icon={faShieldAlt} /> Armor:{" "}
                         </h4>{" "}
-                        <span>{characterData.equipped.armor.name}</span>
-                        <span>
-                          AC: {characterData.equipped.armor["armor_class"].base}{" "}
-                          {characterData.equipped.armor["armor_class"][
-                            "dex_bonus"
-                          ] && "+ dex. modifier"}
-                        </span>
+                        <span>{characterData.equipped?.armor?.name}</span>
+                        {characterData.equipped.armor["armor_class"] && (
+                          <span>
+                            AC:{" "}
+                            {characterData.equipped.armor["armor_class"]?.base}{" "}
+                            {characterData.equipped.armor["armor_class"][
+                              "dex_bonus"
+                            ] && "+ dex. modifier"}
+                          </span>
+                        )}
                       </div>
                     </Tooltip>
                   )}

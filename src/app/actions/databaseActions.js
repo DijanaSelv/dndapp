@@ -9,6 +9,7 @@ import {
   orderByChild,
   equalTo,
   query,
+  remove,
 } from "firebase/database";
 import { userSliceActions } from "../userSlice";
 import { db } from "./base";
@@ -522,7 +523,11 @@ export const updateEquippedItems = (data, uid, id, category) => {
         db,
         "users/" + uid + "/characters/" + id + "/equipped/" + category
       );
-      await update(charRef, { ...data });
+      if (data) {
+        await update(charRef, { ...data });
+      } else {
+        await remove(charRef);
+      }
     } catch (error) {
       console.error(error);
     }
