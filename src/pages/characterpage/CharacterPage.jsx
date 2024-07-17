@@ -29,6 +29,7 @@ import { getItems } from "../../app/actions/dndApiActions";
 import { SPELL_SLOTS } from "../../app/STATIC_SPELL_LEVELS";
 import { updateEquippedItems } from "../../app/actions/databaseActions";
 import { LoadingOutlined } from "@ant-design/icons";
+import DeleteModal from "../../components/DeleteModal";
 
 const CharacterPage = () => {
   const params = useParams();
@@ -48,6 +49,7 @@ const CharacterPage = () => {
   const [equipmentComponent, setEquipmentComponent] = useState();
   const [acScore, setAcScore] = useState();
   const [features, setFeatures] = useState();
+  const [showModal, setShowModal] = useState(false);
   /* CALCULATIONS AND FORMATTING OF STATS */
   let formattedAlignment;
   let hitPoints;
@@ -233,6 +235,10 @@ const CharacterPage = () => {
     window.print();
   };
 
+  const deleteCharacterHandler = () => {
+    setShowModal(true);
+  };
+
   useEffect(() => {
     if (!isLoading) {
       const allLeveledSpells = spellLevels
@@ -300,7 +306,7 @@ const CharacterPage = () => {
         characterData["spells7"] ||
         characterData["spells8"] ||
         characterData["spells9"]) && (
-        <>
+        <div className={classes.charInfoSection}>
           {" "}
           <h3 className={`${classes.skillsTitle} ${classes.spellsTitle}`}>
             <span>
@@ -415,7 +421,7 @@ const CharacterPage = () => {
               );
             })}
           </div>
-        </>
+        </div>
       );
       setSpellsComponent(component);
     }
@@ -1251,6 +1257,20 @@ const CharacterPage = () => {
               </div>
             </div>
           )}
+          <div className={classes.buttonDiv}>
+            <Button type="primary" danger onClick={deleteCharacterHandler}>
+              Delete Character
+            </Button>
+            {showModal && (
+              <DeleteModal
+                uid={uid}
+                cid={cid}
+                type="deleteCharacter"
+                showModal={showModal}
+                setShowModal={setShowModal}
+              />
+            )}
+          </div>
         </div>
       ) : (
         <>

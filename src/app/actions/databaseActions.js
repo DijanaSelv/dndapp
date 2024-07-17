@@ -501,11 +501,11 @@ export const updateNotes = (campaignId, uid, noteId, newContent) => {
 
 //CHARACTER
 
-export const createCharacter = (data, uid, id) => {
+export const createCharacter = (data, uid, cid) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
-      const charRef = ref(db, "users/" + uid + "/characters/" + id);
+      const charRef = ref(db, "users/" + uid + "/characters/" + cid);
       await update(charRef, { ...data });
     } catch (error) {
       console.error(error);
@@ -514,14 +514,27 @@ export const createCharacter = (data, uid, id) => {
     dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
+export const deleteCharacter = (uid, cid) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const charRef = ref(db, "users/" + uid + "/characters/" + cid);
+      await remove(charRef);
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
 
-export const updateEquippedItems = (data, uid, id, category) => {
+export const updateEquippedItems = (data, uid, cid, category) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
       const charRef = ref(
         db,
-        "users/" + uid + "/characters/" + id + "/equipped/" + category
+        "users/" + uid + "/characters/" + cid + "/equipped/" + category
       );
       if (data) {
         await update(charRef, { ...data });
