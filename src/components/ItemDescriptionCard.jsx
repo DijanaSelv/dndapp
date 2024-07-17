@@ -4,26 +4,32 @@ import PotionDescription from "./ItemDescriptionCards/PotionDescription";
 import WeaponDescription from "./ItemDescriptionCards/WeaponDescription";
 import GeneralItemDescription from "./ItemDescriptionCards/GeneralItemDescription";
 import ChooseItem from "./ItemDescriptionCards/ChooseItem";
+import FeatureDescription from "./ItemDescriptionCards/FeatureDescription";
 
 const ItemDescriptionCard = ({ item }) => {
   let content;
 
+  if (item.url.includes("features")) {
+    content = <FeatureDescription item={item} />;
+  }
   // Check the type of item and render the appropriate component
-  switch (item.equipment_category.index) {
-    case "armor":
-      content = <ArmorDescription item={item} />;
-      break;
-    case "potion":
-      content = <PotionDescription item={item} />;
-      break;
-    case "weapon":
-      content = <WeaponDescription item={item} />;
-      break;
-    case "choose":
-      content = <ChooseItem />;
-      break;
-    default:
-      content = <GeneralItemDescription item={item} />;
+  else {
+    switch (item.equipment_category.index) {
+      case "armor":
+        content = <ArmorDescription item={item} />;
+        break;
+      case "potion":
+        content = <PotionDescription item={item} />;
+        break;
+      case "weapon":
+        content = <WeaponDescription item={item} />;
+        break;
+      case "choose":
+        content = <ChooseItem />;
+        break;
+      default:
+        content = <GeneralItemDescription item={item} />;
+    }
   }
 
   //TODO: Ammunition category

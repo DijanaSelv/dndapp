@@ -303,6 +303,7 @@
   border-radius: 5px;
   transform: scale(1.05);
   transition: all 0.2s;
+  cursor: pointer;
 }
 
 .spellsSection :global(.ant-checkbox-checked) :global(.ant-checkbox-inner),
@@ -348,9 +349,6 @@
   transition: all 0.2s !important;
 }
 
-.equipmentTable tr:hover * {
-  cursor: pointer;
-}
 .equipmentTable tr:hover td {
   background-color: rgb(241, 246, 255) !important;
   border-radius: 5px;
@@ -361,6 +359,9 @@
   padding-left: 10px;
 }
 
+.itemNameSpan:hover {
+  cursor: pointer;
+}
 .itemNameSpan {
   padding-right: 10px;
 }
@@ -389,8 +390,29 @@
   transition: all 0.2s;
 }
 
+.equippedSection .otherInfoGroup :hover {
+  cursor: pointer;
+}
+
 .selectedItemRow {
   background-color: rgb(252, 241, 220);
+}
+
+/* Features */
+.featureLabel {
+  padding-bottom: 5px;
+  color: rgb(65, 65, 65);
+  transition: all 0.2s;
+}
+.featureLabel:hover {
+  color: #2778a3;
+  transform: scale(1.05);
+  transition: all 0.2s;
+}
+
+.featuresContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 @media (max-width: 850px) {
@@ -496,16 +518,12 @@
     flex-direction: column;
     border-right: 1px solid #c3c3c5d2;
     padding: 0 15px;
-    width: 25%;
+    min-width: 17%;
     margin-right: auto;
   }
 
   .equippedSection {
-    width: 40%;
-  }
-
-  .proficiency {
-    margin: 0 -10px 15px -10px;
+    width: 50%;
   }
 
   .spellTitleContainer {
