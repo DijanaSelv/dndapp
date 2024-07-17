@@ -1,6 +1,9 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 import { HIT_DICE } from "../../app/STATIC_HIT_DICE";
-import SkillsModifierContainer from "../../components/SkillsModifierContainer";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faShield,
   faHeart,
@@ -13,23 +16,19 @@ import {
   faShieldAlt,
   faHand,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import { Button, Checkbox, Progress, Table, Tooltip } from "antd";
-import classes from "./CharacterPage.module.css";
-import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
 
-import { currencyForDisplay } from "../../app/actions/uitls";
+import classes from "./CharacterPage.module.css";
+
+import SkillsModifierContainer from "../../components/SkillsModifierContainer";
+import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 import SpellCard from "../../components/SpellCard";
-import { useEffect, useState } from "react";
+import { currencyForDisplay } from "../../app/actions/uitls";
 import { getItems } from "../../app/actions/dndApiActions";
 import { SPELL_SLOTS } from "../../app/STATIC_SPELL_LEVELS";
-import {
-  faCircleQuestion,
-  faHandBackFist,
-} from "@fortawesome/free-regular-svg-icons";
-import ItemDescriptionCard from "../../components/ItemDescriptionCard";
 import { updateEquippedItems } from "../../app/actions/databaseActions";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const CharacterPage = () => {
   const params = useParams();
@@ -48,7 +47,7 @@ const CharacterPage = () => {
   const [spellsComponent, setSpellsComponent] = useState();
   const [equipmentComponent, setEquipmentComponent] = useState();
   const [acScore, setAcScore] = useState();
-
+  const [features, setFeatures] = useState();
   /* CALCULATIONS AND FORMATTING OF STATS */
   let formattedAlignment;
   let hitPoints;
@@ -264,6 +263,25 @@ const CharacterPage = () => {
         setEquipmentData(allEquipmentData);
       };
       characterData.equipment && getItemsData();
+
+      const getFeatures = async () => {
+        const featuresList = await getItems("/api/features");
+        const allFeaturesData = await Promise.all(
+          featuresList.results.map(async (feature) => getItems(feature.url))
+        );
+        /* const classFeatures = allFeatures.filter(
+          (feature) => feature.class.index === characterData.class
+        ); */
+        const classFeatures = allFeaturesData.filter(
+          (feature) =>
+            feature.class.index === characterData.class &&
+            feature.level <= characterData.level
+        );
+
+        setFeatures(classFeatures);
+      };
+
+      getFeatures();
     }
   }, [isLoading]);
 
@@ -378,8 +396,8 @@ const CharacterPage = () => {
                   <div className={classes.spellLabelsContainer}>
                     {oneLevelArray.map((spell) => (
                       <Tooltip
-                        mouseEnterDelay="0.7"
-                        key={`tooltip${spell.index}`}
+                        trigger="click"
+                        key={`tooltip-${spell.index}`}
                         overlayInnerStyle={{
                           width: "500px",
                         }}
@@ -514,7 +532,7 @@ const CharacterPage = () => {
           render: (text, record) => (
             <Tooltip
               overlayClassName={classes.equipmentTooltip}
-              mouseEnterDelay="0.7"
+              trigger="click"
               overlayInnerStyle={{
                 width: "400px",
               }}
@@ -585,7 +603,7 @@ const CharacterPage = () => {
           render: (text, record) => (
             <Tooltip
               overlayClassName={classes.equipmentTooltip}
-              mouseEnterDelay="0.7"
+              trigger="click"
               overlayInnerStyle={{
                 minWidth: "200px",
                 maxWidth: "600px",
@@ -654,7 +672,7 @@ const CharacterPage = () => {
           render: (text, record) => (
             <Tooltip
               overlayClassName={classes.equipmentTooltip}
-              mouseEnterDelay="0.7"
+              trigger="click"
               overlayInnerStyle={{
                 minWidth: "200px",
                 maxWidth: "600px",
@@ -666,7 +684,7 @@ const CharacterPage = () => {
                 />
               }
             >
-              {text}
+              <span className={classes.itemNameSpan}>{text}</span>
             </Tooltip>
           ),
         },
@@ -677,7 +695,7 @@ const CharacterPage = () => {
             <span>
               {" "}
               Inventory{" "}
-              <Tooltip title="duble click on weapons and armor to equip them">
+              <Tooltip title="click on an item to see more details">
                 {" "}
                 <FontAwesomeIcon icon={faCircleQuestion} />
               </Tooltip>
@@ -690,7 +708,7 @@ const CharacterPage = () => {
               >
                 <h4>
                   Weapons{" "}
-                  <Tooltip title="hover over the names to see more details">
+                  <Tooltip title="double click on an item to equip or unequip it">
                     {" "}
                     <FontAwesomeIcon icon={faCircleQuestion} />
                   </Tooltip>
@@ -737,7 +755,7 @@ const CharacterPage = () => {
               <div className={classes.equipmentCategoryContent}>
                 <h4>
                   Armor{" "}
-                  <Tooltip title="hover over the names to see more details">
+                  <Tooltip title="double click on an item to equip or unequip it. This will affect your AC. If you're not proficient in that category you cannot equip the item.">
                     {" "}
                     <FontAwesomeIcon icon={faCircleQuestion} />
                   </Tooltip>
@@ -1008,12 +1026,25 @@ const CharacterPage = () => {
                 </div>
               </div>
               <div className={`${classes.skills} ${classes.equippedSection}`}>
-                <h3 className={classes.skillsTitle}>Equipped Items</h3>
+                <h3 className={classes.skillsTitle}>
+                  Equipped Items{" "}
+                  <Tooltip title="click on the items to see more details">
+                    {" "}
+                    <FontAwesomeIcon icon={faCircleQuestion} />
+                  </Tooltip>{" "}
+                </h3>
                 <div className={classes.otherInfoGroup}>
+                  {!characterData.equipped && (
+                    <p>
+                      You don't have any equipped items. Go down to your
+                      inventory and select armor and weapons by double clicking
+                      them.
+                    </p>
+                  )}
                   {characterData.equipped?.armor && (
                     <Tooltip
                       overlayClassName={classes.equipmentTooltip}
-                      mouseEnterDelay="0.7"
+                      trigger="click"
                       placement="bottom"
                       overlayInnerStyle={{
                         minWidth: "300px",
@@ -1047,7 +1078,7 @@ const CharacterPage = () => {
                   {characterData.equipped?.shield && (
                     <Tooltip
                       overlayClassName={classes.equipmentTooltip}
-                      mouseEnterDelay="0.7"
+                      trigger="click"
                       placement="bottom"
                       overlayInnerStyle={{
                         minWidth: "300px",
@@ -1079,7 +1110,7 @@ const CharacterPage = () => {
                   {characterData.equipped?.weapon && (
                     <Tooltip
                       overlayClassName={classes.equipmentTooltip}
-                      mouseEnterDelay="0.7"
+                      trigger="click"
                       placement="bottom"
                       overlayInnerStyle={{
                         minWidth: "300px",
@@ -1124,9 +1155,36 @@ const CharacterPage = () => {
                     </Tooltip>
                   )}
                 </div>
-                <h3 className={classes.skillsTitle}>Features and Traits</h3>
-                <div className={classes.otherInfoGroup}>
-                  <div> Add additional info for your character here</div>
+                <h3 className={classes.skillsTitle}>
+                  Features and Traits{" "}
+                  <Tooltip title="You gain features as you level up. Click on a feature to see more details.">
+                    {" "}
+                    <FontAwesomeIcon icon={faCircleQuestion} />
+                  </Tooltip>{" "}
+                </h3>
+                <div
+                  className={`${classes.otherInfoGroup} ${classes.featuresContainer}`}
+                >
+                  {features ? (
+                    features.map((feature) => (
+                      <Tooltip
+                        overlayClassName={classes.equipmentTooltip}
+                        overlayInnerStyle={{ width: "600px" }}
+                        trigger="click"
+                        key={`tooltip-${feature.index}`}
+                        placement="bottom"
+                        title={<ItemDescriptionCard item={feature} />}
+                      >
+                        <div className={classes.featureLabel}>
+                          {feature.name}
+                        </div>
+                      </Tooltip>
+                    ))
+                  ) : (
+                    <div>
+                      Loading features <LoadingOutlined />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
