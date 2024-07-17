@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteCampaign,
+  deleteCharacter,
   deleteNotes,
   deleteShop,
   leaveCampaign,
@@ -134,6 +135,34 @@ const DeleteModal = (props) => {
         onCancel={handleCancel}
       >
         <p>Are you sure you want to permanently delete this note?</p>
+        <p style={{ fontWeight: "bold" }}></p>
+      </Modal>
+    );
+  }
+  if (props.type === "deleteCharacter") {
+    const { uid, cid, showModal, setShowModal } = props;
+
+    const handleOk = () => {
+      dispatch(deleteCharacter(uid, cid));
+      setShowModal(false);
+      navigate("/");
+    };
+    const handleCancel = () => {
+      setShowModal(false);
+    };
+    content = (
+      <Modal
+        title={`Deleting character`}
+        centered
+        open={showModal}
+        onOk={handleOk}
+        okText="Delete"
+        okButtonProps={{
+          style: { backgroundColor: "red", borderColor: "red" },
+        }}
+        onCancel={handleCancel}
+      >
+        <p>Are you sure you want to permanently delete this character?</p>
         <p style={{ fontWeight: "bold" }}></p>
       </Modal>
     );
