@@ -24,9 +24,7 @@ import { currencyToCopper } from "../../app/actions/uitls";
 import SpellsFormData from "../../components/SpellsFormData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowLeft,
   faArrowLeftLong,
-  faArrowRight,
   faArrowRightLong,
 } from "@fortawesome/free-solid-svg-icons";
 import NewShopPage from "../newshoppage/NewShopPage";

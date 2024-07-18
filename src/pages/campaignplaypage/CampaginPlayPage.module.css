@@ -1,5 +1,4 @@
 .campaignTitle {
-  font-family: "Texturina";
   margin-top: 10px;
   margin-bottom: 30px;
   border-bottom: 1px solid #ccd1dad2;
@@ -7,8 +6,11 @@
 
 .cardsList {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 4fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 4fr));
   gap: 15px;
+}
+.cardsList :global(.ant-card) {
+  height: 100%;
 }
 
 .cardsList * {
@@ -20,4 +22,48 @@
   padding: 20px 0 0 0;
   width: 100%;
   color: #368fbe;
+}
+
+/* ADD A CHARACTER MODAL */
+.addCharacterCardImg .icon {
+  color: #ffa600;
+}
+
+.modalWindow {
+  width: 45% !important;
+}
+.modalWindow img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.modalWindow label {
+}
+
+.modalWindow :global(.ant-card) {
+  width: 180px;
+  padding: 8px;
+  border: 1px solid transparent;
+}
+.modalWindow :global(.ant-card) * {
+  font-size: 14px !important;
+}
+.modalWindow :global(.ant-card-body) {
+  padding: 0;
+}
+.modalWindow :global(.ant-card-meta-title) {
+  margin: 0 !important;
+}
+.modalWindow label :global(.ant-radio) {
+  display: none;
+}
+
+.modalWindow :global(.ant-radio-group) {
+  padding-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.selectedCharacter :global(.ant-card) {
+  border: 1px solid red;
 }
