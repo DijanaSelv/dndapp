@@ -1,7 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-
 .mainWrapper {
   color: #333131;
   margin: auto;
@@ -131,4 +127,9 @@ a {
   align-items: center;
   font-family: "Texturina";
   font-size: large;
+}
+
+.characterCard :global(.ant-card-meta-title) {
+  text-wrap: wrap;
+  text-align: center;
 }

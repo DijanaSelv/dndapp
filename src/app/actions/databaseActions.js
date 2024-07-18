@@ -528,6 +528,24 @@ export const deleteCharacter = (uid, cid) => {
   };
 };
 
+export const addCharacterToCampaign = (uid, characterId, campaignId) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+
+    try {
+      const campaignRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members/" + uid
+      );
+      await update(campaignRef, { character: characterId });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
 export const updateEquippedItems = (data, uid, cid, category) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));

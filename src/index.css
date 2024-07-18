@@ -1,10 +1,10 @@
 * {
-  font-family: "Nanum Gothic", sans-serif;
+  font-family: "Texturina";
   margin: 0;
   padding: 0;
 }
 
-body, html {
+body,
+html {
   height: 100%;
-
 }

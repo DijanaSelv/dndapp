@@ -9,7 +9,7 @@ import FeatureDescription from "./ItemDescriptionCards/FeatureDescription";
 const ItemDescriptionCard = ({ item }) => {
   let content;
 
-  if (item.url.includes("features")) {
+  if (item.url?.includes("features")) {
     content = <FeatureDescription item={item} />;
   }
   // Check the type of item and render the appropriate component

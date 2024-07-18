@@ -27,7 +27,7 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
-      {notification && <NotificationBox />}
+      {/* {notification && <NotificationBox />} */}
 
       <div className={classes.section}>
         <div className={classes.sectionHeader}>
