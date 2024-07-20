@@ -4,14 +4,14 @@ import { signOutUser } from "../app/actions/userActions";
 import { Link, NavLink } from "react-router-dom";
 
 import classes from "./MainNav.module.css";
-import {
-  LogoutOutlined,
-  DownOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { LogoutOutlined, DownOutlined } from "@ant-design/icons";
 import { Dropdown, Skeleton } from "antd";
 import { useEffect } from "react";
-import { getCurrentCampaign, getRoles } from "../app/actions/databaseActions";
+import {
+  getCurrentCampaign,
+  getRoles,
+  getUserData,
+} from "../app/actions/databaseActions";
 import { rolesSliceActions } from "../app/rolesSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiceD20 } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +24,7 @@ const MainNav = () => {
   const campaignId = params.campaignId;
 
   const { uid, firstName } = useSelector((state) => state.userSlice.user);
+  const { requestSuccess } = useSelector((state) => state.uiSlice);
 
   //if a campaign is accessed, fetch roles. If not clear the roles.
   useEffect(() => {
@@ -34,8 +35,12 @@ const MainNav = () => {
     if (!params.campaignId) {
       dispatch(rolesSliceActions.resetRoles());
     }
+    if (requestSuccess) {
+      dispatch(getUserData(uid));
+    }
+
     dispatch(uiSliceActions.resetRequestState());
-  }, [params.campaignId, uid]);
+  }, [params.campaignId, uid, requestSuccess]);
 
   const logoutClickHandler = (e) => {
     e.preventDefault();

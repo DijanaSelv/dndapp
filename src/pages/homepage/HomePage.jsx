@@ -59,7 +59,7 @@ const Home = () => {
         <CampaignCardsContainer type="joined" uid={uid} />
       </div>
 
-      <div className={classes.section}>
+      <div className={`${classes.section} ${classes.charactersSection}`}>
         <div className={classes.sectionHeader}>
           <h2>Characters {isLoading && <LoadingOutlined />}</h2>
           <Link to="/NewCharacter" className={classes.sectionLink}>
