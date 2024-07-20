@@ -51,7 +51,7 @@ a {
   /* width: auto; */
 
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 4fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 15px;
   /* padding: 0;
 
@@ -97,6 +97,18 @@ a {
   .mainWrapper {
     width: 450px;
   }
+
+  .section > ul {
+    padding: 20px;
+  }
+
+  .charactersSection > ul {
+    justify-items: center;
+  }
+
+  .characterCard {
+    width: 300px;
+  }
 }
 
 @media print {
@@ -109,6 +121,7 @@ a {
 
 .characterCard {
   border: none;
+  max-width: 250px;
 }
 
 .characterCard .coverDiv {
@@ -130,6 +143,5 @@ a {
 }
 
 .characterCard :global(.ant-card-meta-title) {
-  text-wrap: wrap;
   text-align: center;
 }

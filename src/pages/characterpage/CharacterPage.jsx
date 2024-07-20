@@ -17,7 +17,7 @@ import {
   faHand,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
-import { Button, Checkbox, Progress, Table, Tooltip } from "antd";
+import { Button, Checkbox, Modal, Progress, Table, Tooltip } from "antd";
 
 import classes from "./CharacterPage.module.css";
 
@@ -30,6 +30,8 @@ import { SPELL_SLOTS } from "../../app/STATIC_SPELL_LEVELS";
 import { updateEquippedItems } from "../../app/actions/databaseActions";
 import { LoadingOutlined } from "@ant-design/icons";
 import DeleteModal from "../../components/DeleteModal";
+import PlayCampaignCard from "../../components/PlayCampaignCard";
+import CampaignListItem from "../../components/CampaignListItem";
 
 const CharacterPage = () => {
   const params = useParams();
@@ -49,7 +51,9 @@ const CharacterPage = () => {
   const [equipmentComponent, setEquipmentComponent] = useState();
   const [acScore, setAcScore] = useState();
   const [features, setFeatures] = useState();
-  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showManageCampaignsmodal, setShowManageCampaignsModal] =
+    useState(false);
   /* CALCULATIONS AND FORMATTING OF STATS */
   let formattedAlignment;
   let hitPoints;
@@ -236,7 +240,11 @@ const CharacterPage = () => {
   };
 
   const deleteCharacterHandler = () => {
-    setShowModal(true);
+    setShowDeleteModal(true);
+  };
+
+  const manageCampaignsHandler = () => {
+    setShowManageCampaignsModal(true);
   };
 
   useEffect(() => {
@@ -472,6 +480,8 @@ const CharacterPage = () => {
   useEffect(() => {
     //set AC score
     if (characterData) {
+      //find the campaigns which the character is part of
+
       //BASE ARMOR CLASS
       //if no  equipped items AC = 10 + dex. mod
       //barbarian +  con mod
@@ -701,7 +711,7 @@ const CharacterPage = () => {
             <span>
               {" "}
               Inventory{" "}
-              <Tooltip title="click on an item to see more details">
+              <Tooltip title="Click on an item to see more details.">
                 {" "}
                 <FontAwesomeIcon icon={faCircleQuestion} />
               </Tooltip>
@@ -714,7 +724,7 @@ const CharacterPage = () => {
               >
                 <h4>
                   Weapons{" "}
-                  <Tooltip title="double click on an item to equip or unequip it">
+                  <Tooltip title="Double click on an item to equip or unequip it.">
                     {" "}
                     <FontAwesomeIcon icon={faCircleQuestion} />
                   </Tooltip>
@@ -761,7 +771,7 @@ const CharacterPage = () => {
               <div className={classes.equipmentCategoryContent}>
                 <h4>
                   Armor{" "}
-                  <Tooltip title="double click on an item to equip or unequip it. This will affect your AC. If you're not proficient in that category you cannot equip the item.">
+                  <Tooltip title="Double click on an item to equip or unequip it. This will affect your AC. If you're not proficient in that category you cannot equip the item.">
                     {" "}
                     <FontAwesomeIcon icon={faCircleQuestion} />
                   </Tooltip>
@@ -1034,7 +1044,7 @@ const CharacterPage = () => {
               <div className={`${classes.skills} ${classes.equippedSection}`}>
                 <h3 className={classes.skillsTitle}>
                   Equipped Items{" "}
-                  <Tooltip title="click on the items to see more details">
+                  <Tooltip title="Click on the items to see more details.">
                     {" "}
                     <FontAwesomeIcon icon={faCircleQuestion} />
                   </Tooltip>{" "}
@@ -1257,19 +1267,46 @@ const CharacterPage = () => {
               </div>
             </div>
           )}
+          <div
+            className={`${classes.otherInfoGroup} ${classes.joinedCampaignsWrapper}`}
+          >
+            <h3 className={classes.sKillsTitle}>
+              Joined Campaigns{" "}
+              <Tooltip title="These are the campaings that your character is part of. You can open them here, or remove your character from them.">
+                {" "}
+                <FontAwesomeIcon icon={faCircleQuestion} />
+              </Tooltip>
+              <ul>
+                {characterData.joinedCampaigns.map((campaign) => (
+                  <p>{campaign}</p>
+                ))}
+              </ul>
+            </h3>
+          </div>
           <div className={classes.buttonDiv}>
             <Button type="primary" danger onClick={deleteCharacterHandler}>
               Delete Character
             </Button>
-            {showModal && (
+            {showDeleteModal && (
               <DeleteModal
                 uid={uid}
                 cid={cid}
                 type="deleteCharacter"
-                showModal={showModal}
-                setShowModal={setShowModal}
+                showModal={showDeleteModal}
+                setShowModal={setShowDeleteModal}
               />
             )}
+            {/*         {showManageCampaignsmodal && <Modal
+              className={classes.modalWindow}
+              title={<h3>Your character has joined the following campaigns:</h3>}
+              centered
+              open={show}
+              onOk={joinHandler}
+              okText="Join"
+              okButtonProps={{ disabled: !selectedCharacter }}
+              onCancel={cancelHandler}
+              cancelText="Cancel"
+            >} */}
           </div>
         </div>
       ) : (
