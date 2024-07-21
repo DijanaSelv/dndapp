@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Form, Checkbox, Progress, Collapse } from "antd";
 import cssClasses from "../pages/newcharacterpage/NewCharacterPage.module.css";
 import SpellCard from "./SpellCard";
-import { getItems } from "../app/actions/dndApiActions";
 import {
   SPELL_SLOTS,
   SPELLS_AVAILABLE,
@@ -10,17 +9,13 @@ import {
 } from "../app/STATIC_SPELL_LEVELS";
 
 const SpellsFormData = ({
-  spells,
+  spellsData,
   classInput,
   levelInput,
   getFieldValue,
   wisdomInput,
   charismaInput,
 }) => {
-  const [spellsData, setSpellsData] = useState([]);
-  /*   const [fetchedSpells, setFetchedSpells] = useState([]); */
-  const [loading, setLoading] = useState(true);
-
   const [spellsAllowed, setSpellsAllowed] = useState(0);
   const [canSelectMoreSpells, setCanSelectMoreSpells] = useState(true);
   const [selectedSpells, setSelectedSpells] = useState([]);
@@ -34,30 +29,6 @@ const SpellsFormData = ({
     </p>
   );
 
-  const getSpellData = async (spell) => {
-    try {
-      const spellData = await getItems(spell.url);
-      return spellData;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
-  /* ~~~~~~~~~~~~~~fetch spells the first time only */
-  useEffect(() => {
-    const fetchSpellsData = async () => {
-      setLoading(true);
-      //deal with all promises as one
-      const spellsArray = await Promise.all(
-        spells.map((spell) => getSpellData(spell))
-      );
-      setSpellsData(spellsArray);
-      setLoading(false);
-    };
-    spells.length > 0 && fetchSpellsData();
-  }, [spells]);
-
   /* ~~~~~~~~~~~~~~~~~~~~~~~~change content according to what has been selected */
   useEffect(() => {
     // 1. there is a selected class that is a spellcaster
@@ -67,7 +38,7 @@ const SpellsFormData = ({
       spellsData.length > 0
     ) {
       //filter them by whether they apply for the selected class.
-      setLoading(true);
+
       const validSpellsArray = spellsData.filter((spell) => {
         const classesList = spell.classes.map((cls) => cls.index);
         return classesList.includes(classInput);
@@ -96,8 +67,6 @@ const SpellsFormData = ({
       }, {});
 
       //update state with sorted spells
-      /*       setFetchedSpells(leveledArray); */
-      setLoading(false);
 
       const collapseItems = Object.keys(leveledArray).map((lvl) => ({
         key: `${lvl}`,
@@ -247,9 +216,9 @@ const SpellsFormData = ({
 
   return (
     <>
-      {loading &&
-      classInput &&
-      !["barbarian", "fighter", "monk", "rogue"].includes(classInput) ? (
+      {classInput &&
+      !["barbarian", "fighter", "monk", "rogue"].includes(classInput) &&
+      spellsData.length === 0 ? (
         <>
           <p className={cssClasses.pageInfo}>Loading spells...</p>
           <Progress

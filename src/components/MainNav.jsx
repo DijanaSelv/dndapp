@@ -25,6 +25,7 @@ const MainNav = () => {
 
   const { uid, firstName } = useSelector((state) => state.userSlice.user);
   const { requestSuccess } = useSelector((state) => state.uiSlice);
+  const { currentCampaign } = useSelector((state) => state.campaignSlice);
 
   //if a campaign is accessed, fetch roles. If not clear the roles.
   useEffect(() => {
@@ -158,6 +159,18 @@ const MainNav = () => {
                 >
                   Info
                 </NavLink>
+                {currentCampaign && currentCampaign.members[uid]?.character && (
+                  <NavLink
+                    to={`/Campaigns/${campaignId}/play/character/${currentCampaign.members[uid].character}`}
+                    className={({ isActive }) =>
+                      isActive
+                        ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
+                        : `${classes.navLink} ${classes.campaignNavLink}`
+                    }
+                  >
+                    Character
+                  </NavLink>
+                )}
                 <NavLink
                   to={`/Campaigns/${campaignId}/play/shops`}
                   className={({ isActive }) =>

@@ -51,6 +51,7 @@ const NewCharacterPage = () => {
     languages: [],
     magicSchools: [],
     spells: [],
+    spellsData: [],
     spellsSelected: 0,
     proficiencies: {
       skills: [],
@@ -223,8 +224,33 @@ const NewCharacterPage = () => {
 
   useEffect(() => {
     getAllOptions();
+  }, []);
+
+  useEffect(() => {
+    const fetchSpellsData = async () => {
+      const spellsData = await Promise.all(
+        optionsData.spells.map((spell) => getItems(spell.url))
+      );
+      return spellsData;
+    };
+    if (optionsData.spells.length !== 0) {
+      const fetchData = async () => {
+        const spellsData = await fetchSpellsData();
+
+        setOptionsData((prev) => ({
+          ...prev,
+          spellsData,
+        }));
+      };
+      fetchData();
+    }
+  }, [optionsData.spells]);
+
+  useEffect(() => {
     requestSuccess && navigate("/");
   }, [requestSuccess]);
+
+  useEffect(() => {}, []);
 
   //FORM CONTENT
 
@@ -474,15 +500,17 @@ const NewCharacterPage = () => {
               </div>
             )}
 
-          <SpellsFormData
-            spells={optionsData.spells}
-            getFieldValue={form.getFieldValue}
-            wisdomInput={optionsData.wisdomSelected}
-            charismaInput={optionsData.charismaSelected}
-            classInput={optionsData.classSelected}
-            levelInput={optionsData.levelSelected}
-            key="spellsForm"
-          />
+          {optionsData.spellsData && (
+            <SpellsFormData
+              spellsData={optionsData.spellsData}
+              getFieldValue={form.getFieldValue}
+              wisdomInput={optionsData.wisdomSelected}
+              charismaInput={optionsData.charismaSelected}
+              classInput={optionsData.classSelected}
+              levelInput={optionsData.levelSelected}
+              key="spellsForm"
+            />
+          )}
         </>
       ),
     },
