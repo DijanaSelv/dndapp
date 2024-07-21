@@ -5,6 +5,7 @@ import {
   deleteNotes,
   deleteShop,
   leaveCampaign,
+  removeCharacterFromCampaign,
 } from "../app/actions/databaseActions";
 import { Modal } from "antd";
 import { useNavigate } from "react-router";
@@ -140,10 +141,10 @@ const DeleteModal = (props) => {
     );
   }
   if (props.type === "deleteCharacter") {
-    const { uid, cid, showModal, setShowModal } = props;
+    const { uid, characterId, showModal, setShowModal } = props;
 
     const handleOk = () => {
-      dispatch(deleteCharacter(uid, cid));
+      dispatch(deleteCharacter(uid, characterId));
       setShowModal(false);
       navigate("/");
     };
@@ -163,6 +164,38 @@ const DeleteModal = (props) => {
         onCancel={handleCancel}
       >
         <p>Are you sure you want to permanently delete this character?</p>
+        <p style={{ fontWeight: "bold" }}></p>
+      </Modal>
+    );
+  }
+  if (props.type === "removeCharacter") {
+    const { uid, campaignId, showModal, setShowModal } = props;
+
+    const handleOk = () => {
+      dispatch(removeCharacterFromCampaign(uid, campaignId));
+      setShowModal(false);
+      navigate(`/Campaigns/${campaignId}/play`);
+    };
+    const handleCancel = () => {
+      setShowModal(false);
+    };
+    content = (
+      <Modal
+        title={`Removing character`}
+        centered
+        open={showModal}
+        onOk={handleOk}
+        okText="Remove"
+        okButtonProps={{
+          style: { backgroundColor: "red", borderColor: "red" },
+        }}
+        onCancel={handleCancel}
+      >
+        <p>
+          You're about to remove your character from this campaign. You can
+          still access your character in your Characters section, but not as
+          part of this campaign.
+        </p>
         <p style={{ fontWeight: "bold" }}></p>
       </Modal>
     );

@@ -27,20 +27,22 @@ import SpellCard from "../../components/SpellCard";
 import { currencyForDisplay } from "../../app/actions/uitls";
 import { getItems } from "../../app/actions/dndApiActions";
 import { SPELL_SLOTS } from "../../app/STATIC_SPELL_LEVELS";
-import { updateEquippedItems } from "../../app/actions/databaseActions";
+import {
+  updateEquippedItems,
+  updatePreparedSpells,
+} from "../../app/actions/databaseActions";
 import { LoadingOutlined } from "@ant-design/icons";
 import DeleteModal from "../../components/DeleteModal";
-import PlayCampaignCard from "../../components/PlayCampaignCard";
-import CampaignListItem from "../../components/CampaignListItem";
 
 const CharacterPage = () => {
   const params = useParams();
 
-  const cid = params.characterId;
+  const characterId = params.characterId;
 
   const characterData = useSelector(
-    (state) => state.userSlice.user.characters[cid]
+    (state) => state.userSlice.user.characters[characterId]
   );
+
   const uid = useSelector((state) => state.userSlice.user.uid);
   const { isLoading } = useSelector((state) => state.uiSlice);
   const dispatch = useDispatch();
@@ -52,8 +54,8 @@ const CharacterPage = () => {
   const [acScore, setAcScore] = useState();
   const [features, setFeatures] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showManageCampaignsmodal, setShowManageCampaignsModal] =
-    useState(false);
+  const [showRemoveCharacterModal, setRemoveCharacterModal] = useState(false);
+
   /* CALCULATIONS AND FORMATTING OF STATS */
   let formattedAlignment;
   let hitPoints;
@@ -76,6 +78,7 @@ const CharacterPage = () => {
     spellLevels,
     spellSlots,
     coins,
+    spellsToPrepare,
     spellcastingAbilities;
 
   let checkIfProficient;
@@ -219,6 +222,12 @@ const CharacterPage = () => {
       wizard: "intelligence",
     };
 
+    //if it's a wizard they can prepare spells, we need prepare spell limit
+
+    if (characterData.class === "wizard") {
+      spellsToPrepare = intelligenceModifier + level || 1;
+    }
+
     hitPoints =
       (classDice +
         level * classDice +
@@ -243,10 +252,31 @@ const CharacterPage = () => {
     setShowDeleteModal(true);
   };
 
-  const manageCampaignsHandler = () => {
-    setShowManageCampaignsModal(true);
+  const removeCharacterHandler = () => {
+    setRemoveCharacterModal(true);
   };
 
+  const prepareSpellHandler = (spellIndex) => {
+    let preparedSpellsArray = characterData?.preparedSpells
+      ? [...characterData.preparedSpells]
+      : [];
+
+    if (!spellIndex) {
+      dispatch(updatePreparedSpells([], uid, characterId));
+    } else {
+      if (preparedSpellsArray.includes(spellIndex)) {
+        preparedSpellsArray = preparedSpellsArray.filter(
+          (preparedSpell) => preparedSpell !== spellIndex
+        );
+        dispatch(updatePreparedSpells(preparedSpellsArray, uid, characterId));
+      } else {
+        preparedSpellsArray = [...preparedSpellsArray, spellIndex];
+        if (preparedSpellsArray.length <= spellsToPrepare) {
+          dispatch(updatePreparedSpells(preparedSpellsArray, uid, characterId));
+        }
+      }
+    }
+  };
   useEffect(() => {
     if (!isLoading) {
       const allLeveledSpells = spellLevels
@@ -353,6 +383,20 @@ const CharacterPage = () => {
                     </span>
                   </p>
                 )}
+              {characterData.class === "wizard" && (
+                <p>
+                  Prepared Spells:{" "}
+                  <span className={classes.spellCastingValue}>
+                    {`${
+                      characterData.preparedSpells?.length || 0
+                    } / ${spellsToPrepare}`}
+                  </span>
+                  <Tooltip title="This is the number of spells you can prepare. Double click on spells to prepare or remove them. You can change your prepared spells on long rest. The number depends on your intelligence modifier and wizard level.">
+                    {" "}
+                    <FontAwesomeIcon icon={faCircleQuestion} />
+                  </Tooltip>{" "}
+                </p>
+              )}
               <p>
                 Spellcasting ability:{" "}
                 <span className={classes.spellCastingValue}>
@@ -410,8 +454,8 @@ const CharacterPage = () => {
                   <div className={classes.spellLabelsContainer}>
                     {oneLevelArray.map((spell) => (
                       <Tooltip
-                        trigger="click"
                         key={`tooltip-${spell.index}`}
+                        mouseEnterDelay={0.7}
                         overlayInnerStyle={{
                           width: "500px",
                         }}
@@ -419,7 +463,21 @@ const CharacterPage = () => {
                         arrow={false}
                         title={<SpellCard spell={spell} />}
                       >
-                        <div className={classes.spellLabel} ley={spell.index}>
+                        <div
+                          className={`${classes.spellLabel}
+                            ${
+                              characterData.preparedSpells?.includes(
+                                spell.index
+                              )
+                                ? classes.preparedSpellLabel
+                                : ""
+                            }`}
+                          key={spell.index}
+                          onDoubleClick={
+                            characterData.class === "wizard" &&
+                            (() => prepareSpellHandler(spell.index))
+                          }
+                        >
                           {spell.name}
                         </div>
                       </Tooltip>
@@ -429,11 +487,18 @@ const CharacterPage = () => {
               );
             })}
           </div>
+          {characterData.class === "wizard" && (
+            <div className={classes.removeSpellsButtonDiv}>
+              <Button onClick={(e) => prepareSpellHandler()}>
+                Remove all prepared spells
+              </Button>
+            </div>
+          )}
         </div>
       );
       setSpellsComponent(component);
     }
-  }, [spellsData]);
+  }, [spellsData, characterData]);
 
   const calculateAttackWeaponBonus = (range, record) => {
     let modifier;
@@ -477,11 +542,21 @@ const CharacterPage = () => {
     return modifier;
   };
 
+  /* console.log(preparedSpells); */
+
+  //manage prepapred spells for wizard
+  /*   useEffect(() => {
+    if (characterData) {
+      //find the prepared spells for wizard
+      if (characterData.class === "wizard") {
+        setPreparedSpells(preparedSpellsData);
+      }
+    }
+  }, [characterData, preparedSpellsData]); */
+
   useEffect(() => {
     //set AC score
     if (characterData) {
-      //find the campaigns which the character is part of
-
       //BASE ARMOR CLASS
       //if no  equipped items AC = 10 + dex. mod
       //barbarian +  con mod
@@ -547,8 +622,8 @@ const CharacterPage = () => {
           key: "name",
           render: (text, record) => (
             <Tooltip
+              mouseEnterDelay={0.7}
               overlayClassName={classes.equipmentTooltip}
-              trigger="click"
               overlayInnerStyle={{
                 width: "400px",
               }}
@@ -618,8 +693,8 @@ const CharacterPage = () => {
           key: "name",
           render: (text, record) => (
             <Tooltip
+              mouseEnterDelay={0.7}
               overlayClassName={classes.equipmentTooltip}
-              trigger="click"
               overlayInnerStyle={{
                 minWidth: "200px",
                 maxWidth: "600px",
@@ -688,7 +763,7 @@ const CharacterPage = () => {
           render: (text, record) => (
             <Tooltip
               overlayClassName={classes.equipmentTooltip}
-              trigger="click"
+              mouseEnterDelay={0.7}
               overlayInnerStyle={{
                 minWidth: "200px",
                 maxWidth: "600px",
@@ -711,7 +786,7 @@ const CharacterPage = () => {
             <span>
               {" "}
               Inventory{" "}
-              <Tooltip title="Click on an item to see more details.">
+              <Tooltip title="Hover over an item to see more details.">
                 {" "}
                 <FontAwesomeIcon icon={faCircleQuestion} />
               </Tooltip>
@@ -743,11 +818,21 @@ const CharacterPage = () => {
                           record.name !== characterData.equipped?.weapon?.name
                         ) {
                           dispatch(
-                            updateEquippedItems(record, uid, cid, "weapon")
+                            updateEquippedItems(
+                              record,
+                              uid,
+                              characterId,
+                              "weapon"
+                            )
                           );
                         } else {
                           dispatch(
-                            updateEquippedItems(null, uid, cid, "weapon")
+                            updateEquippedItems(
+                              null,
+                              uid,
+                              characterId,
+                              "weapon"
+                            )
                           );
                         }
                       },
@@ -798,14 +883,24 @@ const CharacterPage = () => {
                               weaponsProficiency.includes("Shield")
                             ) {
                               dispatch(
-                                updateEquippedItems(record, uid, cid, "shield")
+                                updateEquippedItems(
+                                  record,
+                                  uid,
+                                  characterId,
+                                  "shield"
+                                )
                               );
                             }
                           }
                           //if shield is equip it remove it from equipped items
                           else {
                             dispatch(
-                              updateEquippedItems(null, uid, cid, "shield")
+                              updateEquippedItems(
+                                null,
+                                uid,
+                                characterId,
+                                "shield"
+                              )
                             );
                           }
                         }
@@ -824,13 +919,18 @@ const CharacterPage = () => {
                             armorProficiency.includes("All")
                           ) {
                             dispatch(
-                              updateEquippedItems(record, uid, cid, "armor")
+                              updateEquippedItems(
+                                record,
+                                uid,
+                                characterId,
+                                "armor"
+                              )
                             );
                           }
                         } else {
                           //if equipped, remove it
                           dispatch(
-                            updateEquippedItems(null, uid, cid, "armor")
+                            updateEquippedItems(null, uid, characterId, "armor")
                           );
                         }
                       },
@@ -1044,7 +1144,7 @@ const CharacterPage = () => {
               <div className={`${classes.skills} ${classes.equippedSection}`}>
                 <h3 className={classes.skillsTitle}>
                   Equipped Items{" "}
-                  <Tooltip title="Click on the items to see more details.">
+                  <Tooltip title="Hover over the items to see more details.">
                     {" "}
                     <FontAwesomeIcon icon={faCircleQuestion} />
                   </Tooltip>{" "}
@@ -1060,7 +1160,7 @@ const CharacterPage = () => {
                   {characterData.equipped?.armor && (
                     <Tooltip
                       overlayClassName={classes.equipmentTooltip}
-                      trigger="click"
+                      mouseEnterDelay={0.7}
                       placement="bottom"
                       overlayInnerStyle={{
                         minWidth: "300px",
@@ -1094,7 +1194,7 @@ const CharacterPage = () => {
                   {characterData.equipped?.shield && (
                     <Tooltip
                       overlayClassName={classes.equipmentTooltip}
-                      trigger="click"
+                      mouseEnterDelay={0.7}
                       placement="bottom"
                       overlayInnerStyle={{
                         minWidth: "300px",
@@ -1126,7 +1226,7 @@ const CharacterPage = () => {
                   {characterData.equipped?.weapon && (
                     <Tooltip
                       overlayClassName={classes.equipmentTooltip}
-                      trigger="click"
+                      mouseEnterDelay={0.7}
                       placement="bottom"
                       overlayInnerStyle={{
                         minWidth: "300px",
@@ -1185,8 +1285,8 @@ const CharacterPage = () => {
                     features.map((feature) => (
                       <Tooltip
                         overlayClassName={classes.equipmentTooltip}
+                        mouseEnterDelay={0.7}
                         overlayInnerStyle={{ width: "600px" }}
-                        trigger="click"
                         key={`tooltip-${feature.index}`}
                         placement="bottom"
                         title={<ItemDescriptionCard item={feature} />}
@@ -1267,46 +1367,35 @@ const CharacterPage = () => {
               </div>
             </div>
           )}
-          <div
-            className={`${classes.otherInfoGroup} ${classes.joinedCampaignsWrapper}`}
-          >
-            <h3 className={classes.sKillsTitle}>
-              Joined Campaigns{" "}
-              <Tooltip title="These are the campaings that your character is part of. You can open them here, or remove your character from them.">
-                {" "}
-                <FontAwesomeIcon icon={faCircleQuestion} />
-              </Tooltip>
-              <ul>
-                {characterData.joinedCampaigns.map((campaign) => (
-                  <p>{campaign}</p>
-                ))}
-              </ul>
-            </h3>
-          </div>
+
           <div className={classes.buttonDiv}>
+            {params.campaignId && (
+              <Button danger onClick={removeCharacterHandler}>
+                Remove character from campaign
+              </Button>
+            )}
             <Button type="primary" danger onClick={deleteCharacterHandler}>
               Delete Character
             </Button>
             {showDeleteModal && (
               <DeleteModal
                 uid={uid}
-                cid={cid}
+                characterId={characterId}
                 type="deleteCharacter"
                 showModal={showDeleteModal}
                 setShowModal={setShowDeleteModal}
               />
             )}
-            {/*         {showManageCampaignsmodal && <Modal
-              className={classes.modalWindow}
-              title={<h3>Your character has joined the following campaigns:</h3>}
-              centered
-              open={show}
-              onOk={joinHandler}
-              okText="Join"
-              okButtonProps={{ disabled: !selectedCharacter }}
-              onCancel={cancelHandler}
-              cancelText="Cancel"
-            >} */}
+            {showRemoveCharacterModal && (
+              <DeleteModal
+                uid={uid}
+                characterId={characterId}
+                campaignId={params.campaignId}
+                type="removeCharacter"
+                showModal={showRemoveCharacterModal}
+                setShowModal={setRemoveCharacterModal}
+              />
+            )}
           </div>
         </div>
       ) : (

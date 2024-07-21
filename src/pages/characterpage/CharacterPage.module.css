@@ -250,7 +250,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 3fr));
   gap: 15px;
-  margin-bottom: 25px;
 }
 .spellTitleContainer {
   display: flex;
@@ -309,6 +308,18 @@
   background-color: #0e3042;
 }
 
+.preparedSpellLabel {
+  background-color: rgb(252, 241, 220);
+  transition: all 0.2s;
+  border-radius: 5px;
+}
+
+.removeSpellsButtonDiv {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
 /* biography */
 
 /* .charInfoSection:has(.spellsTitle),
@@ -328,9 +339,12 @@
   flex-direction: column;
 }
 
-.equipmentTooltip div {
-  padding: 5px !important;
+.equipmentTooltip > div > div > div {
+  border: 2px solid #b1ccd4;
+  padding: 0 !important;
+  padding-right: 0 !important;
   margin: 0;
+  /*   margin-right: -5px; */
   width: 100%;
 }
 
@@ -420,6 +434,9 @@
   display: flex;
   justify-content: flex-end;
   margin: 10px;
+}
+.buttonDiv button {
+  margin-left: 40px;
 }
 
 /* MEDIA QUERY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */

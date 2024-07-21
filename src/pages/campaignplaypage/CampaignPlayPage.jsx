@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import classes from "./CampaginPlayPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import PlayCampaignCard from "../../components/PlayCampaignCard";
@@ -11,10 +11,12 @@ import {
   faPencil,
   faUserLarge,
   faPersonCircleQuestion,
+  faPlusCircle,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { Modal, Radio } from "antd";
+import { Button, Modal, Radio } from "antd";
 
 import CharacterCard from "../../components/CharacterCard";
 import { addCharacterToCampaign } from "../../app/actions/databaseActions";
@@ -67,7 +69,7 @@ const CampaignPlayPage = () => {
         />
         {characters && characters[currentCampaign.members?.[uid]?.character] ? (
           <PlayCampaignCard
-            goTo={`/Characters/${currentCampaign.members[uid].character}`}
+            goTo={`/Campaigns/${params.campaignId}/play/character/${currentCampaign.members[uid].character}`}
             cardFor="Character"
             image={
               <FontAwesomeIcon className={classes.icon} icon={faUserLarge} />
@@ -114,6 +116,13 @@ const CampaignPlayPage = () => {
                 onChange={setSelectedCharacterHandler}
                 value={selectedCharacter}
               />
+              <div className={classes.newCharacterOptionWrapper}>
+                <Link to="/NewCharacter">
+                  <Button type="dashed">
+                    <FontAwesomeIcon icon={faPlus} /> Create a New Character
+                  </Button>
+                </Link>
+              </div>
             </Modal>
             <div onClick={addCharacterHandler}>
               <PlayCampaignCard

@@ -46,10 +46,10 @@ export const SPELLS_AVAILABLE = {
 //~~~~~~~~~~~~~~~~LEARNS AND PREPARES SPELLS
 
 //WIZARD: first level gets to learn 3 cantrips + 6 first level spells.
-//KNOWS SPELLS - Each next level gets to learn + 2 new spells from available spell slot levels.
+//KNOWS SPELLS - Each next level gets to learn + 2 new spells from available spell slot levels. //SPELLS  6 + (levelx2) + cantrips according to the table
 // wizard gets to PREPARE spells every long rest.
 //on lvl 3 they can replace one cantrip with another.
-//SPELLS  6 + (levelx2) + cantrips according to the table
+//TO PREPARE: int.mod + wiz.lvl
 
 export const SPELL_SLOTS = {
   //CANTRIPS (the first number is CANTRIPS KNOWN, not slots.)

@@ -16,7 +16,6 @@
 
 .title {
   padding-bottom: 10px;
-  font-family: "Texturina";
   border-bottom: 1px solid #ccd1dad2;
 }
 
@@ -32,7 +31,6 @@
   font-size: 1.25rem;
   display: flex;
   justify-content: center;
-  font-family: "Texturina";
 }
 
 .tableOfItems th span,
@@ -58,7 +56,6 @@
 }
 
 .logoWrapper p {
-  font-family: "Texturina";
   padding-bottom: 15px;
 }
 
@@ -81,10 +78,6 @@
   padding: 5px;
 }
 
-.itemDescription h3 {
-  font-family: "Texturina";
-}
-
 .chooseItem {
   border: dashed #b1ccd4;
   text-align: center;
@@ -93,9 +86,6 @@
   align-items: center;
   height: 200px;
 }
-.chooseItem p {
-  font-family: "Texturina";
-}
 
 .description {
   font-style: italic;
@@ -103,7 +93,6 @@
 
 .label {
   margin-bottom: 8px;
-  font-family: "Texturina";
 }
 
 .itemspecs {
@@ -114,7 +103,6 @@
 
 .categoryDesc {
   font-weight: 700;
-  font-family: "Texturina";
 }
 
 .description {

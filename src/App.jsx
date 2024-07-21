@@ -83,6 +83,10 @@ const router = createBrowserRouter([
         element: <CampaignPlayPage />,
       },
       {
+        path: "/Campaigns/:campaignId/play/character/:characterId",
+        element: <CharacterPage />,
+      },
+      {
         path: "/Campaigns/:campaignId/play/shops",
         element: <CampaignShopsPage />,
       },
