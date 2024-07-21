@@ -6,6 +6,7 @@ const SpellCard = ({ spell }) => {
   return (
     <motion.div className={cssClasses.motionWrapper} whileTap={{ scale: 1.01 }}>
       <Card
+        key={`card-${spell.index}`}
         className={cssClasses.spellCard}
         title={spell.name}
         extra={<p>{spell.school.index}</p>}
@@ -32,11 +33,11 @@ const SpellCard = ({ spell }) => {
         </div>
         <div className={cssClasses.cardDescriptionContainer}>
           <div>
-            {spell.desc.map((line) => (
-              <>
+            {spell.desc.map((line, i) => (
+              <div key={`${spell.index}-desc-${i}`}>
                 {line}
                 <br />
-              </>
+              </div>
             ))}
           </div>
           {spell["higher_level"].length ? (

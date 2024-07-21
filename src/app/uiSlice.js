@@ -63,6 +63,12 @@ const uiSlice = createSlice({
       } else if (action.payload.code === "campaign left") {
         message = "Campaign left";
         description = "You left the campaign.";
+      } else if (action.payload.code === "added character") {
+        message = "Character added";
+        description = "You added a character to this campaign.";
+      } else if (action.payload.code === "removed character") {
+        message = "Character removed";
+        description = "You removed your character from this campaign.";
       } else {
         message = "Error";
         description = "Request failed. Try again later.";

@@ -543,21 +543,76 @@ export const addCharacterToCampaign = (uid, characterId, campaignId) => {
     }
     dispatch(uiSliceActions.changeLoading(false));
     dispatch(uiSliceActions.requestSuccessIsTrue());
+    dispatch(
+      uiSliceActions.showNotification({
+        type: "success",
+        code: "added character",
+      })
+    );
   };
 };
 
-export const updateEquippedItems = (data, uid, cid, category) => {
+export const removeCharacterFromCampaign = (uid, campaignId) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+
+    try {
+      const characterRef = ref(
+        db,
+        "campaigns/" + campaignId + "/members/" + uid + "/character/"
+      );
+      console.log(characterRef);
+      await remove(characterRef);
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+    dispatch(
+      uiSliceActions.showNotification({
+        type: "success",
+        code: "removed character",
+      })
+    );
+  };
+};
+
+export const updateEquippedItems = (data, uid, characterId, category) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
       const charRef = ref(
         db,
-        "users/" + uid + "/characters/" + cid + "/equipped/" + category
+        "users/" + uid + "/characters/" + characterId + "/equipped/" + category
       );
       if (data) {
         await update(charRef, { ...data });
       } else {
         await remove(charRef);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
+//for wizard, they can prepare spells from the learned ones
+export const updatePreparedSpells = (data, uid, characterId) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const preparedSpellsRef = ref(
+        db,
+        "users/" + uid + "/characters/" + characterId + "/preparedSpells/"
+      );
+
+      if (!data.length === 0) {
+        await remove(preparedSpellsRef);
+      } else {
+        //set overwrites the whole data (instead of putting remove and update and to not have duplicate spells.)
+        await set(preparedSpellsRef, data);
       }
     } catch (error) {
       console.error(error);

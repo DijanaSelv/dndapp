@@ -54,27 +54,17 @@
 .modalWindow label :global(.ant-radio) {
   display: none;
 }
-/* 
-.modalWindow :global(.ant-radio-group) {
-  padding-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-}
-
-.selectedCharacter :global(.ant-card) {
-  border: 1px solid red;
-} */
 
 .modalWindow {
   width: 55% !important;
   max-width: 800px;
 }
 .modalWindow :global(.ant-radio-group) {
-  padding-top: 40px;
+  padding: 20px 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 10px;
+  border-bottom: 1px dashed #d3d3d4d2;
 }
 .modalWindow :global(.ant-card) {
   width: 150px;
@@ -85,6 +75,18 @@
 .selectedCharacter :global(.ant-card) {
   border: 1px solid red;
 }
+
+.newCharacterOptionWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+.newCharacterOptionWrapper a,
+.newCharacterOptionWrapper a span {
+  padding-left: 15px;
+}
+
 @media (max-width: 850px) {
   .modalWindow {
     width: 55% !important;
