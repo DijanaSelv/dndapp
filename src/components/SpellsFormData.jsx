@@ -201,6 +201,7 @@ const SpellsFormData = ({
     canSelectMoreSpells,
     selectedCantrips,
     canSelectMoreCantrips,
+    spellsAllowed,
   ]);
 
   useEffect(() => {

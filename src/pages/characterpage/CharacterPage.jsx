@@ -474,8 +474,9 @@ const CharacterPage = () => {
                             }`}
                           key={spell.index}
                           onDoubleClick={
-                            characterData.class === "wizard" &&
-                            (() => prepareSpellHandler(spell.index))
+                            characterData.class === "wizard"
+                              ? () => prepareSpellHandler(spell.index)
+                              : undefined
                           }
                         >
                           {spell.name}
@@ -701,6 +702,7 @@ const CharacterPage = () => {
               }}
               title={
                 <ItemDescriptionCard
+                  key={`${text}-item`}
                   className={classes.equipmentTooltipCard}
                   item={record}
                 />
@@ -720,7 +722,7 @@ const CharacterPage = () => {
           key: "category",
           render: (text, record) => {
             return text ? (
-              <p>
+              <p key={`${record.name}-category`}>
                 {text}
                 {!armorProficiency.includes(text) &&
                   !weaponsProficiency.includes(record["armor_category"]) &&
@@ -745,7 +747,7 @@ const CharacterPage = () => {
           key: "AC",
           render: (text, record) =>
             text ? (
-              <p>
+              <p key={`${record.name}-AC`}>
                 {text.base}
                 {text["dex_bonus"] && "+ dex. modifier"}
               </p>
@@ -808,10 +810,13 @@ const CharacterPage = () => {
                 <Table
                   className={classes.equipmentTable}
                   columns={weaponsColumn}
-                  dataSource={weapons}
+                  dataSource={weapons.map((item, index) => ({
+                    ...item,
+                    key: index,
+                  }))}
                   size="small"
                   pagination={false}
-                  onRow={(record, index) => {
+                  onRow={(record) => {
                     return {
                       onDoubleClick: (event) => {
                         if (
@@ -864,7 +869,10 @@ const CharacterPage = () => {
                 <Table
                   className={classes.equipmentTable}
                   columns={armorColumn}
-                  dataSource={armor}
+                  dataSource={armor.map((item, index) => ({
+                    ...item,
+                    key: index,
+                  }))}
                   size="small"
                   pagination={false}
                   onRow={(record, index) => {
@@ -963,7 +971,10 @@ const CharacterPage = () => {
                 <Table
                   className={classes.equipmentTable}
                   columns={otherItemsColumn}
-                  dataSource={otherItems}
+                  dataSource={otherItems.map((item, index) => ({
+                    ...item,
+                    key: index,
+                  }))}
                   size="small"
                   pagination={false}
                   /* pagination={{
@@ -1282,20 +1293,22 @@ const CharacterPage = () => {
                   className={`${classes.otherInfoGroup} ${classes.featuresContainer}`}
                 >
                   {features ? (
-                    features.map((feature) => (
-                      <Tooltip
-                        overlayClassName={classes.equipmentTooltip}
-                        mouseEnterDelay={0.7}
-                        overlayInnerStyle={{ width: "600px" }}
-                        key={`tooltip-${feature.index}`}
-                        placement="bottom"
-                        title={<ItemDescriptionCard item={feature} />}
-                      >
-                        <div className={classes.featureLabel}>
-                          {feature.name}
-                        </div>
-                      </Tooltip>
-                    ))
+                    features
+                      .sort((a, b) => a.level - b.level)
+                      .map((feature) => (
+                        <Tooltip
+                          overlayClassName={classes.equipmentTooltip}
+                          mouseEnterDelay={0.7}
+                          overlayInnerStyle={{ width: "600px" }}
+                          key={`tooltip-${feature.index}`}
+                          placement="bottom"
+                          title={<ItemDescriptionCard item={feature} />}
+                        >
+                          <div className={classes.featureLabel}>
+                            {feature.name}
+                          </div>
+                        </Tooltip>
+                      ))
                   ) : (
                     <div>
                       Loading features <LoadingOutlined />
