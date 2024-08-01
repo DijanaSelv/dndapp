@@ -150,7 +150,7 @@ const CampaignPlayPage = () => {
           description="You can buy and sell items"
         />
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.campaignId}/play/combat`}
+          goTo={`/Campaigns/${params.campaignId}/play/${uid}/combat`}
           cardFor="Combat"
           image={<FontAwesomeIcon className={classes.icon} icon={faDiceD20} />}
           description="Fight!"

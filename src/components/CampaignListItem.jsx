@@ -64,7 +64,7 @@ const CampaignListItem = ({ campaign, type }) => {
       }
       <Card
         cover={
-          <Link to={`/Campaigns/${campaign.id}/info`}>
+          <Link to={`/Campaigns/${campaign.id}/play`}>
             <div className={classes.coverDiv}>
               <img alt="campaign image" src={campaign.image} />
             </div>
