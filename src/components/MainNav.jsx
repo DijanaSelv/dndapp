@@ -172,6 +172,16 @@ const MainNav = () => {
                   </NavLink>
                 )}
                 <NavLink
+                  to={`/Campaigns/${params.campaignId}/play/${uid}/combat`}
+                  className={({ isActive }) =>
+                    isActive
+                      ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
+                      : `${classes.navLink} ${classes.campaignNavLink}`
+                  }
+                >
+                  Combat
+                </NavLink>
+                <NavLink
                   to={`/Campaigns/${campaignId}/play/shops`}
                   className={({ isActive }) =>
                     isActive

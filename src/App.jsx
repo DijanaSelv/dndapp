@@ -26,6 +26,7 @@ import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import NotesPage from "./pages/notespage/NotesPage";
 import { uiSliceActions } from "./app/uiSlice";
 import CharacterPage from "./pages/characterpage/CharacterPage";
+import CombatPage from "./pages/combatpage/CombatPage";
 
 //refresh state persistence
 /* import { PersistGate } from "redux-persist/integration/react";
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
       {
         path: "/Campaigns/:campaignId/play/shops",
         element: <CampaignShopsPage />,
+      },
+      {
+        path: "/Campaigns/:campaignId/play/:uid/combat",
+        element: <CombatPage />,
       },
       {
         path: "/Campaigns/:campaignId/play/shops/:shopId",

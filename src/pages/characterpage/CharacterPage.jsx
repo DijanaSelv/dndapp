@@ -17,7 +17,7 @@ import {
   faHand,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
-import { Button, Checkbox, Modal, Progress, Table, Tooltip } from "antd";
+import { Button, Checkbox, Progress, Table, Tooltip } from "antd";
 
 import classes from "./CharacterPage.module.css";
 

@@ -607,13 +607,27 @@ export const updatePreparedSpells = (data, uid, characterId) => {
         db,
         "users/" + uid + "/characters/" + characterId + "/preparedSpells/"
       );
-
       if (!data.length === 0) {
         await remove(preparedSpellsRef);
       } else {
         //set overwrites the whole data (instead of putting remove and update and to not have duplicate spells.)
         await set(preparedSpellsRef, data);
       }
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
+export const addRolltoCombat = (campaignId, type, character, content) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const combatRef = ref(db, "campaigns/" + campaignId + "/combat");
+      const timestamp = Date.now();
+      await update(combatRef, { [timestamp]: { content, type, character } });
     } catch (error) {
       console.error(error);
     }
