@@ -11,21 +11,16 @@ import {
   faPencil,
   faUserLarge,
   faPersonCircleQuestion,
-  faPlusCircle,
-  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { Button, Modal, Radio } from "antd";
 
-import CharacterCard from "../../components/CharacterCard";
-import { addCharacterToCampaign } from "../../app/actions/databaseActions";
+import { AddCharacterToCampaignModal } from "../../components/AddCharacterToCampaignModal";
 
 const CampaignPlayPage = () => {
   const params = useParams();
   const { currentCampaign } = useSelector((state) => state.campaignSlice);
   const { characters, uid } = useSelector((state) => state.userSlice.user);
-  const dispatch = useDispatch();
 
   const [showModal, setShowModal] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState();
@@ -34,24 +29,6 @@ const CampaignPlayPage = () => {
 
   const addCharacterHandler = () => {
     setShowModal(true);
-  };
-
-  const setSelectedCharacterHandler = (e) => {
-    setSelectedCharacter(e.target.value);
-  };
-
-  const cancelHandler = () => {
-    setShowModal(false);
-    setSelectedCharacter(null);
-  };
-
-  const joinHandler = () => {
-    console.log(uid, selectedCharacter, currentCampaign.id);
-    dispatch(
-      addCharacterToCampaign(uid, selectedCharacter, currentCampaign.id)
-    );
-    setSelectedCharacter(null);
-    setShowModal(false);
   };
 
   return (
@@ -74,60 +51,15 @@ const CampaignPlayPage = () => {
             image={
               <FontAwesomeIcon className={classes.icon} icon={faUserLarge} />
             }
-            /*  image={
-              (
-                <img
-                  alt="characterCard"
-                  src={characters[currentCampaign.members[uid].character].image}
-                />
-              ) || <FontAwesomeIcon icon={faUserLarge} />
-            } */
             description="Your character in this campaign"
           />
         ) : (
-          <>
-            <Modal
-              className={classes.modalWindow}
-              title={<h3>Select a character to join this campaign</h3>}
-              centered
-              open={showModal}
-              onOk={joinHandler}
-              okText="Join"
-              okButtonProps={{ disabled: !selectedCharacter }}
-              onCancel={cancelHandler}
-              cancelText="Cancel"
-            >
-              {/*  <span>Your characters: </span> */}
-
-              <Radio.Group
-                className={classes.charactersCheckboxGroup}
-                options={Object.keys(characters).map((cid) => ({
-                  label: (
-                    <div
-                      className={
-                        selectedCharacter === cid && classes.selectedCharacter
-                      }
-                    >
-                      <CharacterCard cid={cid} inModal="true" />
-                    </div>
-                  ),
-                  value: cid,
-                }))}
-                onChange={setSelectedCharacterHandler}
-                value={selectedCharacter}
-              />
-              <div className={classes.newCharacterOptionWrapper}>
-                <Link to="/NewCharacter">
-                  <Button type="dashed">
-                    <FontAwesomeIcon icon={faPlus} /> Create a New Character
-                  </Button>
-                </Link>
-              </div>
-            </Modal>
+          <AddCharacterToCampaignModal
+            showModal={showModal}
+            setShowModal={setShowModal}
+          >
             <div onClick={addCharacterHandler}>
               <PlayCampaignCard
-                /* goTo={`/Campaigns/${params.campaignId}/info`} */
-
                 cardFor="Add a characer"
                 image={
                   <div className={classes.addCharacterCardImg}>
@@ -140,7 +72,7 @@ const CampaignPlayPage = () => {
                 description="You can link one of your characters to this campaign"
               />
             </div>
-          </>
+          </AddCharacterToCampaignModal>
         )}
 
         <PlayCampaignCard

@@ -1,0 +1,20 @@
+.messageWrapper {
+  border-top: 2px solid blue;
+  border-bottom: 2px solid blue;
+  border-image: radial-gradient(
+      circle,
+      #2b5ea0,
+      #5379b6,
+      #6e85b3,
+      #a4b6dd,
+      #ffffff
+    )
+    1;
+  width: 65%;
+  margin: auto;
+  padding: 10px 0;
+  line-height: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
