@@ -7,27 +7,38 @@ import { Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { addRolltoCombat } from "../../app/actions/databaseActions";
 
+import classes from "./CombatPage.module.css";
+import { AddCharacterToCampaignModal } from "../../components/AddCharacterToCampaignModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+
 const CombatPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const campaignId = params.campaignId;
   const uid = params.uid;
   const [combatData, setCombatData] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
-  //TODO: refactor this, put some of the info in the params url primer userId in play, and character if there is one. Ako params nema character togash render neshto ko: please addd a character to hte campaign to join combat.
-  /*   const characterId = useSelector(
-    (state) => state.campaignSlice.currentCampaign.members[uid].character
+  const isLoading = useSelector((state) => state.uiSlice.isLoading);
+  const characterId = useSelector(
+    (state) =>
+      state.campaignSlice?.currentCampaign?.members[uid]?.character || ""
   );
-  const characterName = useSelector(
-    (state) => state.userSlice.characters[characterId].name
-  ); */
 
-  //if there is not character for this member do not render buttons to roll, instead a button to add a character. They can still view the rolls and combat.
+  const characterName = useSelector(
+    (state) =>
+      (characterId && state.userSlice?.user.characters[characterId]?.name) || ""
+  );
+
+  const addCharacterHandler = () => {
+    setShowModal(true);
+  };
 
   const rollDiceHandler = () => {
     const randomd20 = Math.floor(Math.random() * (20 - 1) + 1);
     console.log(randomd20);
-    const character = "djane";
+    const character = characterName;
     const type = "d20";
     const content = randomd20;
     dispatch(addRolltoCombat(campaignId, type, character, content));
@@ -62,7 +73,22 @@ const CombatPage = () => {
             />
           ))}
       </div>
-      <Button onClick={rollDiceHandler}> Roll Dice </Button>
+      {characterId && <Button onClick={rollDiceHandler}>Roll Dice</Button>}
+      {!isLoading && !characterId && (
+        <div className={classes.messageWrapper}>
+          Please add a character to the campaign to join combat. You can still
+          spectate but you won't be able to roll without a joined character.
+          <AddCharacterToCampaignModal
+            showModal={showModal}
+            setShowModal={setShowModal}
+          >
+            <Button onClick={addCharacterHandler}>
+              {" "}
+              <FontAwesomeIcon icon={faPlus} /> Add Character
+            </Button>
+          </AddCharacterToCampaignModal>
+        </div>
+      )}
     </div>
   );
 };
