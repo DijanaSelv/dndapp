@@ -1,3 +1,72 @@
+.combatContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chatWrapper {
+  width: 100%;
+  /* border: 2px solid rgb(111, 144, 204); */
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  height: 800px;
+}
+
+/* Scroll bar design */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #58597e;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1f284e;
+}
+
+.chatBarRight {
+  width: 350px;
+  border-left: 1px solid red;
+  border-radius: 0 5px 5px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.chatBarLeft {
+  padding: 0 40px 10px 0;
+  border-right: 1px solid green;
+}
+
+.messagesWrapper {
+  overflow-y: scroll;
+  padding-left: 5px;
+}
+
+.mapWrapper {
+  /* flex grow spreads to the rest of the available space */
+  flex-grow: 1;
+  width: 100%;
+  object-fit: fill;
+  /*   background-image: url("https://cdn.pixabay.com/photo/2016/12/13/16/42/treasure-map-1904546_1280.jpg"); 
+  background-size: cover;
+  background-repeat: no-repeat; */
+  opacity: 0.7;
+  transition: opacity 0.4s;
+}
+.mapWrapper:hover {
+  opacity: 0.8;
+  transition: all 0.4s;
+}
+
 .messageWrapper {
   border-top: 2px solid blue;
   border-bottom: 2px solid blue;
