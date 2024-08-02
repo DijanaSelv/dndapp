@@ -25,8 +25,6 @@ const CampaignPlayPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState();
 
-  //TODO: on added character the new character data is not fetched and updated.
-
   const addCharacterHandler = () => {
     setShowModal(true);
   };

@@ -11,6 +11,7 @@ import classes from "./CombatPage.module.css";
 import { AddCharacterToCampaignModal } from "../../components/AddCharacterToCampaignModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import TextArea from "antd/es/input/TextArea";
 
 const CombatPage = () => {
   const params = useParams();
@@ -37,16 +38,18 @@ const CombatPage = () => {
 
   const rollDiceHandler = () => {
     const randomd20 = Math.floor(Math.random() * (20 - 1) + 1);
-    console.log(randomd20);
     const character = characterName;
     const type = "d20";
     const content = randomd20;
-    dispatch(addRolltoCombat(campaignId, type, character, content));
+    dispatch(addRolltoCombat(campaignId, type, character, content, uid));
   };
 
   //get value on change
   useEffect(() => {
-    const combatDataRef = ref(db, "campaigns/" + campaignId + "/combat");
+    const combatDataRef = ref(
+      db,
+      "campaigns/" + campaignId + "/combat/messages"
+    );
 
     const unsubscribe = onValue(combatDataRef, (snapshot) => {
       const data = snapshot.val();
@@ -60,18 +63,44 @@ const CombatPage = () => {
   }, [campaignId]);
 
   return (
-    <div>
+    <div className={classes.combatContent}>
       <header>Combat rolls</header>
-      <div>
-        {combatData &&
-          Object.values(combatData).map((roll, i) => (
-            <CombatRollWrapper
-              key={i}
-              character={roll.character}
-              type={roll.type}
-              content={roll.content}
+      <div className={classes.chatWrapper}>
+        <div className={classes.chatBarLeft}>
+          <h4>Initiative</h4>
+          <div>Ratka</div>
+          <div>Pande</div>
+          <div>Kire</div>
+          <div>Slafka</div>
+        </div>
+        {/*      <div className={classes.mapWrapper}></div> */}
+        {/*  <img
+          src="https://cdn.pixabay.com/photo/2016/12/13/16/42/treasure-map-1904546_1280.jpg"
+          className={classes.mapWrapper}
+        ></img> */}
+        <div className={classes.chatBarRight}>
+          <div className={classes.messagesWrapper}>
+            {combatData &&
+              Object.values(combatData).map((roll, i) => (
+                <CombatRollWrapper
+                  key={i}
+                  character={roll.character}
+                  type={roll.type}
+                  content={roll.content}
+                  uid={roll.uid}
+                />
+              ))}
+          </div>
+          <div className={classes.textInputWrapper}>
+            <TextArea
+              showCount
+              maxLength={100}
+              style={{
+                resize: "none",
+              }}
             />
-          ))}
+          </div>
+        </div>
       </div>
       {characterId && <Button onClick={rollDiceHandler}>Roll Dice</Button>}
       {!isLoading && !characterId && (
