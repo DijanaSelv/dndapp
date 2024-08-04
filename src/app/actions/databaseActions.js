@@ -621,14 +621,21 @@ export const updatePreparedSpells = (data, uid, characterId) => {
   };
 };
 
-export const addRolltoCombat = (campaignId, type, character, content, uid) => {
+export const addRolltoCombat = (
+  campaignId,
+  type,
+  character,
+  content,
+  uid,
+  details
+) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
       const combatRef = ref(db, "campaigns/" + campaignId + "/combat/messages");
       const timestamp = Date.now();
       await update(combatRef, {
-        [timestamp]: { content, type, character, uid },
+        [timestamp]: { content, type, character, uid, details },
       });
     } catch (error) {
       console.error(error);
