@@ -14,7 +14,13 @@ import {
 } from "../app/actions/databaseActions";
 import { rolesSliceActions } from "../app/rolesSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDiceD20 } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBook,
+  faDiceD20,
+  faInfo,
+  faShop,
+  faUserLarge,
+} from "@fortawesome/free-solid-svg-icons";
 import { uiSliceActions } from "../app/uiSlice";
 
 const MainNav = () => {
@@ -136,19 +142,21 @@ const MainNav = () => {
         </div>
         {params.campaignId && (
           <div className={classes.campaignNavBackground}>
-            <div className={classes.mainNav}>
+            <div className={`${classes.mainNav} ${classes.campaignNav}`}>
               <div className={classes.navLinks}>
                 <NavLink
                   to={`/Campaigns/${campaignId}/play`}
                   className={({ isActive }) =>
                     isActive
-                      ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
-                      : `${classes.navLink} ${classes.campaignNavLink}`
+                      ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink} ${classes.campaignPlayLink}`
+                      : `${classes.navLink} ${classes.campaignNavLink} ${classes.campaignPlayLink}`
                   }
                   end
                 >
-                  Play
+                  {currentCampaign.title}
                 </NavLink>
+              </div>
+              <div className={classes.navLinks}>
                 <NavLink
                   to={`/Campaigns/${campaignId}/info`}
                   className={({ isActive }) =>
@@ -157,8 +165,9 @@ const MainNav = () => {
                       : `${classes.navLink} ${classes.campaignNavLink}`
                   }
                 >
-                  Info
+                  <FontAwesomeIcon className={classes.icon} icon={faInfo} />
                 </NavLink>
+
                 {currentCampaign && currentCampaign.members[uid]?.character && (
                   <NavLink
                     to={`/Campaigns/${campaignId}/play/character/${currentCampaign.members[uid].character}`}
@@ -168,19 +177,13 @@ const MainNav = () => {
                         : `${classes.navLink} ${classes.campaignNavLink}`
                     }
                   >
-                    Character
+                    <FontAwesomeIcon
+                      className={classes.icon}
+                      icon={faUserLarge}
+                    />
                   </NavLink>
                 )}
-                <NavLink
-                  to={`/Campaigns/${params.campaignId}/play/${uid}/combat`}
-                  className={({ isActive }) =>
-                    isActive
-                      ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
-                      : `${classes.navLink} ${classes.campaignNavLink}`
-                  }
-                >
-                  Combat
-                </NavLink>
+
                 <NavLink
                   to={`/Campaigns/${campaignId}/play/shops`}
                   className={({ isActive }) =>
@@ -189,7 +192,17 @@ const MainNav = () => {
                       : `${classes.navLink} ${classes.campaignNavLink}`
                   }
                 >
-                  Shops
+                  <FontAwesomeIcon className={classes.icon} icon={faShop} />
+                </NavLink>
+                <NavLink
+                  to={`/Campaigns/${params.campaignId}/play/${uid}/combat`}
+                  className={({ isActive }) =>
+                    isActive
+                      ? ` ${classes.activeNavLink} ${classes.navLink} ${classes.campaignNavLink}`
+                      : `${classes.navLink} ${classes.campaignNavLink}`
+                  }
+                >
+                  <FontAwesomeIcon className={classes.icon} icon={faDiceD20} />
                 </NavLink>
                 <NavLink
                   to={`/Campaigns/${campaignId}/play/notes`}
@@ -199,7 +212,7 @@ const MainNav = () => {
                       : `${classes.navLink} ${classes.campaignNavLink}`
                   }
                 >
-                  Notes
+                  <FontAwesomeIcon className={classes.icon} icon={faBook} />
                 </NavLink>
                 {/*               <NavLink
             className={`${classes.navLink} ${classes.campaignNavLink}`}

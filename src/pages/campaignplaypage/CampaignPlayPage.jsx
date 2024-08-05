@@ -23,18 +23,12 @@ const CampaignPlayPage = () => {
   const { characters, uid } = useSelector((state) => state.userSlice.user);
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedCharacter, setSelectedCharacter] = useState();
-
   const addCharacterHandler = () => {
     setShowModal(true);
   };
 
   return (
     <div className={classes.playPageContainer}>
-      <h1 className={classes.campaignTitle}>
-        {currentCampaign.title || <LoadingOutlined />}
-      </h1>
-
       <ul className={classes.cardsList}>
         <PlayCampaignCard
           goTo={`/Campaigns/${params.campaignId}/info`}

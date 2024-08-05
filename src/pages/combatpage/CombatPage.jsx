@@ -16,7 +16,6 @@ import classes from "./CombatPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDiceD20,
-  faEllipsisVertical,
   faGripLines,
   faMinusCircle,
   faPlus,
@@ -63,11 +62,15 @@ const CombatPage = () => {
     (state) =>
       state.campaignSlice?.currentCampaign?.members[uid]?.character || ""
   );
-  const characterName = useSelector(
+  let characterName = useSelector(
     (state) =>
       (characterId && state.userSlice?.user.characters[characterId]?.name) || ""
   );
+  const { dm, loremaster } = useSelector((state) => state.rolesSlice);
 
+  if (dm && !characterName) {
+    characterName = "DM";
+  }
   /* ```````````````````HANDLERS   */
   /* drag initiative list items  */
   const handleDragStart = (key) => {
@@ -189,7 +192,6 @@ const CombatPage = () => {
           Math.floor(Math.random() * (rollType - 1) + 1),
           Math.floor(Math.random() * (rollType - 1) + 1),
         ]);
-        console.log(rolledDiceScores);
         diceSum =
           rollData.rollTwoDice === "advantage"
             ? Math.max(...rolledDiceScores)
@@ -311,7 +313,17 @@ const CombatPage = () => {
 
   return (
     <div className={classes.combatContent}>
-      <header>Combat rolls</header>
+      <h2>Combat chat</h2>
+      {dm && !characterName && (
+        <div className={classes.playingAsDiv}>
+          Playing as: <span>Dungeon Master</span>{" "}
+        </div>
+      )}
+      {characterId && (
+        <div className={classes.playingAsDiv}>
+          Playing as: <span>{characterName}</span>{" "}
+        </div>
+      )}
       <div
         className={classes.chatWrapper}
         onMouseDown={removeInitiativeInputHandler}
@@ -322,9 +334,11 @@ const CombatPage = () => {
             {combatData?.initiative &&
               Object.keys(combatData.initiative).map((key) => (
                 <li
-                  draggable
+                  draggable={dm || loremaster}
                   key={key}
-                  onDragStart={(e) => handleDragStart(key)}
+                  onDragStart={(e) =>
+                    (dm || loremaster) && handleDragStart(key)
+                  }
                   onDragOver={(e) => handleDragOver(e)}
                   onDrop={() => handleDrop(key)}
                   onDragEnter={() => handleDragEnter(key)}
@@ -332,17 +346,16 @@ const CombatPage = () => {
                   onDragEnd={handleDragEnd}
                 >
                   {combatData.initiative[key]}{" "}
-                  <FontAwesomeIcon
-                    icon={faTrashCan}
-                    onClick={() => removeFromInitiativeHandler(key)}
-                  />
-                  <FontAwesomeIcon
-                    icon={faGripLines}
-                    onClick={() => removeFromInitiativeHandler(key)}
-                  />
+                  {(dm || loremaster) && (
+                    <FontAwesomeIcon
+                      icon={faTrashCan}
+                      onClick={() => removeFromInitiativeHandler(key)}
+                    />
+                  )}
+                  {(dm || loremaster) && <FontAwesomeIcon icon={faGripLines} />}
                 </li>
               ))}
-            {!showAddToInitiativeInput && (
+            {!showAddToInitiativeInput && (dm || loremaster) && (
               <li
                 className={classes.addToInitiative}
                 onClick={showAddToInitiativeHandler}
@@ -395,7 +408,7 @@ const CombatPage = () => {
             />
           </div>
         </div>
-        {characterId && (
+        {(characterId || dm || loremaster) && (
           <div className={classes.buttonsBar}>
             <h4 className={classes.barTitle}>Roll Some Dice!</h4>
             <div className={classes.buttonsGroup}>
@@ -480,7 +493,7 @@ const CombatPage = () => {
         )}
       </div>
 
-      {!isLoading && !characterId && (
+      {!isLoading && !characterId && !dm && (
         <div className={classes.messageWrapper}>
           Please add a character to the campaign to join combat. You can still
           spectate but you won't be able to roll without a joined character.

@@ -52,25 +52,27 @@ export const AddCharacterToCampaignModal = ({
       >
         {/*  <span>Your characters: </span> */}
 
-        <Radio.Group
-          className={classes.charactersCheckboxGroup}
-          options={Object.keys(characters).map((cid) => ({
-            label: (
-              <div
-                className={
-                  selectedCharacter === cid
-                    ? classes.selectedCharacter
-                    : undefined
-                }
-              >
-                <CharacterCard cid={cid} inModal="true" />
-              </div>
-            ),
-            value: cid,
-          }))}
-          onChange={setSelectedCharacterHandler}
-          value={selectedCharacter}
-        />
+        {characters && (
+          <Radio.Group
+            className={classes.charactersCheckboxGroup}
+            options={Object.keys(characters).map((cid) => ({
+              label: (
+                <div
+                  className={
+                    selectedCharacter === cid
+                      ? classes.selectedCharacter
+                      : undefined
+                  }
+                >
+                  <CharacterCard cid={cid} inModal="true" />
+                </div>
+              ),
+              value: cid,
+            }))}
+            onChange={setSelectedCharacterHandler}
+            value={selectedCharacter}
+          />
+        )}
         <div className={classes.newCharacterOptionWrapper}>
           <Link to="/NewCharacter">
             <Button type="dashed">
