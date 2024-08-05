@@ -621,6 +621,7 @@ export const updatePreparedSpells = (data, uid, characterId) => {
   };
 };
 
+/* COMBAT PAGE */
 export const addRolltoCombat = (
   campaignId,
   type,
@@ -634,9 +635,81 @@ export const addRolltoCombat = (
     try {
       const combatRef = ref(db, "campaigns/" + campaignId + "/combat/messages");
       const timestamp = Date.now();
+
+      const snapshot = await get(combatRef);
+      const messages = snapshot.val();
+
+      //remove messages of there's over 50
+      const messageKeys = messages ? Object.keys(messages) : [];
+      if (messageKeys.length >= 100) {
+        messageKeys.sort((a, b) => a - b);
+        const messagesToDelete = messageKeys.slice(0, messageKeys.length - 99);
+        const deleteUpdates = messagesToDelete.reduce((acc, key) => {
+          acc[key] = null;
+          return acc;
+        }, {});
+
+        await update(combatRef, deleteUpdates);
+      }
+
       await update(combatRef, {
         [timestamp]: { content, type, character, uid, details },
       });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
+export const addToInitiative = (name, key, campaignId) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const initiativeRef = ref(
+        db,
+        "campaigns/" + campaignId + "/combat/initiative"
+      );
+      /* const timestamp = Date.now().toString(); */
+      await update(initiativeRef, { [key]: name });
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
+export const removeFromInitiative = (key, campaignId) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    try {
+      const initiativeRef = ref(
+        db,
+        "campaigns/" + campaignId + "/combat/initiative/" + key
+      );
+
+      await remove(initiativeRef);
+    } catch (error) {
+      console.error(error);
+    }
+    dispatch(uiSliceActions.changeLoading(false));
+    dispatch(uiSliceActions.requestSuccessIsTrue());
+  };
+};
+
+export const reorderInitiative = (updatedInitiativeOrder, campaignId) => {
+  return async (dispatch) => {
+    dispatch(uiSliceActions.changeLoading(true));
+    /* console.log(oldKey, newKey); */
+    try {
+      const initiativeRef = ref(
+        db,
+        "campaigns/" + campaignId + "/combat/initiative/"
+      );
+
+      await set(initiativeRef, updatedInitiativeOrder);
     } catch (error) {
       console.error(error);
     }
