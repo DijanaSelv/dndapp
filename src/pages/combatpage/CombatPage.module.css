@@ -1,12 +1,29 @@
-.combatContent {
+/* .combatContent {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+ */
+.combatContent h2 {
+  padding: 10px;
+  border-bottom: 1px solid #ccd1dad2;
+  text-align: center;
+}
+
+.playingAsDiv {
+  text-align: center;
+  padding: 5px 15px;
+  font-size: larger;
+}
+.playingAsDiv span {
+  font-weight: bold;
+  padding-left: 5px;
+}
 
 .chatWrapper {
-  width: 100%;
-  border: 2px solid rgb(111, 144, 204);
+  padding: 10px;
+  border: 1px solid #ccd1dad2;
+  box-shadow: 0px 0px 20px rgba(128, 128, 128, 0.192);
   border-radius: 5px;
   display: grid;
   grid-template-columns: 1fr 2.5fr 1fr;
@@ -16,7 +33,7 @@
 .initiativeBar,
 .messagesBar,
 .buttonsBar {
-  height: 100%;
+  /*   height: 100%; */
   overflow: hidden;
 }
 
@@ -25,27 +42,89 @@
   margin-bottom: 20px;
   font-size: larger;
   border-bottom: 1px solid #ccd1dad2;
+  text-align: center;
 }
 
 /* INITIATIVE */
 .initiativeBar {
   padding: 10px;
+  overflow-y: scroll;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .initiativeBar ol {
-  padding-left: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  padding-left: 10px;
+  padding-right: 5px;
 }
 
-.initiativeBar li {
+.initiativeBar li,
+.addToInitiativeInput {
   background-color: #ecbc7371;
   border-radius: 2px;
   padding: 3px 10px;
   margin: 3px;
-  min-width: 100px;
-  /* box-shadow: 2px 2px 5px #86848465; */
+  transition: all 0.3s;
+  position: relative;
+}
+
+.addToInitiativeInput {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.initiativeBar li:hover {
+  scale: 1.08;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.initiativeBar li svg {
+  opacity: 0;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  margin-right: 0;
+  padding: 0 5px;
+  font-size: smaller;
+  transition: all 0.3s;
+}
+.initiativeBar li svg:nth-child(2) {
+  opacity: 1;
+  position: absolute;
+  right: 0px;
+  color: #626986;
+}
+
+.initiativeBar li:hover svg {
+  opacity: 1;
+  padding: 0 5px;
+  font-size: smaller;
+  transition: all 0.4s;
+}
+.initiativeBar li:hover svg:hover:nth-child(1) {
+  color: red;
+}
+
+.addToInitiativeInput {
+  border: 1px dashed #96764771;
+  background-color: white;
+}
+
+.initiativeBar .addToInitiative {
+  list-style: none;
+  background-color: transparent;
+  border: 1px dashed rgb(88, 88, 88);
+  transition: all 0.3s;
+  text-align: center;
+}
+.addToInitiative:hover {
+  scale: 1.1;
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
 .messagesBar {
@@ -62,6 +141,7 @@
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 5px;
+  height: 100%;
 }
 
 /* Message text input */
@@ -83,7 +163,7 @@
   transition: all 0.5s;
 }
 .textInputWrapper svg:hover {
-  background-color: #e7c38d;
+  background-color: rgba(236, 188, 115, 0.443);
   transition: all 0.4s;
 }
 
@@ -168,29 +248,14 @@
 
 .combatMessageWrapper {
   background-color: #ccc9bc8c;
-  /*   background-image: linear-gradient(
-    to right top,
-    #d6e5ee,
-    #dceaf2,
-    #e2eff6,
-    #e8f4fb,
-    #eef9ff
-  ); */
   border-radius: 3px;
   padding: 10px 15px;
   margin: 10px;
-  /* box-shadow: 1px 1px 10px #86848488; */
+  min-width: 120px;
+  box-shadow: 0px 0px 10px rgba(128, 128, 128, 0.192);
 }
 
 .ownMessageWrapper {
-  /*  background-image: linear-gradient(
-    to left top,
-    #abc5d3,
-    #b1cbd9,
-    #b7d1df,
-    #bdd8e6,
-    #c3deec
-  ); */
   background-color: #d3dde2b9;
   align-self: flex-end;
 }
@@ -228,7 +293,7 @@
 
 /* Scroll bar design */
 ::-webkit-scrollbar {
-  width: 15px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {

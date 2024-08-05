@@ -1,17 +1,22 @@
-import { ref, onValue } from "firebase/database";
-import { db } from "../../app/actions/base";
-import { useParams } from "react-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { CombatRollWrapper } from "../../components/CombatRollWrapper";
-import { Button, Checkbox, Divider, Input, InputNumber } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { addRolltoCombat } from "../../app/actions/databaseActions";
+import { useParams } from "react-router";
 
+import { db } from "../../app/actions/base";
+import { ref, onValue } from "firebase/database";
+import {
+  addRolltoCombat,
+  addToInitiative,
+  removeFromInitiative,
+  reorderInitiative,
+} from "../../app/actions/databaseActions";
+
+import { Button, Checkbox, Divider } from "antd";
 import classes from "./CombatPage.module.css";
-import { AddCharacterToCampaignModal } from "../../components/AddCharacterToCampaignModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDiceD20,
+  faGripLines,
   faMinusCircle,
   faPlus,
   faPlusCircle,
@@ -21,16 +26,24 @@ import {
   faFaceFrown,
   faFaceSmileBeam,
   faPaperPlane,
+  faTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
 
+import { CombatRollWrapper } from "../../components/CombatRollWrapper";
+import { AddCharacterToCampaignModal } from "../../components/AddCharacterToCampaignModal";
+
 const CombatPage = () => {
-  const params = useParams();
   const dispatch = useDispatch();
+  const params = useParams();
   const campaignId = params.campaignId;
   const uid = params.uid;
 
   const chatEndRef = useRef();
   const textInputRef = useRef();
+  const initiativeInputRef = useRef("");
+  const [dragItemKey, setDragItemKey] = useState();
+  const [dragOverItemKey, setDragOverItemKey] = useState();
+
   const [textInput, setTextInput] = useState();
   const [combatData, setCombatData] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -40,22 +53,106 @@ const CombatPage = () => {
     guidance: false,
     rollTwoDice: false,
   });
+  const [showAddToInitiativeInput, setShowAddToInitiativeInput] =
+    useState(false);
+  const [addToInitiativeValue, setAddToInitiativeValue] = useState("");
 
   const isLoading = useSelector((state) => state.uiSlice.isLoading);
   const characterId = useSelector(
     (state) =>
       state.campaignSlice?.currentCampaign?.members[uid]?.character || ""
   );
-
-  const characterName = useSelector(
+  let characterName = useSelector(
     (state) =>
       (characterId && state.userSlice?.user.characters[characterId]?.name) || ""
   );
+  const { dm, loremaster } = useSelector((state) => state.rolesSlice);
+
+  if (dm && !characterName) {
+    characterName = "DM";
+  }
+  /* ```````````````````HANDLERS   */
+  /* drag initiative list items  */
+  const handleDragStart = (key) => {
+    setDragItemKey(key);
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    //reorder initiative items
+    if (dragItemKey && dragOverItemKey) {
+      const draggedKey = Number(dragItemKey);
+      const targetKey = Number(dragOverItemKey);
+      const valuesOrder = Object.values(combatData.initiative);
+      const [dragItem] = valuesOrder.splice(draggedKey, 1);
+
+      valuesOrder.splice(targetKey, 0, dragItem);
+
+      const updatedInitiativeOrder = {};
+      valuesOrder.forEach(
+        (value, index) => (updatedInitiativeOrder[index] = value)
+      );
+      dispatch(reorderInitiative(updatedInitiativeOrder, campaignId));
+    }
+  };
+
+  const handleDragEnter = (key) => {
+    //new position
+    setDragOverItemKey(key);
+  };
+
+  const handleDragLeave = (e) => {
+    setDragOverItemKey(undefined);
+  };
+
+  const handleDragEnd = (e) => {
+    setDragItemKey(undefined);
+    setDragOverItemKey(undefined);
+  };
 
   const addCharacterHandler = () => {
     setShowModal(true);
   };
 
+  //Add list item to initiative
+  const showAddToInitiativeHandler = () => {
+    setShowAddToInitiativeInput(true);
+    //makes sure the element is added to the dom first
+    setTimeout(() => {
+      initiativeInputRef.current.focus();
+    }, 0);
+  };
+
+  const keyDownInitiativeHandler = (e) => {
+    if (e.code === "Escape") {
+      setShowAddToInitiativeInput(false);
+    }
+    if ((e.code === "Enter" || e.code === "NumpadEnter") && e.target.value) {
+      const key = combatData?.initiative
+        ? Object.keys(combatData?.initiative).length
+        : 0;
+      dispatch(addToInitiative(e.target.value, key, campaignId));
+      setAddToInitiativeValue("");
+      initiativeInputRef.current.focus();
+    }
+  };
+
+  const addToInitiativeValueHandler = (e) => {
+    setAddToInitiativeValue(e.target.value);
+  };
+
+  const removeInitiativeInputHandler = (e) => {
+    if (e.target !== initiativeInputRef.current) {
+      setShowAddToInitiativeInput(false);
+      setAddToInitiativeValue("");
+    }
+  };
+
+  const removeFromInitiativeHandler = (key) => {
+    dispatch(removeFromInitiative(key, campaignId));
+  };
   const enterHandler = (e) => {
     if (e.code === "Enter") {
       console.log(e.code === "Enter");
@@ -75,9 +172,11 @@ const CombatPage = () => {
       const type = rollType;
       const character = characterName;
 
-      dispatch(
-        addRolltoCombat(campaignId, type, character, content, uid, null)
-      );
+      if (content) {
+        dispatch(
+          addRolltoCombat(campaignId, type, character, content, uid, null)
+        );
+      }
       setTextInput("");
     } else {
       //ROLL DICE
@@ -93,7 +192,6 @@ const CombatPage = () => {
           Math.floor(Math.random() * (rollType - 1) + 1),
           Math.floor(Math.random() * (rollType - 1) + 1),
         ]);
-        console.log(rolledDiceScores);
         diceSum =
           rollData.rollTwoDice === "advantage"
             ? Math.max(...rolledDiceScores)
@@ -191,16 +289,15 @@ const CombatPage = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  /* ``````````````````````````` */
+
   //performs layout measurements before the browser repaints the screen (scroll to bottom did not include the last message otherwise). Use effect runs acync, this one runs sunch after dom mutations.
   useLayoutEffect(() => {
     scrollToBottom();
   }, [combatData]);
 
   useEffect(() => {
-    const combatDataRef = ref(
-      db,
-      "campaigns/" + campaignId + "/combat/messages"
-    );
+    const combatDataRef = ref(db, "campaigns/" + campaignId + "/combat");
 
     const unsubscribe = onValue(combatDataRef, (snapshot) => {
       const data = snapshot.val();
@@ -216,22 +313,73 @@ const CombatPage = () => {
 
   return (
     <div className={classes.combatContent}>
-      <header>Combat rolls</header>
-      <div className={classes.chatWrapper}>
+      <h2>Combat chat</h2>
+      {dm && !characterName && (
+        <div className={classes.playingAsDiv}>
+          Playing as: <span>Dungeon Master</span>{" "}
+        </div>
+      )}
+      {characterId && (
+        <div className={classes.playingAsDiv}>
+          Playing as: <span>{characterName}</span>{" "}
+        </div>
+      )}
+      <div
+        className={classes.chatWrapper}
+        onMouseDown={removeInitiativeInputHandler}
+      >
         <div className={classes.initiativeBar}>
           <h4 className={classes.barTitle}>Initiative</h4>
           <ol>
-            <li draggable>Ratka</li>
-            <li>Pande</li>
-            <li>Kire</li>
-            <li>Slafka</li>
+            {combatData?.initiative &&
+              Object.keys(combatData.initiative).map((key) => (
+                <li
+                  draggable={dm || loremaster}
+                  key={key}
+                  onDragStart={(e) =>
+                    (dm || loremaster) && handleDragStart(key)
+                  }
+                  onDragOver={(e) => handleDragOver(e)}
+                  onDrop={() => handleDrop(key)}
+                  onDragEnter={() => handleDragEnter(key)}
+                  onDragLeave={() => handleDragLeave(key)}
+                  onDragEnd={handleDragEnd}
+                >
+                  {combatData.initiative[key]}{" "}
+                  {(dm || loremaster) && (
+                    <FontAwesomeIcon
+                      icon={faTrashCan}
+                      onClick={() => removeFromInitiativeHandler(key)}
+                    />
+                  )}
+                  {(dm || loremaster) && <FontAwesomeIcon icon={faGripLines} />}
+                </li>
+              ))}
+            {!showAddToInitiativeInput && (dm || loremaster) && (
+              <li
+                className={classes.addToInitiative}
+                onClick={showAddToInitiativeHandler}
+              >
+                + add
+              </li>
+            )}
+            {showAddToInitiativeInput && (
+              <input
+                className={classes.addToInitiativeInput}
+                placeholder="type a name"
+                onKeyDown={keyDownInitiativeHandler}
+                onChange={addToInitiativeValueHandler}
+                ref={initiativeInputRef}
+                value={addToInitiativeValue}
+              ></input>
+            )}
           </ol>
         </div>
 
         <div className={classes.messagesBar}>
           <div className={classes.messagesWrapper}>
-            {combatData &&
-              Object.values(combatData).map((roll, i) => (
+            {combatData?.messages &&
+              Object.values(combatData.messages).map((roll, i) => (
                 <CombatRollWrapper
                   key={i}
                   character={roll.character}
@@ -260,7 +408,7 @@ const CombatPage = () => {
             />
           </div>
         </div>
-        {characterId && (
+        {(characterId || dm || loremaster) && (
           <div className={classes.buttonsBar}>
             <h4 className={classes.barTitle}>Roll Some Dice!</h4>
             <div className={classes.buttonsGroup}>
@@ -345,7 +493,7 @@ const CombatPage = () => {
         )}
       </div>
 
-      {!isLoading && !characterId && (
+      {!isLoading && !characterId && !dm && (
         <div className={classes.messageWrapper}>
           Please add a character to the campaign to join combat. You can still
           spectate but you won't be able to roll without a joined character.

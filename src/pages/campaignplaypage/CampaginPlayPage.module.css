@@ -6,8 +6,9 @@
 
 .cardsList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 4fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 4fr));
   gap: 15px;
+  margin-top: 20px;
 }
 .cardsList :global(.ant-card) {
   height: 100%;
@@ -22,13 +23,14 @@
   padding: 20px 0 0 0;
   width: 100%;
   color: #368fbe;
+  color: rgb(70, 113, 136);
+  color: rgb(58, 159, 214);
 }
 
 /* ADD A CHARACTER MODAL */
 .addCharacterCardImg .icon {
-  color: #ffa600;
+  color: rgb(235, 179, 96);
 }
-
 .modalWindow {
   width: 45% !important;
 }
