@@ -107,7 +107,7 @@ export const createNewCampaign = (uid, newCampaignData) => {
 export const getCampaignsData = (campaignsIds, type) => {
   return async (dispatch) => {
     const campaignsDataList = {};
-    dispatch(uiSliceActions.changeLoading(true));
+    /* dispatch(uiSliceActions.changeLoading(true)); */
 
     try {
       let campaignId;
@@ -146,7 +146,7 @@ export const getCampaignsData = (campaignsIds, type) => {
     if (type === "joined") {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));
     }
-    dispatch(uiSliceActions.changeLoading(false));
+    /* dispatch(uiSliceActions.changeLoading(false)); */
   };
 };
 
@@ -631,7 +631,6 @@ export const addRolltoCombat = (
   details
 ) => {
   return async (dispatch) => {
-    dispatch(uiSliceActions.changeLoading(true));
     try {
       const combatRef = ref(db, "campaigns/" + campaignId + "/combat/messages");
       const timestamp = Date.now();
@@ -658,14 +657,11 @@ export const addRolltoCombat = (
     } catch (error) {
       console.error(error);
     }
-    dispatch(uiSliceActions.changeLoading(false));
-    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
 
 export const addToInitiative = (name, key, campaignId) => {
   return async (dispatch) => {
-    dispatch(uiSliceActions.changeLoading(true));
     try {
       const initiativeRef = ref(
         db,
@@ -676,14 +672,11 @@ export const addToInitiative = (name, key, campaignId) => {
     } catch (error) {
       console.error(error);
     }
-    dispatch(uiSliceActions.changeLoading(false));
-    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
 
 export const removeFromInitiative = (key, campaignId) => {
   return async (dispatch) => {
-    dispatch(uiSliceActions.changeLoading(true));
     try {
       const initiativeRef = ref(
         db,
@@ -694,14 +687,11 @@ export const removeFromInitiative = (key, campaignId) => {
     } catch (error) {
       console.error(error);
     }
-    dispatch(uiSliceActions.changeLoading(false));
-    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
 
 export const reorderInitiative = (updatedInitiativeOrder, campaignId) => {
   return async (dispatch) => {
-    dispatch(uiSliceActions.changeLoading(true));
     /* console.log(oldKey, newKey); */
     try {
       const initiativeRef = ref(
@@ -713,7 +703,5 @@ export const reorderInitiative = (updatedInitiativeOrder, campaignId) => {
     } catch (error) {
       console.error(error);
     }
-    dispatch(uiSliceActions.changeLoading(false));
-    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };

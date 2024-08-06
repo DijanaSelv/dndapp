@@ -43,31 +43,53 @@
   font-family: "Texturina";
 }
 
-a {
+.section :global(.ant-card) {
+  box-shadow: none;
+}
+
+.section a {
   align-self: center;
 }
 
 .section > ul {
-  /* width: auto; */
-
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 15px;
-  /* padding: 0;
-
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: flex-start;
- */
 }
 
-/* ul > div {
-  width: 24%;
-} */
+.campaignsList > div {
+  box-shadow: 1px 1px 5px rgba(128, 128, 128, 0.281);
+}
 
-.campaignMeta div {
-  font-family: "Texturina";
-  font-size: large !important;
+/* Add and join card */
+
+.addMoreCard {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  min-height: 350px;
+  cursor: pointer;
+}
+
+.addMoreWrapper * {
+  text-decoration: none;
+}
+
+.addMoreWrapper {
+  border-radius: 10px;
+}
+
+.addMoreCard svg {
+  font-size: 90px;
+  color: rgb(58, 159, 214);
+}
+
+.addMoreCard :global(.ant-card-cover) {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 /* TO MAINTAIN IMAGE RATIO 3:2 */
@@ -80,6 +102,9 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.motionDiv {
+  border-radius: 8px;
 }
 
 /* Width of the whole content wrapper */

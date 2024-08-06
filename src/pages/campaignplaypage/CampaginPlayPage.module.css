@@ -12,6 +12,7 @@
 }
 .cardsList :global(.ant-card) {
   height: 100%;
+  box-shadow: 1px 1px 5px rgba(128, 128, 128, 0.397);
 }
 
 .cardsList * {

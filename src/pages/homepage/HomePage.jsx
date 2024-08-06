@@ -56,7 +56,11 @@ const Home = () => {
             Join <PlusCircleOutlined />
           </Link>
         </div>
-        <CampaignCardsContainer type="joined" uid={uid} />
+        <CampaignCardsContainer
+          type="joined"
+          uid={uid}
+          joinCampaignHandler={joinCampaignHandler}
+        />
       </div>
 
       <div className={`${classes.section} ${classes.charactersSection}`}>

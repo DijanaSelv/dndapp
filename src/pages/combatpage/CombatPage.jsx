@@ -16,7 +16,6 @@ import classes from "./CombatPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDiceD20,
-  faGripLines,
   faMinusCircle,
   faPlus,
   faPlusCircle,
@@ -28,6 +27,13 @@ import {
   faPaperPlane,
   faTrashCan,
 } from "@fortawesome/free-regular-svg-icons";
+
+//dice icons for the buttons
+import d10 from "../../icons/dice-d10.png";
+import d12 from "../../icons/dice-d12.png";
+import d8 from "../../icons/dice-d8.png";
+import d6 from "../../icons/dice-d6.png";
+import d4 from "../../icons/dice-d4.png";
 
 import { CombatRollWrapper } from "../../components/CombatRollWrapper";
 import { AddCharacterToCampaignModal } from "../../components/AddCharacterToCampaignModal";
@@ -133,6 +139,7 @@ const CombatPage = () => {
       const key = combatData?.initiative
         ? Object.keys(combatData?.initiative).length
         : 0;
+      console.log(key);
       dispatch(addToInitiative(e.target.value, key, campaignId));
       setAddToInitiativeValue("");
       initiativeInputRef.current.focus();
@@ -314,198 +321,264 @@ const CombatPage = () => {
   return (
     <div className={classes.combatContent}>
       <h2>Combat chat</h2>
-      {dm && !characterName && (
-        <div className={classes.playingAsDiv}>
-          Playing as: <span>Dungeon Master</span>{" "}
-        </div>
-      )}
-      {characterId && (
-        <div className={classes.playingAsDiv}>
-          Playing as: <span>{characterName}</span>{" "}
-        </div>
-      )}
-      <div
-        className={classes.chatWrapper}
-        onMouseDown={removeInitiativeInputHandler}
-      >
-        <div className={classes.initiativeBar}>
-          <h4 className={classes.barTitle}>Initiative</h4>
-          <ol>
-            {combatData?.initiative &&
-              Object.keys(combatData.initiative).map((key) => (
+      {characterId ||
+        (dm && (
+          <div className={classes.playingAsDiv}>
+            Playing as: <span>{characterName}</span>{" "}
+          </div>
+        ))}
+      {combatData && !isLoading && (
+        <div
+          className={classes.chatWrapper}
+          onMouseDown={removeInitiativeInputHandler}
+        >
+          <div className={classes.initiativeBar}>
+            <h4 className={classes.barTitle}>Initiative</h4>
+            <ol>
+              {combatData?.initiative &&
+                Object.keys(combatData.initiative).map((key) => (
+                  <li
+                    draggable={dm || loremaster}
+                    key={key}
+                    onDragStart={(e) =>
+                      (dm || loremaster) && handleDragStart(key)
+                    }
+                    onDragOver={(e) => handleDragOver(e)}
+                    onDrop={() => handleDrop(key)}
+                    onDragEnter={() => handleDragEnter(key)}
+                    onDragLeave={() => handleDragLeave(key)}
+                    onDragEnd={handleDragEnd}
+                  >
+                    {combatData.initiative[key]}{" "}
+                    {(dm || loremaster) && (
+                      <FontAwesomeIcon
+                        icon={faTrashCan}
+                        onClick={() => removeFromInitiativeHandler(key)}
+                      />
+                    )}
+                  </li>
+                ))}
+              {!showAddToInitiativeInput && (dm || loremaster) && (
                 <li
-                  draggable={dm || loremaster}
-                  key={key}
-                  onDragStart={(e) =>
-                    (dm || loremaster) && handleDragStart(key)
-                  }
-                  onDragOver={(e) => handleDragOver(e)}
-                  onDrop={() => handleDrop(key)}
-                  onDragEnter={() => handleDragEnter(key)}
-                  onDragLeave={() => handleDragLeave(key)}
-                  onDragEnd={handleDragEnd}
+                  className={classes.addToInitiative}
+                  onClick={showAddToInitiativeHandler}
                 >
-                  {combatData.initiative[key]}{" "}
-                  {(dm || loremaster) && (
-                    <FontAwesomeIcon
-                      icon={faTrashCan}
-                      onClick={() => removeFromInitiativeHandler(key)}
-                    />
-                  )}
-                  {(dm || loremaster) && <FontAwesomeIcon icon={faGripLines} />}
+                  + add
                 </li>
-              ))}
-            {!showAddToInitiativeInput && (dm || loremaster) && (
-              <li
-                className={classes.addToInitiative}
-                onClick={showAddToInitiativeHandler}
-              >
-                + add
-              </li>
-            )}
-            {showAddToInitiativeInput && (
-              <input
-                className={classes.addToInitiativeInput}
-                placeholder="type a name"
-                onKeyDown={keyDownInitiativeHandler}
-                onChange={addToInitiativeValueHandler}
-                ref={initiativeInputRef}
-                value={addToInitiativeValue}
-              ></input>
-            )}
-          </ol>
-        </div>
+              )}
+              {showAddToInitiativeInput && (
+                <input
+                  className={classes.addToInitiativeInput}
+                  placeholder="type a name"
+                  onKeyDown={keyDownInitiativeHandler}
+                  onChange={addToInitiativeValueHandler}
+                  ref={initiativeInputRef}
+                  value={addToInitiativeValue}
+                ></input>
+              )}
+            </ol>
+          </div>
 
-        <div className={classes.messagesBar}>
-          <div className={classes.messagesWrapper}>
-            {combatData?.messages &&
-              Object.values(combatData.messages).map((roll, i) => (
-                <CombatRollWrapper
-                  key={i}
-                  character={roll.character}
-                  type={roll.type}
-                  content={roll.content}
-                  uid={roll.uid}
-                  details={roll.details}
-                />
-              ))}
-            <div ref={chatEndRef}></div>
+          <div className={classes.messagesBar}>
+            <div className={classes.messagesWrapper}>
+              {combatData?.messages &&
+                Object.values(combatData.messages).map((roll, i) => (
+                  <CombatRollWrapper
+                    key={i}
+                    character={roll.character}
+                    type={roll.type}
+                    content={roll.content}
+                    uid={roll.uid}
+                    details={roll.details}
+                  />
+                ))}
+              <div ref={chatEndRef}></div>
+            </div>
+            <div className={classes.textInputWrapper}>
+              <TextArea
+                onKeyDown={enterHandler}
+                maxLength={150}
+                style={{
+                  resize: "none",
+                }}
+                ref={textInputRef}
+                onChange={textInputHandler}
+                value={textInput}
+              />
+              <FontAwesomeIcon
+                icon={faPaperPlane}
+                onClick={() => rollDiceHandler("message")}
+              />
+            </div>
           </div>
-          <div className={classes.textInputWrapper}>
-            <TextArea
-              onKeyDown={enterHandler}
-              maxLength={150}
-              style={{
-                resize: "none",
-              }}
-              ref={textInputRef}
-              onChange={textInputHandler}
-              value={textInput}
-            />
-            <FontAwesomeIcon
-              icon={faPaperPlane}
-              onClick={() => rollDiceHandler("message")}
-            />
-          </div>
-        </div>
-        {(characterId || dm || loremaster) && (
           <div className={classes.buttonsBar}>
             <h4 className={classes.barTitle}>Roll Some Dice!</h4>
-            <div className={classes.buttonsGroup}>
-              <Button onClick={() => rollDiceHandler(20)}>
-                {" "}
-                <FontAwesomeIcon icon={faDiceD20} />
-                d20
-              </Button>
-
-              <div className={classes.checkboxGroup}>
-                <Checkbox
-                  onClick={() => rollTwoDiceHandler("advantage")}
-                  checked={rollData.rollTwoDice === "advantage"}
-                  disabled={rollData.numberOfDice > 1}
+            {!characterId && !dm && (
+              <div className={classes.messageWrapper}>
+                <p>Please add a character to this campaign to join combat.</p>
+                <Divider />
+                <p>
+                  You can still spectate and send text messages but you won't be
+                  able to roll without a character.
+                </p>
+                <Divider />
+                <AddCharacterToCampaignModal
+                  showModal={showModal}
+                  setShowModal={setShowModal}
                 >
-                  Advantage <FontAwesomeIcon icon={faFaceSmileBeam} />
-                </Checkbox>
-                <Checkbox
-                  onClick={() => rollTwoDiceHandler("disadvantage")}
-                  checked={rollData.rollTwoDice === "disadvantage"}
-                  disabled={rollData.numberOfDice > 1}
-                >
-                  Disadvantage <FontAwesomeIcon icon={faFaceFrown} />
-                </Checkbox>
+                  <Button onClick={addCharacterHandler}>
+                    {" "}
+                    <FontAwesomeIcon icon={faPlus} /> Add Character
+                  </Button>
+                </AddCharacterToCampaignModal>
               </div>
-            </div>
+            )}
+            {(characterId || dm || loremaster) && (
+              <>
+                <div className={classes.buttonsGroup}>
+                  <Button onClick={() => rollDiceHandler(20)}>
+                    {" "}
+                    <FontAwesomeIcon icon={faDiceD20} />
+                    d20
+                  </Button>
 
-            <Divider />
-            <div className={classes.buttonsGroup}>
-              <p>Additional Modifiers</p>
-              <div className={classes.modifiersGroup}>
-                <FontAwesomeIcon
-                  icon={faMinusCircle}
-                  onClick={() => additionalModifiersHandler("-1")}
-                />
-                <div className={classes.numberInput}>
-                  {rollData.additionalModifiers}
-                </div>
-                <FontAwesomeIcon
-                  icon={faPlusCircle}
-                  onClick={() => additionalModifiersHandler("+1")}
-                />
-              </div>
-              <div className={classes.buttonsGroups}>
-                <Checkbox onClick={guidanceHandler} checked={rollData.guidance}>
-                  Guidance (+1d4)
-                </Checkbox>
-              </div>
-            </div>
-            <Divider />
-
-            <div className={classes.allButtonsGroups}>
-              <div className={classes.buttonsGroup}>
-                <p>Number of Dice</p>
-                <div className={classes.modifiersGroup}>
-                  <FontAwesomeIcon
-                    icon={faMinusCircle}
-                    onClick={() => numberOfDiceHandler("-1")}
-                  />
-                  <div className={classes.numberInput}>
-                    {rollData.numberOfDice}
+                  <div className={classes.checkboxGroup}>
+                    <Checkbox
+                      onClick={() => rollTwoDiceHandler("advantage")}
+                      checked={rollData.rollTwoDice === "advantage"}
+                      disabled={rollData.numberOfDice > 1}
+                    >
+                      Advantage <FontAwesomeIcon icon={faFaceSmileBeam} />
+                    </Checkbox>
+                    <Checkbox
+                      onClick={() => rollTwoDiceHandler("disadvantage")}
+                      checked={rollData.rollTwoDice === "disadvantage"}
+                      disabled={rollData.numberOfDice > 1}
+                    >
+                      Disadvantage <FontAwesomeIcon icon={faFaceFrown} />
+                    </Checkbox>
                   </div>
-                  <FontAwesomeIcon
-                    icon={faPlusCircle}
-                    onClick={() => numberOfDiceHandler("+1")}
-                  />
                 </div>
-              </div>
-              <Divider />
 
-              <div className={`${classes.buttonsGroup} ${classes.diceButtons}`}>
-                {" "}
-                <Button onClick={() => rollDiceHandler(12)}> d12</Button>
-                <Button onClick={() => rollDiceHandler(10)}> d10</Button>
-                <Button onClick={() => rollDiceHandler(8)}> d8</Button>
-                <Button onClick={() => rollDiceHandler(6)}> d6</Button>
-                <Button onClick={() => rollDiceHandler(4)}> d4</Button>
-                <Button onClick={() => rollDiceHandler(100)}> d100</Button>
-              </div>
-            </div>
+                <Divider />
+                <div className={classes.buttonsGroup}>
+                  <p>Additional Modifiers</p>
+                  <div className={classes.modifiersGroup}>
+                    <FontAwesomeIcon
+                      icon={faMinusCircle}
+                      onClick={() => additionalModifiersHandler("-1")}
+                    />
+                    <div className={classes.numberInput}>
+                      {rollData.additionalModifiers}
+                    </div>
+                    <FontAwesomeIcon
+                      icon={faPlusCircle}
+                      onClick={() => additionalModifiersHandler("+1")}
+                    />
+                  </div>
+                  <div className={classes.buttonsGroups}>
+                    <Checkbox
+                      onClick={guidanceHandler}
+                      checked={rollData.guidance}
+                    >
+                      Guidance (+1d4)
+                    </Checkbox>
+                  </div>
+                </div>
+                <Divider />
+
+                <div className={classes.allButtonsGroups}>
+                  <div className={classes.buttonsGroup}>
+                    <p>Number of Dice</p>
+                    <div className={classes.modifiersGroup}>
+                      <FontAwesomeIcon
+                        icon={faMinusCircle}
+                        onClick={() => numberOfDiceHandler("-1")}
+                      />
+                      <div className={classes.numberInput}>
+                        {rollData.numberOfDice}
+                      </div>
+                      <FontAwesomeIcon
+                        icon={faPlusCircle}
+                        onClick={() => numberOfDiceHandler("+1")}
+                      />
+                    </div>
+                  </div>
+                  <Divider />
+
+                  <div
+                    className={`${classes.buttonsGroup} ${classes.diceButtons}`}
+                  >
+                    <Button onClick={() => rollDiceHandler(12)}>
+                      <p>
+                        <img
+                          className={classes.diceIcon}
+                          width="26px"
+                          src={d12}
+                        />
+                      </p>
+                      <p>d12</p>
+                    </Button>
+                    <Button onClick={() => rollDiceHandler(10)}>
+                      <p>
+                        <img
+                          className={classes.diceIcon}
+                          width="26px"
+                          src={d10}
+                        />
+                      </p>
+                      <p>d10</p>
+                    </Button>
+                    <Button onClick={() => rollDiceHandler(8)}>
+                      <p>
+                        <img
+                          className={classes.diceIcon}
+                          width="26px"
+                          src={d8}
+                        />
+                      </p>
+                      <p>d8</p>
+                    </Button>
+                    <Button onClick={() => rollDiceHandler(6)}>
+                      <p>
+                        <img
+                          className={classes.diceIcon}
+                          width="26px"
+                          src={d6}
+                        />
+                      </p>
+                      <p>d6</p>
+                    </Button>
+                    <Button onClick={() => rollDiceHandler(4)}>
+                      <p>
+                        <img
+                          className={classes.diceIcon}
+                          width="26px"
+                          src={d4}
+                        />
+                      </p>
+                      <p>d4</p>
+                    </Button>
+                    <Button onClick={() => rollDiceHandler(100)}>
+                      <p>
+                        <img
+                          className={classes.diceIcon}
+                          width="26px"
+                          src={d10}
+                        />
+                        <img
+                          className={classes.diceIcon}
+                          width="26px"
+                          src={d10}
+                        />
+                      </p>
+                      <p>d100</p>
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
-        )}
-      </div>
-
-      {!isLoading && !characterId && !dm && (
-        <div className={classes.messageWrapper}>
-          Please add a character to the campaign to join combat. You can still
-          spectate but you won't be able to roll without a joined character.
-          <AddCharacterToCampaignModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-          >
-            <Button onClick={addCharacterHandler}>
-              {" "}
-              <FontAwesomeIcon icon={faPlus} /> Add Character
-            </Button>
-          </AddCharacterToCampaignModal>
         </div>
       )}
     </div>

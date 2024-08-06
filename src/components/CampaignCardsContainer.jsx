@@ -1,15 +1,28 @@
 import { useDispatch, useSelector } from "react-redux";
-
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCampaignsData } from "../app/actions/databaseActions";
 import LoadingCard from "./LoadingCard";
 import CampaignListItem from "./CampaignListItem";
 import JoinCampaignModal from "./JoinCampaignModal";
-import { uiSliceActions } from "../app/uiSlice";
+import { Card } from "antd";
+import classes from "../pages/homepage/HomePage.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import Meta from "antd/es/card/Meta";
+import { motion } from "framer-motion";
 
-const CampaignCardsContainer = ({ type, uid }) => {
+const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
   const dispatch = useDispatch();
+
+  //when loading is done: gi imame created and joined vo user
+  //loading campaigns true:
+  //togash proveri dali ima created and joined, ako ima setni gi, ako nema opet setni gi
+  //ko kje se setnati togash loading campaigns false
+  //display data accordingly:
+  //loading campagins true - loading
+  //loading false i ima campaigns: join + cards
+  //loading false i nema campaigns: join samo
 
   // Fetch campaigns data from userSlice
   const campaigns = useSelector(
@@ -18,76 +31,131 @@ const CampaignCardsContainer = ({ type, uid }) => {
   const { createdCampaigns, joinedCampaigns } = useSelector(
     (state) => state.campaignSlice
   );
+  const { isLoading } = useSelector((state) => state.uiSlice);
+  const [loadingCampaigns, setLoadingCampaigns] = useState(true);
 
-  //get the campaigns undefined - if data hasn't been fetched, null - fetched but empty, {id: true} if there is data. In content it will show loading, no campaigns message or cards soodvetno.
   let createdCampaignsFromUser = campaigns.created;
   let joinedCampaignsFromUsers = campaigns.joined;
 
-  const [showJoinModal, setShowJoinModal] = useState(false);
+  /*  const [showJoinModal, setShowJoinModal] = useState(false); */
+
+  const addMoreCard =
+    type === "created" ? (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.02 }}
+        className={classes.addMoreWrapper}
+      >
+        <Link to={`/NewCampaign`}>
+          <Card
+            className={classes.addMoreCard}
+            cover={
+              <div className={classes.addMoreCoverDiv}>
+                <FontAwesomeIcon icon={faPlusCircle} />
+              </div>
+            }
+          >
+            {" "}
+            <Meta
+              className={classes.campaignMeta}
+              description={"Create a new campaign"}
+            />
+          </Card>
+        </Link>
+      </motion.div>
+    ) : (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.02 }}
+        className={classes.addMoreWrapper}
+      >
+        <Card
+          onClick={joinCampaignHandler}
+          className={classes.addMoreCard}
+          cover={
+            <div className={classes.addMoreCoverDiv}>
+              <FontAwesomeIcon icon={faPlusCircle} />
+            </div>
+          }
+        >
+          {" "}
+          <Meta
+            className={classes.campaignMeta}
+            description={"Join a campaign"}
+          />
+        </Card>
+      </motion.div>
+    );
 
   useEffect(() => {
-    const campaignIds =
-      type === "created"
-        ? createdCampaignsFromUser
-          ? Object.keys(createdCampaignsFromUser)
-          : []
-        : joinedCampaignsFromUsers
-        ? Object.keys(joinedCampaignsFromUsers)
-        : [];
+    if (!isLoading) {
+      const campaignIds =
+        type === "created"
+          ? createdCampaignsFromUser
+            ? Object.keys(createdCampaignsFromUser)
+            : []
+          : joinedCampaignsFromUsers
+          ? Object.keys(joinedCampaignsFromUsers)
+          : [];
 
-    if (campaignIds.length > 0) {
-      dispatch(getCampaignsData(campaignIds, type));
-    } else {
-      createdCampaignsFromUser = null;
-      joinedCampaignsFromUsers = null;
-      dispatch(uiSliceActions.changeLoading(false));
+      //makes sure the loading is managed after getCampaignsData is done
+      dispatch(getCampaignsData(campaignIds, type)).then(() => {
+        setLoadingCampaigns(false);
+      });
     }
-  }, [type, createdCampaignsFromUser, joinedCampaignsFromUsers, dispatch]);
+  }, [type, createdCampaignsFromUser, joinedCampaignsFromUsers, isLoading]);
 
-  const joinCampaignHandler = () => {
-    setShowJoinModal(true);
-  };
+  console.log("createdCampaigns", createdCampaigns);
+  console.log("createdCampaignsFromUser", createdCampaignsFromUser);
+  console.log(loadingCampaigns);
 
   let content;
   if (type === "created") {
     content = (
-      <ul>
-        {createdCampaignsFromUser === undefined && <LoadingCard />}
-        {createdCampaignsFromUser === null ? (
-          <p>
-            You haven't created any campaigns yet.{" "}
-            <Link to="/NewCampaign">Create one here.</Link>
-          </p>
-        ) : (
-          Object.values(createdCampaigns).map((campaign) => (
-            <CampaignListItem
-              key={campaign.id}
-              campaign={campaign}
-              type="created"
-            />
-          ))
-        )}
+      <ul className={classes.campaignsList}>
+        {loadingCampaigns && <LoadingCard />}
+        {!loadingCampaigns &&
+          (createdCampaignsFromUser ? (
+            <>
+              {addMoreCard}
+              {Object.values(createdCampaigns).map((campaign) => (
+                <CampaignListItem
+                  key={campaign.id}
+                  campaign={campaign}
+                  type="created"
+                />
+              ))}
+            </>
+          ) : (
+            <>{addMoreCard}</>
+          ))}
       </ul>
     );
   } else {
     content = (
-      <ul>
-        <JoinCampaignModal
+      <ul className={classes.campaignsList}>
+        {/* <JoinCampaignModal
           showModal={showJoinModal}
           setShowModal={setShowJoinModal}
           uid={uid}
-        />
-        {joinedCampaignsFromUsers === undefined && <LoadingCard />}
-        {joinedCampaignsFromUsers === null ? (
-          <p>
-            You haven't joined any campaigns yet. Do you have a{" "}
-            <Link onClick={joinCampaignHandler}>Join Code</Link>?
-          </p>
-        ) : (
-          Object.values(joinedCampaigns).map((campaign) => (
-            <CampaignListItem key={campaign.id} campaign={campaign} />
-          ))
-        )}
+        /> */}
+        {loadingCampaigns && <LoadingCard />}
+        {!loadingCampaigns &&
+          (joinedCampaignsFromUsers ? (
+            <>
+              {addMoreCard}
+              {joinedCampaignsFromUsers !== null &&
+                Object.values(joinedCampaigns).map((campaign) => (
+                  <CampaignListItem key={campaign.id} campaign={campaign} />
+                ))}
+            </>
+          ) : (
+            <>{addMoreCard}</>
+          ))}
       </ul>
     );
   }
