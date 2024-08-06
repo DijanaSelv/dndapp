@@ -49,6 +49,7 @@ const CampaignListItem = ({ campaign, type }) => {
 
   return (
     <motion.div
+      className={classes.motionDiv}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
@@ -63,6 +64,7 @@ const CampaignListItem = ({ campaign, type }) => {
         />
       }
       <Card
+        bordered={false}
         cover={
           <Link to={`/Campaigns/${campaign.id}/play`}>
             <div className={classes.coverDiv}>

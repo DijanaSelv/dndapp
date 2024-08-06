@@ -17,7 +17,10 @@ export const CombatRollWrapper = ({
       }`}
     >
       <p className={classes.messageHeader}>
-        {`${character} ${type === "message" ? "wrote" : "rolled"}`} :
+        {`${character !== "" ? character : "A guest"} ${
+          type === "message" ? "wrote" : "rolled"
+        }`}{" "}
+        :
       </p>{" "}
       {type !== "message" && (
         <div className={classes.rollContent}>

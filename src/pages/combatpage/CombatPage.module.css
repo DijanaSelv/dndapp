@@ -3,7 +3,11 @@
   flex-direction: column;
   align-items: center;
 }
- */
+
+*/
+.combatContent :global(.ant-divider) {
+  margin: 20px 0px;
+}
 .combatContent h2 {
   padding: 10px;
   border-bottom: 1px solid #ccd1dad2;
@@ -79,24 +83,19 @@
 .initiativeBar li:hover {
   scale: 1.08;
   transition: all 0.3s;
-  cursor: pointer;
+  cursor: grab;
 }
 
 .initiativeBar li svg {
   opacity: 0;
   position: absolute;
-  right: 15px;
+  right: 10px;
   top: 10px;
   margin-right: 0;
   padding: 0 5px;
   font-size: smaller;
   transition: all 0.3s;
-}
-.initiativeBar li svg:nth-child(2) {
-  opacity: 1;
-  position: absolute;
-  right: 0px;
-  color: #626986;
+  cursor: pointer;
 }
 
 .initiativeBar li:hover svg {
@@ -124,7 +123,7 @@
 .addToInitiative:hover {
   scale: 1.1;
   transition: all 0.3s;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .messagesBar {
@@ -213,7 +212,7 @@
   border: 1px solid #d9d9d9;
   border-radius: 5px;
   padding: 5px;
-  margin: 10px;
+  margin: 10px 10px 5px 10px;
 }
 
 .modifiersGroup svg {
@@ -237,11 +236,26 @@
 .chatWrapper button:hover {
   scale: 1.08;
 }
-.chatWrapper button {
-  height: 60px;
-  width: 70px;
+.buttonsGroup button {
+  height: 70px;
+  width: 80px;
+  padding: 7px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+/* d20 button is different */
+.buttonsBar > .buttonsGroup:first-of-type button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 10px;
-  font-size: large;
+}
+
+.buttonsBar > .buttonsGroup:first-of-type button svg {
+  font-size: 30px;
+  padding-bottom: 5px;
 }
 
 /* the messages and rolls in the chat  */
@@ -312,18 +326,7 @@
 
 /* no joined character message */
 .messageWrapper {
-  border-top: 2px solid blue;
-  border-bottom: 2px solid blue;
-  border-image: radial-gradient(
-      circle,
-      #2b5ea0,
-      #5379b6,
-      #6e85b3,
-      #a4b6dd,
-      #ffffff
-    )
-    1;
-  width: 65%;
+  width: 90%;
   margin: auto;
   padding: 10px 0;
   line-height: 30px;
