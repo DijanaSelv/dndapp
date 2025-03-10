@@ -18,6 +18,7 @@ import {
   faBook,
   faDiceD20,
   faInfo,
+  faPencil,
   faShop,
   faUserLarge,
 } from "@fortawesome/free-solid-svg-icons";
@@ -212,7 +213,7 @@ const MainNav = () => {
                       : `${classes.navLink} ${classes.campaignNavLink}`
                   }
                 >
-                  <FontAwesomeIcon className={classes.icon} icon={faBook} />
+                  <FontAwesomeIcon className={classes.icon} icon={faPencil} />
                 </NavLink>
                 {/*               <NavLink
             className={`${classes.navLink} ${classes.campaignNavLink}`}

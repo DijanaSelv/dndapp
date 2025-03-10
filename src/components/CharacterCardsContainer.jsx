@@ -8,7 +8,7 @@ const CharacterCardsContainer = () => {
     <>
       {characters &&
         Object.keys(characters).map((cid) => {
-          return <CharacterCard cid={cid} key={cid} />;
+          return <CharacterCard bordered cid={cid} key={cid} />;
         })}
     </>
   );

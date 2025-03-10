@@ -1,0 +1,42 @@
+roles:
+     dm
+     player
+     loremaster
+
+
+Permissions:
+
+everyone:
+	roll dice
+	take private notes
+	view shop/campaign
+	view lore/logs
+
+dm
+	edit campaign
+	edit shop
+	DM notes
+	add/remove players
+	upgrade memeber roles
+	view all players (characters, inventory) but not edit
+	view the campaign join code
+
+Loremaster + dm
+	change combat initiative 
+	add lore (places, npc, other lore)
+	add session logs
+
+player
+	create character in the campaign
+	edit character
+	buy items
+	manage inventory
+	see other players (limited info)
+
+
+
+
+	
+	
+
+
