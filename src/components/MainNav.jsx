@@ -85,32 +85,35 @@ const MainNav = () => {
     <>
       <div className={classes.background} id="mainNav">
         <div className={classes.mainNav}>
-          <div className={classes.welcomeLogo}>
-            <Link className={classes.titleLink}>
-              <div className={classes.appLogo}>
-                <FontAwesomeIcon icon={faDiceD20} className={classes.icon} />
-                <h1 className={classes.title}> Di & Di </h1>
-              </div>
-              <p className={classes.subtitle}>
-                A web app for your RPG campaigns
-              </p>
-            </Link>
+          <div className="container">
+            <div className={classes.welcomeLogo}>
+              <Link className={classes.titleLink}>
+                <div className={classes.appLogo}>
+                  <FontAwesomeIcon icon={faDiceD20} className={classes.icon} />
+                  <h1 className={classes.title}> Di & Di </h1>
+                </div>
+                <p className={classes.subtitle}>
+                  A web app for your RPG campaigns
+                </p>
+              </Link>
+            </div>
           </div>
 
-          <div className={classes.secondRow}>
-            <div className={classes.navLinks}>
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive
-                    ? ` ${classes.activeNavLink} ${classes.navLink} `
-                    : `${classes.navLink} `
-                }
-                end
-              >
-                Home
-              </NavLink>
-              {/*                   <NavLink
+          <div className="container">
+            <div className={classes.secondRow}>
+              <div className={classes.navLinks}>
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    isActive
+                      ? ` ${classes.activeNavLink} ${classes.navLink} `
+                      : `${classes.navLink} `
+                  }
+                  end
+                >
+                  Home
+                </NavLink>
+                {/*                   <NavLink
                     to="/announcements"
                     className={({ isActive }) =>
                       isActive
@@ -120,25 +123,26 @@ const MainNav = () => {
                   >
                     Announcements
                   </NavLink> */}
-            </div>
-
-            <Dropdown
-              menu={{ items }}
-              trigger={["click"]}
-              className={classes.navLink}
-            >
-              <div>
-                {" "}
-                {firstName ? (
-                  `Hi, ${firstName}!`
-                ) : (
-                  <Skeleton.Input active size="small" />
-                )}
-                <DownOutlined
-                  style={{ color: "#3a9fd6", paddingLeft: "10px" }}
-                />
               </div>
-            </Dropdown>
+
+              <Dropdown
+                menu={{ items }}
+                trigger={["click"]}
+                className={classes.navLink}
+              >
+                <div>
+                  {" "}
+                  {firstName ? (
+                    `Hi, ${firstName}!`
+                  ) : (
+                    <Skeleton.Input active size="small" />
+                  )}
+                  <DownOutlined
+                    style={{ color: "#3a9fd6", paddingLeft: "10px" }}
+                  />
+                </div>
+              </Dropdown>
+            </div>
           </div>
         </div>
         {params.campaignId && (
