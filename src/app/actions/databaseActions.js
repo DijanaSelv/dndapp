@@ -108,11 +108,6 @@ export const subscribeToCampaigns = (campaignIds = [], type) => {
   return (dispatch) => {
     // quick exit for empty input
     if (!Array.isArray(campaignIds) || campaignIds.length === 0) {
-      const action =
-        type === "created"
-          ? campaignSliceActions.setCreatedCampaigns
-          : campaignSliceActions.setJoinedCampaigns;
-      dispatch(action({})); // clear
       return () => {};
     }
 
@@ -177,10 +172,10 @@ export const subscribeToCampaigns = (campaignIds = [], type) => {
 };
 
 //get list of campaigns
-export const getCampaignsData = (campaignsIds, type) => {
+/* export const getCampaignsData = (campaignsIds, type) => {
   return async (dispatch) => {
     const campaignsDataList = {};
-    /* dispatch(uiSliceActions.changeLoading(true)); */
+    
 
     try {
       let campaignId;
@@ -219,9 +214,9 @@ export const getCampaignsData = (campaignsIds, type) => {
     if (type === "joined") {
       dispatch(campaignSliceActions.setJoinedCampaigns(campaignsDataList));
     }
-    /* dispatch(uiSliceActions.changeLoading(false)); */
+   
   };
-};
+}; */
 
 //get current campaign
 export const getCurrentCampaign = (uid, campaignId) => {

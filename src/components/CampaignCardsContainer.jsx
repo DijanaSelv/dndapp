@@ -94,10 +94,8 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
     }
   }, [dispatch, type, campaignsFromUser, isLoading]);
 
-  /* This is to prevent flicker and show old campaignsData until new one is updated */
-
   const content = (
-    <ul className={classes.campaignsList} key={`${type}-campaigns-list`}>
+    <ul className={classes.campaignsList}>
       <>{addMoreCard}</>
 
       {campaignsForDisplay && (
