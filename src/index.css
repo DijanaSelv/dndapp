@@ -2,6 +2,7 @@
   font-family: "Texturina";
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body,
@@ -13,8 +14,6 @@ html {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
 }
 
 @media (min-width: 640px) {
@@ -43,6 +42,25 @@ html {
 
 @media (min-width: 1536px) {
   .container {
-    max-width: 1536px;
+    max-width: 1800px;
   }
+}
+
+#root {
+  display: flex;
+  justify-content: flex-start;
+  justify-items: start;
+  alighn-items: stretch;
+  height: 100%;
+  padding: 1rem;
+  overflow-y: hidden;
+  gap: 1.5rem;
+}
+
+button {
+  all: unset;
+}
+
+a {
+  text-decoration: none;
 }

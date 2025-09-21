@@ -1,7 +1,13 @@
 .mainWrapper {
   color: #333131;
-  margin: auto;
-  width: 1500px;
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  height: 100%;
+  overflow: auto;
+  padding-right: 10px;
 }
 
 .sectionLink {

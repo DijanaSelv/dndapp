@@ -307,7 +307,7 @@
 
 /* Scroll bar design */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -316,7 +316,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #58597e;
+  background: #b9b9b9ff;
   border-radius: 5px;
 }
 

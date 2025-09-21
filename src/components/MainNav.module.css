@@ -1,39 +1,89 @@
-.background {
-  /* background-color: #7cacbb; */
-  background-color: #373d49f9;
+.navWrapper {
+  position: relative;
 }
 
 .mainNav {
-  color: #f3f3f3;
+  /* color: #f3f3f3; */
   display: flex;
   flex-direction: column;
-  margin: auto;
+  justify-content: space-between;
+  height: 100%;
+  background-color: var(--color-backgroundFA);
+  padding: 12px;
+  border: 1px solid #efefef;
+  border-radius: 4px;
 }
 
 .welcomeLogo {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: auto;
-  margin-right: auto;
   padding-bottom: 4px;
+  border-bottom: 1px solid var(--color-lightStroke);
+  padding-bottom: 8px;
+  gap: 12px;
 }
 
 .title {
-  font-family: "Texturina";
-  font-size: 35px;
-  margin: -5px;
+  font-family: "Scope One", serif;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  margin-bottom: -4px;
 }
 .appLogo {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 8px;
 }
 
-.icon {
+.logoIcon {
   color: var(--color-primary);
-  font-size: 35px;
+  font-size: 22px;
+}
+
+.sidebarButton icon {
+  background-color: none;
+}
+
+.sidebarButton {
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 14px;
+  position: absolute;
+  right: -12px;
+  top: 0;
+  z-index: 1;
+}
+
+.collapsedSidebarButton {
+  transform: rotate(180deg);
+}
+
+.sidebarButton:hover svg {
+  color: var(--color-hover);
+  transition: color 100ms ease-in-out;
+}
+
+.collapse {
+  overflow: hidden;
+  transition: max-width 0.3s ease;
+}
+
+.collapsed {
+  max-width: 44px;
+}
+
+.expanded {
+  max-width: 200px;
+}
+
+.menuIcon {
+  width: 18px;
+  height: auto;
+  object-fit: contain;
 }
 
 @keyframes logoShake {
@@ -50,33 +100,14 @@
     rotate: -10deg;
   }
 }
-.icon:hover {
+.logoIcon:hover {
   animation: logoShake 0.4s;
   animation-iteration-count: 1.5;
 }
 
-.subtitle {
-  padding: 0;
-  font-family: "Texturina";
-  font-size: 12px;
-}
-
 .titleLink {
   text-decoration: none;
-  color: #f3f3f3;
-}
-
-.secondRow {
-  border-top: 1px solid #5d6779d2;
-  display: flex;
-  justify-content: space-between;
-  padding: 7px;
-  font-size: 18px;
-}
-
-.secondRow p {
-  margin-top: 0px;
-  align-self: center;
+  color: black;
 }
 
 /* CAMPAIGN NAV BAR */
@@ -87,6 +118,9 @@
 }
 .navLinks {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0;
 }
 
 .campaignNav .campaignPlayLink {
@@ -94,20 +128,27 @@
 }
 
 .navLink {
-  color: white;
   display: flex;
   text-decoration: none;
-  font-family: "Texturina";
-  padding: 2px 17px;
   border-bottom: 2px solid transparent;
-  transition: all 0.5s;
+  transition: all 0.3s;
+  color: black;
+}
+.navLinkContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .campaignNav .navLink svg {
   animation: none;
-  color: white;
+
   font-size: 20px;
   padding: 5px;
+}
+
+.menuName {
+  padding-right: 10px;
 }
 
 /* .button {
@@ -118,10 +159,11 @@
 } */
 
 .navLink:hover {
-  color: #ffffff;
-  transition: color 0.3s;
-  border-bottom: 2px solid var(--color-primary);
-  transition: all 0.5s;
+  color: var(--color-hover);
+}
+
+.activeNavLink * {
+  color: var(--color-primary);
 }
 
 /* Campaign bar */
@@ -143,10 +185,5 @@
 
 .campaignNavLink:hover {
   border-bottom: 2px solid #373d49;
-  transition: all 0.5s;
-}
-
-.activeNavLink {
-  background-color: #c7e9ff46;
-  border-radius: 5px;
+  transition: all 0.3s;
 }
