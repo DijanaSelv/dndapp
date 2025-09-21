@@ -1,9 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getCampaignsData } from "../app/actions/databaseActions";
+import {
+  getCampaignsData,
+  subscribeToCampaigns,
+} from "../app/actions/databaseActions";
 import LoadingCard from "./LoadingCard";
 import CampaignListItem from "./CampaignListItem";
-import JoinCampaignModal from "./JoinCampaignModal";
 import { Card } from "antd";
 import classes from "../pages/homepage/HomePage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,14 +30,18 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
   const campaigns = useSelector(
     (state) => state.userSlice.user.campaigns || {}
   );
-  const { createdCampaigns, joinedCampaigns } = useSelector(
-    (state) => state.campaignSlice
-  );
+
+  const campaignsForDisplay = useSelector((state) => {
+    return type === "created"
+      ? state.campaignSlice.createdCampaigns
+      : state.campaignSlice.joinedCampaigns;
+  });
+
   const { isLoading } = useSelector((state) => state.uiSlice);
   const [loadingCampaigns, setLoadingCampaigns] = useState(true);
 
-  let createdCampaignsFromUser = campaigns.created;
-  let joinedCampaignsFromUsers = campaigns.joined;
+  let campaignsFromUser =
+    type == "created" ? campaigns.created : campaigns.joined;
 
   /*  const [showJoinModal, setShowJoinModal] = useState(false); */
 
@@ -92,73 +98,36 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
     );
 
   useEffect(() => {
-    if (!isLoading) {
-      const campaignIds =
-        type === "created"
-          ? createdCampaignsFromUser
-            ? Object.keys(createdCampaignsFromUser)
-            : []
-          : joinedCampaignsFromUsers
-          ? Object.keys(joinedCampaignsFromUsers)
-          : [];
+    if (!isLoading && campaignsFromUser) {
+      const campaignIds = Object.keys(campaignsFromUser);
 
-      //makes sure the loading is managed after getCampaignsData is done
-      dispatch(getCampaignsData(campaignIds, type)).then(() => {
-        setLoadingCampaigns(false);
-      });
+      const cleanup = dispatch(subscribeToCampaigns(campaignIds, type));
+
+      return () => {
+        if (typeof cleanup === "function") cleanup();
+      };
     }
-  }, [type, createdCampaignsFromUser, joinedCampaignsFromUsers, isLoading]);
+  }, [dispatch, type, campaignsFromUser, isLoading]);
 
-  console.log("createdCampaigns", createdCampaigns);
-  console.log("createdCampaignsFromUser", createdCampaignsFromUser);
-  console.log(loadingCampaigns);
+  const content = (
+    <ul className={classes.campaignsList}>
+      <>{addMoreCard}</>
 
-  let content;
-  if (type === "created") {
-    content = (
-      <ul className={classes.campaignsList}>
-        {loadingCampaigns && <LoadingCard />}
-        {!loadingCampaigns &&
-          (createdCampaignsFromUser ? (
-            <>
-              {addMoreCard}
-              {Object.values(createdCampaigns).map((campaign) => (
-                <CampaignListItem
-                  key={campaign.id}
-                  campaign={campaign}
-                  type="created"
-                />
-              ))}
-            </>
-          ) : (
-            <>{addMoreCard}</>
-          ))}
-      </ul>
-    );
-  } else {
-    content = (
-      <ul className={classes.campaignsList}>
-        {/* <JoinCampaignModal
-          showModal={showJoinModal}
-          setShowModal={setShowJoinModal}
-          uid={uid}
-        /> */}
-        {loadingCampaigns && <LoadingCard />}
-        {!loadingCampaigns &&
-          (joinedCampaignsFromUsers ? (
-            <>
-              {addMoreCard}
-              {joinedCampaignsFromUsers !== null &&
-                Object.values(joinedCampaigns).map((campaign) => (
-                  <CampaignListItem key={campaign.id} campaign={campaign} />
-                ))}
-            </>
-          ) : (
-            <>{addMoreCard}</>
-          ))}
-      </ul>
-    );
-  }
+      {campaignsForDisplay && (
+        <>
+          {campaignsForDisplay !== null &&
+            Object.values(campaignsForDisplay).map((campaign) => (
+              <CampaignListItem
+                key={campaign.id}
+                campaign={campaign}
+                type={type}
+              />
+            ))}
+        </>
+      )}
+      {loadingCampaigns && !campaignsForDisplay && <LoadingCard />}
+    </ul>
+  );
 
   return <>{content}</>;
 };

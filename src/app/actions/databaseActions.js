@@ -103,6 +103,79 @@ export const createNewCampaign = (uid, newCampaignData) => {
   };
 };
 
+//realTime CampaignsData
+export const subscribeToCampaigns = (campaignIds = [], type) => {
+  return (dispatch) => {
+    // quick exit for empty input
+    if (!Array.isArray(campaignIds) || campaignIds.length === 0) {
+      const action =
+        type === "created"
+          ? campaignSliceActions.setCreatedCampaigns
+          : campaignSliceActions.setJoinedCampaigns;
+      dispatch(action({})); // clear
+      return () => {};
+    }
+
+    const campaignsDataList = {};
+    const unsubscribers = [];
+
+    campaignIds.forEach((id) => {
+      const campaignsRef = ref(db, `campaigns/${id}`);
+
+      const unsubscribe = onValue(
+        campaignsRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+
+            campaignsDataList[id] = {
+              id: data.id,
+              title: data.title,
+              image: data.image,
+              players: data.players || 0,
+              joinCode: data.joinCode,
+            };
+          } else {
+            console.log(
+              "No campaign found in",
+              type,
+              ", possibly deleted by creator."
+            );
+            delete campaignsDataList[id];
+          }
+
+          //Update Redux every time data changes
+          const action =
+            type === "created"
+              ? campaignSliceActions.setCreatedCampaigns
+              : campaignSliceActions.setJoinedCampaigns;
+
+          // spread to create a fresh object so Redux detects change
+          dispatch(action({ ...campaignsDataList }));
+        },
+        (error) => {
+          dispatch(
+            uiSliceActions.showNotification({
+              type: "error",
+              code: error.code,
+            })
+          );
+        }
+      );
+
+      unsubscribers.push(unsubscribe);
+    });
+
+    //return a cleanup function to stop listening whn component unmounts
+    return () =>
+      unsubscribers.forEach((unsubscribe) => {
+        try {
+          unsubscribe();
+        } catch (e) {}
+      });
+  };
+};
+
 //get list of campaigns
 export const getCampaignsData = (campaignsIds, type) => {
   return async (dispatch) => {

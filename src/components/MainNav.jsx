@@ -184,7 +184,7 @@ const MainNav = () => {
           </div>
         </div>
 
-        {/*         <div>
+        <div>
           account settings
           <Dropdown
             menu={{ items }}
@@ -201,7 +201,7 @@ const MainNav = () => {
               <DownOutlined style={{ color: "#3a9fd6", paddingLeft: "10px" }} />
             </div>
           </Dropdown>
-        </div> */}
+        </div>
       </div>
       {/*  {params.campaignId && (
           <div className={classes.campaignNavBackground}>
