@@ -293,7 +293,7 @@ const CombatPage = () => {
 
   //scroll chat to bottom
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    chatEndRef.current?.scrollIntoView({ behavior: "instant" });
   };
 
   /* ``````````````````````````` */
