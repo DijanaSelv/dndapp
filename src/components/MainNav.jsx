@@ -164,6 +164,7 @@ const MainNav = () => {
             {mainMenu.map((item) => (
               <NavLink
                 to={item.link}
+                key={item.name}
                 className={({ isActive }) =>
                   isActive
                     ? ` ${classes.activeNavLink} ${classes.navLink} `

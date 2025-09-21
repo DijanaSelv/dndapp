@@ -2,15 +2,12 @@ import { Button, Form, Input } from "antd";
 import { useValidate } from "../../app/hooks/useValidate";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
-import { uiSliceActions } from "../../app/uiSlice";
+
 import NotificationBox from "../../components/NotificationBox";
 import STATIC_SHOPS from "../../app/STATIC_SHOPS";
-import {
-  createNewCampaign,
-  getCampaignsData,
-} from "../../app/actions/databaseActions";
+import { createNewCampaign } from "../../app/actions/databaseActions";
 import CancelModal from "../../components/CancelModal";
 import classes from "./NewCampaignPage.module.css";
 
@@ -19,25 +16,9 @@ const NewCampaignPage = () => {
   const dispatch = useDispatch();
   const { TextArea } = Input;
   const { isLoading } = useSelector((state) => state.uiSlice);
-  const { createdCampaigns } = useSelector((state) => state.campaignSlice);
   const { uid } = useSelector((state) => state.userSlice.user);
-  const { requestSuccess, requestFailed, notification, fetchedCampaigns } =
-    useSelector((state) => state.uiSlice);
-
+  const { notification } = useSelector((state) => state.uiSlice);
   const [showModal, setShowModal] = useState(false);
-  const [newCampaingId, setNewCampaignId] = useState();
-
-  useEffect(() => {
-    newCampaingId && navigate(`/Campaigns/${newCampaingId}/info`);
-  }, [createdCampaigns]);
-
-  useEffect(() => {
-    if (requestSuccess) {
-      dispatch(getCampaignsData([newCampaingId], "created"));
-    }
-    dispatch(uiSliceActions.resetRequestState());
-    dispatch(uiSliceActions.changeLoading(false));
-  }, [requestSuccess, requestFailed, fetchedCampaigns]);
 
   const {
     inputValue: title,
@@ -74,12 +55,14 @@ const NewCampaignPage = () => {
   const createCampaignHandler = async (e) => {
     e.preventDefault();
 
+    const newCampaignId = nanoid(9);
+
     const roles = {
       creator: true,
       dm: true,
     };
     const newCampaignData = {
-      id: nanoid(9),
+      id: newCampaignId,
       joinCode: nanoid(12),
       title,
       location,
@@ -91,8 +74,8 @@ const NewCampaignPage = () => {
       members: { [uid]: { roles } },
     };
 
-    setNewCampaignId(newCampaignData.id);
-    dispatch(createNewCampaign(uid, newCampaignData));
+    await dispatch(createNewCampaign(uid, newCampaignData));
+    navigate(`/Campaigns/${newCampaignId}/info`);
   };
 
   const cancelPageHandler = () => {

@@ -1,9 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import {
-  getCampaignsData,
-  subscribeToCampaigns,
-} from "../app/actions/databaseActions";
+import { subscribeToCampaigns } from "../app/actions/databaseActions";
 import LoadingCard from "./LoadingCard";
 import CampaignListItem from "./CampaignListItem";
 import { Card } from "antd";
@@ -47,13 +44,7 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
 
   const addMoreCard =
     type === "created" ? (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-        whileHover={{ scale: 1.02 }}
-        className={classes.addMoreWrapper}
-      >
+      <div className={classes.addMoreWrapper}>
         <Link to={`/NewCampaign`}>
           <Card
             className={classes.addMoreCard}
@@ -70,15 +61,9 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
             />
           </Card>
         </Link>
-      </motion.div>
+      </div>
     ) : (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-        whileHover={{ scale: 1.02 }}
-        className={classes.addMoreWrapper}
-      >
+      <div className={classes.addMoreWrapper}>
         <Card
           onClick={joinCampaignHandler}
           className={classes.addMoreCard}
@@ -94,7 +79,7 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
             description={"Join a campaign"}
           />
         </Card>
-      </motion.div>
+      </div>
     );
 
   useEffect(() => {
@@ -109,13 +94,15 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
     }
   }, [dispatch, type, campaignsFromUser, isLoading]);
 
+  /* This is to prevent flicker and show old campaignsData until new one is updated */
+
   const content = (
-    <ul className={classes.campaignsList}>
+    <ul className={classes.campaignsList} key={`${type}-campaigns-list`}>
       <>{addMoreCard}</>
 
       {campaignsForDisplay && (
         <>
-          {campaignsForDisplay !== null &&
+          {Object.keys(campaignsForDisplay).length !== 0 &&
             Object.values(campaignsForDisplay).map((campaign) => (
               <CampaignListItem
                 key={campaign.id}
