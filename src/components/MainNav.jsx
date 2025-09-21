@@ -6,7 +6,7 @@ import { Link, NavLink } from "react-router-dom";
 import classes from "./MainNav.module.css";
 import { LogoutOutlined, DownOutlined } from "@ant-design/icons";
 import { Dropdown, Skeleton } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   getCurrentCampaign,
   getRoles,
@@ -15,12 +15,18 @@ import {
 import { rolesSliceActions } from "../app/rolesSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBars,
   faBook,
   faDiceD20,
   faInfo,
   faPencil,
   faShop,
   faUserLarge,
+  faHouse,
+  faHatWizard,
+  faDragon,
+  faBullhorn,
+  faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { uiSliceActions } from "../app/uiSlice";
 
@@ -33,6 +39,8 @@ const MainNav = () => {
   const { uid, firstName } = useSelector((state) => state.userSlice.user);
   const { requestSuccess } = useSelector((state) => state.uiSlice);
   const { currentCampaign } = useSelector((state) => state.campaignSlice);
+
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   //if a campaign is accessed, fetch roles. If not clear the roles.
   useEffect(() => {
@@ -54,6 +62,10 @@ const MainNav = () => {
     e.preventDefault();
     dispatch(signOutUser());
     navigate("/");
+  };
+
+  const collapseMenu = () => {
+    setIsCollapsed((prev) => !prev);
   };
 
   //dropdown profile menu
@@ -81,71 +93,117 @@ const MainNav = () => {
     },
   ];
 
+  const mainMenu = [
+    {
+      name: "Home",
+      link: "/",
+      icon: faHouse,
+    },
+    {
+      name: "Campaigns",
+      link: "/campaigns/",
+      icon: faDragon,
+      dropdownContent: [
+        {
+          name: "Created",
+          link: "/campaigns/?created",
+        },
+        {
+          name: "Joined",
+          link: "/campaigns/?joined",
+        },
+      ],
+    },
+    {
+      name: "Characters",
+      link: "/characters/",
+      icon: faHatWizard,
+    },
+    {
+      name: "Announcements",
+      link: "/announcements/",
+      icon: faBullhorn,
+    },
+  ];
+
   return (
-    <>
-      <div className={classes.background} id="mainNav">
-        <div className={classes.mainNav}>
-          <div className="container">
-            <div className={classes.welcomeLogo}>
-              <Link className={classes.titleLink}>
-                <div className={classes.appLogo}>
-                  <FontAwesomeIcon icon={faDiceD20} className={classes.icon} />
-                  <h1 className={classes.title}> Di & Di </h1>
-                </div>
-                <p className={classes.subtitle}>
-                  A web app for your RPG campaigns
-                </p>
-              </Link>
-            </div>
+    <div className={classes.navWrapper}>
+      <button className={classes.sidebarButton} onClick={collapseMenu}>
+        <FontAwesomeIcon
+          icon={faChevronLeft}
+          className={isCollapsed ? classes.collapsedSidebarButton : ""}
+        />
+      </button>
+      <div
+        className={`${classes.mainNav} ${classes.collapse} ${
+          isCollapsed ? classes.collapsed : classes.expanded
+        }`}
+        id="mainNav"
+      >
+        <div className={classes.mainMenu}>
+          <div className={classes.welcomeLogo}>
+            <Link className={classes.titleLink}>
+              <div className={classes.appLogo}>
+                <FontAwesomeIcon
+                  icon={faDiceD20}
+                  className={`${classes.logoIcon}`}
+                />
+                <h1
+                  className={`${classes.collapse} ${
+                    isCollapsed ? classes.collapsed : classes.expanded
+                  } ${classes.title}`}
+                >
+                  {" "}
+                  Di&Di{" "}
+                </h1>
+              </div>
+            </Link>
           </div>
 
-          <div className="container">
-            <div className={classes.secondRow}>
-              <div className={classes.navLinks}>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    isActive
-                      ? ` ${classes.activeNavLink} ${classes.navLink} `
-                      : `${classes.navLink} `
-                  }
-                  end
-                >
-                  Home
-                </NavLink>
-                {/*                   <NavLink
-                    to="/announcements"
-                    className={({ isActive }) =>
-                      isActive
-                        ? ` ${classes.activeNavLink} ${classes.navLink} `
-                        : `${classes.navLink} `
-                    }
-                  >
-                    Announcements
-                  </NavLink> */}
-              </div>
-
-              <Dropdown
-                menu={{ items }}
-                trigger={["click"]}
-                className={classes.navLink}
+          <div className={classes.navLinks}>
+            {mainMenu.map((item) => (
+              <NavLink
+                to={item.link}
+                className={({ isActive }) =>
+                  isActive
+                    ? ` ${classes.activeNavLink} ${classes.navLink} `
+                    : `${classes.navLink}`
+                }
               >
-                <div>
-                  {" "}
-                  {firstName ? (
-                    `Hi, ${firstName}!`
-                  ) : (
-                    <Skeleton.Input active size="small" />
-                  )}
-                  <DownOutlined
-                    style={{ color: "#3a9fd6", paddingLeft: "10px" }}
+                <div className={classes.navLinkContent}>
+                  <FontAwesomeIcon
+                    icon={item.icon}
+                    className={classes.menuIcon}
                   />
+                  <div className={classes.navLink}>
+                    <span className={` ${classes.menuName}`}>{item.name}</span>
+                  </div>
                 </div>
-              </Dropdown>
-            </div>
+              </NavLink>
+            ))}
           </div>
         </div>
-        {params.campaignId && (
+
+        {/*         <div>
+          account settings
+          <Dropdown
+            menu={{ items }}
+            trigger={["click"]}
+            className={classes.navLink}
+          >
+            <div>
+              {" "}
+              {firstName ? (
+                `Hi, ${firstName}!`
+              ) : (
+                <Skeleton.Input active size="small" />
+              )}
+              <DownOutlined style={{ color: "#3a9fd6", paddingLeft: "10px" }} />
+            </div>
+          </Dropdown>
+        </div> */}
+      </div>
+      {/*  {params.campaignId && (
           <div className={classes.campaignNavBackground}>
             <div className={`${classes.mainNav} ${classes.campaignNav}`}>
               <div className={classes.navLinks}>
@@ -219,27 +277,17 @@ const MainNav = () => {
                 >
                   <FontAwesomeIcon className={classes.icon} icon={faPencil} />
                 </NavLink>
-                {/*               <NavLink
-            className={`${classes.navLink} ${classes.campaignNavLink}`}
-          >
-            Combat
-          </NavLink>
-          <NavLink
-            className={`${classes.navLink} ${classes.campaignNavLink}`}
-          >
-            Log
-          </NavLink>
-          <NavLink
-            className={`${classes.navLink} ${classes.campaignNavLink}`}
-          >
-            Notes
-          </NavLink> */}
+
+                <NavLink
+                  className={`${classes.navLink} ${classes.campaignNavLink}`}
+                >
+                  Log
+                </NavLink>
               </div>
             </div>
           </div>
-        )}
-      </div>
-    </>
+        )} */}
+    </div>
   );
 };
 
