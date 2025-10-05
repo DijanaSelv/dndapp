@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import ShopListItem from "../../components/ShopListItem";
-import { getShopsData } from "../../app/actions/databaseActions";
+import { getShopsData, watchShops } from "../../app/actions/databaseActions";
 
 import NotificationBox from "../../components/NotificationBox";
 
@@ -14,15 +14,29 @@ const CampaignShopsPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.uiSlice);
-  const { shops } = useSelector((state) => state.shopsSlice);
+  const { shops, loading } = useSelector((state) => state.shopsSlice);
   const { creator, dm } = useSelector((state) => state.rolesSlice);
   const { requestSuccess, requestFailed, notification } = useSelector(
     (state) => state.uiSlice
   );
 
   useEffect(() => {
-    dispatch(getShopsData(params.campaignId));
-  }, [requestSuccess, requestFailed]);
+    const unsubscribe = dispatch(watchShops(params.campaignId));
+    return () => {
+      if (typeof unsubscribe === "function") unsubscribe();
+    };
+  }, [dispatch, params.campaignId]);
+
+  useEffect(() => {
+    if (!isLoading && shops && Object.keys(shops).length === 0) {
+      const cleanup = dispatch(getShopsData(params.campaignId));
+      return () => {
+        if (typeof cleanup === "function") {
+          cleanup();
+        }
+      };
+    }
+  }, [dispatch, params.campaignId, isLoading]);
 
   return (
     <>
@@ -35,7 +49,7 @@ const CampaignShopsPage = () => {
           </Link>
         </div>
         <ul className={classes.shopCards}>
-          {isLoading && !shops.length ? (
+          {(loading && !shops.length) || isLoading ? (
             <LoadingOutlined />
           ) : Object.keys(shops).length !== 0 ? (
             Object.values(shops).map((shop) => (

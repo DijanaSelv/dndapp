@@ -89,11 +89,9 @@ const EditShopPage = () => {
     setShopItemsData(initialshopItemsData);
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     getShop();
-  }, []);
-
-  //update the added items on add item from the state and on render
+  }, []) */ //update the added items on add item from the state and on render
   useEffect(() => {
     if (shop) {
       shop.items ? populateItemsInShop() : setShopItemsData([]);

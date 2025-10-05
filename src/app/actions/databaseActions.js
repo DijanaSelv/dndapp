@@ -10,6 +10,8 @@ import {
   equalTo,
   query,
   remove,
+  onChildAdded,
+  onChildRemoved,
 } from "firebase/database";
 import { userSliceActions } from "../userSlice";
 import { db } from "./base";
@@ -18,7 +20,8 @@ import { campaignSliceActions } from "../campaignSlice";
 import { shopsSliceActions } from "../shopsSlice";
 import { rolesSliceActions } from "../rolesSlice";
 import { notesSliceActions } from "../notesSlice";
-
+//we need static shops to create a noew campaign with default shops
+import STATIC_SHOPS from "../STATIC_SHOPS";
 //create new user in collection (on sgin up)
 export const createNewUserData = (uid, user) => {
   return async (dispatch) => {
@@ -71,7 +74,6 @@ export const getRoles = (uid, campaignId) => {
 //create a new campaign
 export const createNewCampaign = (uid, newCampaignData) => {
   return async (dispatch) => {
-    dispatch(uiSliceActions.changeLoading(true));
     try {
       //new campaign info
       const id = newCampaignData.id;
@@ -81,6 +83,9 @@ export const createNewCampaign = (uid, newCampaignData) => {
         ref(db, "users/" + uid + "/campaigns/created/" + newCampaignData.id),
         true
       );
+      //store the initial shops
+      await set(ref(db, "shops/" + newCampaignData.id), STATIC_SHOPS);
+
       dispatch(uiSliceActions.requestSuccessIsTrue());
       dispatch(
         uiSliceActions.showNotification({
@@ -98,8 +103,6 @@ export const createNewCampaign = (uid, newCampaignData) => {
         })
       );
     }
-    dispatch(getUserCampaigns(uid));
-    dispatch(uiSliceActions.changeLoading(false));
   };
 };
 
@@ -111,6 +114,7 @@ export const subscribeToCampaigns = (campaignIds = [], type) => {
       return () => {};
     }
 
+    dispatch(uiSliceActions.changeLoading(true));
     const campaignsDataList = {};
     const unsubscribers = [];
 
@@ -161,6 +165,7 @@ export const subscribeToCampaigns = (campaignIds = [], type) => {
       unsubscribers.push(unsubscribe);
     });
 
+    dispatch(uiSliceActions.changeLoading(false));
     //return a cleanup function to stop listening whn component unmounts
     return () =>
       unsubscribers.forEach((unsubscribe) => {
@@ -253,29 +258,28 @@ export const getCurrentCampaign = (uid, campaignId) => {
 //delete campaign from the user and from the campaign
 
 export const deleteCampaign = (campaignId, uid) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     const newPostKey = push(child(ref(db), "campaigns")).key; //do i need this? TODO:
     const updates = {};
     updates["users/" + uid + "/campaigns/created/" + campaignId] = null;
     updates["campaigns/" + campaignId] = null;
+    updates["shops/" + campaignId] = null;
 
-    update(ref(db), updates);
+    await update(ref(db), updates);
     dispatch(
       uiSliceActions.showNotification({
         type: "info",
         code: "campaign deleted",
       })
     );
-    dispatch(getUserCampaigns(uid));
-    dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
 
 //join Campaign
 export const joinCampaign = (joinCode, uid) => {
   return async (dispatch) => {
-    dispatch(uiSliceActions.changeLoading(true));
-    let campaignKey;
+    /*  dispatch(uiSliceActions.changeLoading(true)); */
+    let campaignId;
     try {
       const campaignsRef = ref(db, "campaigns/");
       const joinCodeQuery = query(
@@ -286,7 +290,7 @@ export const joinCampaign = (joinCode, uid) => {
       const snapshot = await get(joinCodeQuery);
 
       if (snapshot.exists()) {
-        campaignKey = Object.keys(snapshot.val())[0];
+        campaignId = Object.keys(snapshot.val())[0];
         //add the campagin to the user joined campaigns
         const joinedCampaignsRef = ref(
           db,
@@ -294,12 +298,12 @@ export const joinCampaign = (joinCode, uid) => {
         );
         const joinedMemberRef = ref(
           db,
-          "campaigns/" + campaignKey + "/members/" + uid
+          "campaigns/" + campaignId + "/members/" + uid
         );
         const roles = {
           player: true,
         };
-        await update(joinedCampaignsRef, { [campaignKey]: true });
+        await update(joinedCampaignsRef, { [campaignId]: true });
         await update(joinedMemberRef, { roles });
 
         dispatch(
@@ -325,30 +329,27 @@ export const joinCampaign = (joinCode, uid) => {
         })
       );
     }
-    dispatch(getUserCampaigns(uid));
-    dispatch(uiSliceActions.changeLoading(false));
-    return campaignKey;
+    /*  dispatch(getUserCampaigns(uid)); */
+    /* dispatch(uiSliceActions.changeLoading(false)); */
+    return campaignId;
   };
 };
 
 //leave a joined campaign
 
 export const leaveCampaign = (campaignId, uid) => {
-  return async (dispatch) => {
-    dispatch(uiSliceActions.changeLoading(true));
+  return async (dispatch, getState) => {
     const updates = {};
     updates["users/" + uid + "/campaigns/joined/" + campaignId] = null;
     updates["campaigns/" + campaignId + "/members/" + uid] = null;
-    update(ref(db), updates);
+
+    await update(ref(db), updates);
     dispatch(
       uiSliceActions.showNotification({
         type: "info",
         code: "campaign left",
       })
     );
-    dispatch(uiSliceActions.requestSuccessIsTrue());
-    dispatch(getUserCampaigns(uid));
-    dispatch(uiSliceActions.changeLoading(false));
   };
 };
 
@@ -395,7 +396,7 @@ export const createShopsData = (campaignId, shopData) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
-      const shopRef = ref(db, "campaigns/" + campaignId + "/shops/");
+      const shopRef = ref(db, "shops/" + campaignId);
       await update(shopRef, { [shopData.id]: { ...shopData } });
       dispatch(uiSliceActions.requestSuccessIsTrue());
       dispatch(
@@ -404,7 +405,7 @@ export const createShopsData = (campaignId, shopData) => {
           code: "new shop created",
         })
       );
-      dispatch(getShopsData(campaignId));
+      //dispatch(getShopsData(campaignId));
     } catch (error) {
       console.error(error);
       dispatch(
@@ -414,32 +415,101 @@ export const createShopsData = (campaignId, shopData) => {
         })
       );
     }
+
     dispatch(uiSliceActions.changeLoading(false));
   };
 };
 
 export const getShopsData = (campaignId) => {
+  console.log("getShopsData called");
   return async (dispatch) => {
-    const shopsDataList = {};
-    dispatch(uiSliceActions.changeLoading(true));
+    dispatch(shopsSliceActions.setLoading(true));
+    const shopsData = {};
+    const unsubscribers = [];
+
     try {
-      const shopsRef = ref(db, "campaigns/" + campaignId + "/shops");
-      const snapshot = await get(shopsRef);
+      const allShopsRef = ref(db, "shops/" + campaignId);
+      const snapshot = await get(allShopsRef);
+
       if (snapshot.exists()) {
-        const shopsData = snapshot.val();
-        dispatch(shopsSliceActions.setShopsData(shopsData));
+        const shopIds = Object.keys(snapshot.val());
+
+        let firstDataLoaded = false;
+
+        shopIds.forEach((id) => {
+          const shopRef = ref(db, "shops/" + campaignId + "/" + id);
+
+          const unsubscribe = onValue(
+            shopRef,
+            (snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                shopsData[id] = data;
+              } else {
+                delete shopsData[id];
+              }
+
+              dispatch(shopsSliceActions.setShopsData({ ...shopsData }));
+
+              if (!firstDataLoaded) {
+                firstDataLoaded = true;
+                dispatch(shopsSliceActions.setLoading(false));
+              }
+            },
+            (error) => {
+              dispatch(
+                uiSliceActions.showNotification({
+                  type: "error",
+                  code: error.code,
+                })
+              );
+            }
+          );
+          unsubscribers.push(unsubscribe);
+        });
       } else {
-        dispatch(shopsSliceActions.setShopsData(""));
+        dispatch(shopsSliceActions.setShopsData({}));
+        dispatch(shopsSliceActions.setLoading(false));
       }
     } catch (error) {
       dispatch(
         uiSliceActions.showNotification({
           type: "error",
-          code: "error",
+          code: error.code || "error",
         })
       );
+      dispatch(shopsSliceActions.setLoading(false));
     }
-    dispatch(uiSliceActions.changeLoading(false));
+
+    return () => unsubscribers.forEach((u) => u());
+  };
+};
+
+/* keep track if something is added or removed */
+export const watchShops = (campaignId) => {
+  return (dispatch) => {
+    const shopsRef = ref(db, `shops/${campaignId}`);
+
+    // When a new shop is added
+    const unsubscribeAdded = onChildAdded(shopsRef, (snapshot) => {
+      const shopId = snapshot.key;
+      const data = snapshot.val();
+      console.log("shop added", shopId, data);
+      dispatch(shopsSliceActions.addShop({ shopId: shopId, data: data }));
+    });
+
+    // When a shop is removed
+    const unsubscribeRemoved = onChildRemoved(shopsRef, (snapshot) => {
+      const shopId = snapshot.key;
+      console.log("shop removed", shopId);
+      dispatch(shopsSliceActions.removeShop(shopId));
+    });
+
+    // Cleanup function
+    return () => {
+      unsubscribeAdded();
+      unsubscribeRemoved();
+    };
   };
 };
 
@@ -457,7 +527,7 @@ export const updateShopItems = (newShopData, campaignId, shopId) => {
           code: "shop updated",
         })
       );
-      dispatch(getShopsData(campaignId));
+      //dispatch(getShopsData(campaignId));
     } catch (error) {
       console.error(error);
       dispatch(
@@ -476,9 +546,11 @@ export const deleteShop = (campaignId, shopId) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
-      const shopRef = ref(db, "campaigns/" + campaignId + "/shops/");
-      console.log(shopRef);
-      await update(shopRef, { [shopId]: null });
+      const updates = {};
+      updates["shops/" + campaignId + "/" + shopId] = null;
+
+      await update(ref(db), updates);
+
       dispatch(uiSliceActions.requestSuccessIsTrue());
       dispatch(
         uiSliceActions.showNotification({
@@ -486,7 +558,7 @@ export const deleteShop = (campaignId, shopId) => {
           code: "shop deleted",
         })
       );
-      dispatch(getShopsData(campaignId));
+      //dispatch(getShopsData(campaignId));
     } catch (error) {
       console.error(error);
       dispatch(

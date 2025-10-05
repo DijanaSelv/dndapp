@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { remove } from "firebase/database";
 
 const initialState = {
   shops: {},
+  loading: false,
 };
 
 const shopsSlice = createSlice({
@@ -28,6 +30,12 @@ const shopsSlice = createSlice({
       }
       state.shops[shopId].items = updatedItems;
     },
+    addShop(state, action) {
+      state.shops[action.payload.shopId] = action.payload.data;
+    },
+    removeShop(state, action) {
+      delete state.shops[action.payload];
+    },
     changeTitleOfShop(state, action) {
       state.shops[action.payload.shopId].title = action.payload.title;
     },
@@ -45,6 +53,9 @@ const shopsSlice = createSlice({
     },
     clearItemsFromShop(state, action) {
       state.shops[action.payload].items = {};
+    },
+    setLoading(state, action) {
+      state.loading = action.payload;
     },
   },
 });

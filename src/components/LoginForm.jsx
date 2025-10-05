@@ -9,8 +9,9 @@ import classes from "../pages/loginpage/LoginPage.module.css";
 
 const LoginForm = () => {
   // **Redux hooks**
-  const { notification, isLoading, requestSuccess, requestFailed } =
-    useSelector((state) => state.uiSlice);
+  const { notification, requestSuccess, requestFailed } = useSelector(
+    (state) => state.uiSlice
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -87,12 +88,7 @@ const LoginForm = () => {
           </p>
         )}
       </div>
-      <Button
-        type="primary"
-        htmlType="submit"
-        loading={isLoading}
-        disabled={!formIsValid}
-      >
+      <Button type="primary" htmlType="submit">
         Log in
       </Button>
     </form>

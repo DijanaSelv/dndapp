@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,15 +11,18 @@ import { Button, Table, Spin } from "antd";
 import classes from "./ShopPage.module.css";
 import DeleteModal from "../../components/DeleteModal";
 import { currencyForShopDisplay } from "../../app/actions/uitls";
+import { set } from "firebase/database";
 
 const ShopPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
-  const { isLoading } = useSelector((state) => state.uiSlice);
-  const { shops } = useSelector((state) => state.shopsSlice);
+  const { shops, loading } = useSelector((state) => state.shopsSlice);
   const { dm } = useSelector((state) => state.rolesSlice);
   const shop = shops[params.shopId];
+
+  const [finsishedLookingUpShop, setFinishedLookingUpShop] = useState(false);
+  const navigate = useNavigate();
 
   const [itemsData, setItemsData] = useState();
   const [clickedItem, setClickedItem] = useState();
@@ -34,9 +37,9 @@ const ShopPage = () => {
   };
 
   //POPULATE THE SHOP ITEMS in shop
-  const getShop = async () => {
+  /*   const getShop = async () => {
     dispatch(getShopsData(params.campaignId));
-  };
+  }; */
 
   const setShop = () => {
     Object.keys(shop.items).map((itemKey) => {
@@ -53,16 +56,31 @@ const ShopPage = () => {
     setItemsData(itemsList);
   };
 
+  /* if the user naviggates directly to this url, the shops won't be fetched. we try to fnd if it exists and mark the state that we finishede looking it up */
+  // 1. Fetch shops when needed
   useEffect(() => {
-    getShop();
-  }, []);
+    if (!shop && !finsishedLookingUpShop) {
+      const cleanup = dispatch(getShopsData(params.campaignId));
+      console.log("looking up shop");
+      setFinishedLookingUpShop(true);
+      return () => {
+        if (typeof cleanup === "function") {
+          cleanup();
+        }
+      };
+    }
+  }, [dispatch, params.campaignId, shop, finsishedLookingUpShop]);
 
+  // 3. Redirect or populate items
   useEffect(() => {
-    if (shop) {
-      //if there are no items on shop pass an empty items array.
+    if (!loading && !shop && finsishedLookingUpShop) {
+      console.log("no shop found, going back");
+      navigate(`/Campaigns/${params.campaignId}/play/shops`);
+    } else if (shop) {
+      console.log("shop found, populating items");
       shop.items ? setShop() : setItemsData([]);
     }
-  }, [shop]);
+  }, [shop, loading, finsishedLookingUpShop, navigate]);
 
   //show item specs on click
   const clickHandler = async (url, id) => {
@@ -137,7 +155,7 @@ const ShopPage = () => {
                   locale={{
                     emptyText: "The shop is currently empty.",
                   }}
-                  loading={isLoading}
+                  loading={loading}
                   columns={columns}
                   dataSource={itemsData}
                   pagination={false}
