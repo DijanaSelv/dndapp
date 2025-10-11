@@ -589,7 +589,7 @@ const NewCharacterPage = () => {
   ];
 
   return (
-    <>
+    <div className={cssClasses.pageContainer}>
       <h2 className={cssClasses.title}>Create a new character</h2>
       <Form
         form={form}
@@ -636,7 +636,7 @@ const NewCharacterPage = () => {
         </div>
         <p>{messageContent}</p>
       </Form>
-    </>
+    </div>
   );
 };
 
