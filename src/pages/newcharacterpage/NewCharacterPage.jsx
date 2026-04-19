@@ -18,6 +18,7 @@ import { nanoid } from "nanoid";
 import cssClasses from "./NewCharacterPage.module.css";
 
 import { STARTING_GOLD } from "../../app/STATIC_STARTING_GOLD";
+import { SPELLCASTING_CLASSES } from "../../app/STATIC_SPELL_LEVELS";
 import { getItems } from "../../app/actions/dndApiActions";
 import { createCharacter } from "../../app/actions/databaseActions";
 import { currencyToCopper } from "../../app/actions/uitls";
@@ -37,7 +38,7 @@ const NewCharacterPage = () => {
   const { requestSuccess } = useSelector((state) => state.uiSlice);
 
   const [goldValueTooltip, setGoldValueTooltip] = useState(
-    "Starting gold will be adjusted if you select your class"
+    "Starting gold will be adjusted if you select your class",
   );
 
   const [messageContent, setMessageContent] = useState("");
@@ -145,6 +146,16 @@ const NewCharacterPage = () => {
 
     return data;
   };
+  /* const getSpellsOptions = async (category) => {
+    let data = [];
+    const apiData = await getItems(`/api/${category}`);
+
+    for (const element of apiData.results) {
+      data.push(element);
+    }
+
+    return data;
+  }; */
 
   const getAllOptions = async () => {
     try {
@@ -155,7 +166,7 @@ const NewCharacterPage = () => {
       const languages = await getCategoryOptions("languages");
       const magicSchools = await getCategoryOptions("magic-schools");
       const proficiencies = await getCategoryOptions("proficiencies");
-      const spells = await getCategoryOptions("spells");
+      /* const spells = await getCategoryOptions("spells"); */
 
       setOptionsData((prev) => ({
         ...prev,
@@ -166,7 +177,6 @@ const NewCharacterPage = () => {
         languages,
         magicSchools,
         proficiencies,
-        spells,
       }));
 
       const armor = [];
@@ -214,7 +224,6 @@ const NewCharacterPage = () => {
           other,
           weaponsInstruments,
           supplies,
-          spells,
         },
       }));
     } catch (error) {
@@ -228,23 +237,26 @@ const NewCharacterPage = () => {
 
   useEffect(() => {
     const fetchSpellsData = async () => {
-      const spellsData = await Promise.all(
-        optionsData.spells.map((spell) => getItems(spell.url))
+      const spellsList = await getCategoryOptions(
+        /* fetch the spells for a class at a certain level */
+        `classes/${optionsData.classSelected}/levels/${optionsData.levelSelected}/spells`,
       );
-      return spellsData;
-    };
-    if (optionsData.spells.length !== 0) {
-      const fetchData = async () => {
-        const spellsData = await fetchSpellsData();
+      const spellsUrls = spellsList.map((spell) => spell.url);
+      const spellsData = await Promise.all(
+        spellsUrls.map((url) => getItems(url)),
+      );
+      setOptionsData((prev) => ({ ...prev, spellsData }));
 
-        setOptionsData((prev) => ({
-          ...prev,
-          spellsData,
-        }));
-      };
-      fetchData();
+      console.log(spellsData, "spells fetched");
+      console.log(spellsData, "spells url");
+    };
+
+    /* execute only if the selected class is a spellcaster  */
+    if (SPELLCASTING_CLASSES.includes(optionsData.classSelected)) {
+      console.log("fetching spells data");
+      fetchSpellsData();
     }
-  }, [optionsData.spells]);
+  }, [optionsData.classSelected, optionsData.levelSelected]);
 
   useEffect(() => {
     requestSuccess && navigate("/");

@@ -1,3 +1,14 @@
+export const SPELLCASTING_CLASSES = [
+  "bard",
+  "druid",
+  "paladin",
+  "cleric",
+  "sorcerer",
+  "ranger",
+  "warlock",
+  "wizard",
+];
+
 export const SPELLS_AVAILABLE = {
   bard: [
     4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 15, 16, 18, 19, 19, 20, 22, 22, 22,
