@@ -132,9 +132,12 @@ const NewCharacterPage = () => {
   };
 
   //fetch from api
-  const getCategoryOptions = async (category) => {
+  const getCategoryOptions = async (category, options = {}) => {
     let data = [];
-    const apiData = await getItems(`/api/${category}`);
+    const apiData = await getItems(`/api/${category}`, options);
+
+    /* guard in case we abort the request so that error does not happen, because abort returns undefined */
+    if (!apiData || !apiData.results) return [];
 
     for (const element of apiData.results) {
       data.push({
@@ -236,26 +239,50 @@ const NewCharacterPage = () => {
   }, []);
 
   useEffect(() => {
-    const fetchSpellsData = async () => {
-      const spellsList = await getCategoryOptions(
-        /* fetch the spells for a class at a certain level */
-        `classes/${optionsData.classSelected}/levels/${optionsData.levelSelected}/spells`,
-      );
-      const spellsUrls = spellsList.map((spell) => spell.url);
-      const spellsData = await Promise.all(
-        spellsUrls.map((url) => getItems(url)),
-      );
-      setOptionsData((prev) => ({ ...prev, spellsData }));
+    /* we create a new controller */
+    const controller = new AbortController();
 
-      console.log(spellsData, "spells fetched");
-      console.log(spellsData, "spells url");
+    const fetchSpellsData = async () => {
+      try {
+        const spellsList = await getCategoryOptions(
+          /* fetch the spells for a class at a certain level */
+          `classes/${optionsData.classSelected}/levels/${optionsData.levelSelected}/spells`,
+          /* we attach the signal to this fetch, we make it cancellable, it needs to listen for this cancel signal */
+          { signal: controller.signal },
+        );
+
+        if (controller.signal.aborted) return;
+        const spellsUrls = spellsList.map((spell) => spell.url);
+        const spellsData = await Promise.all(
+          spellsUrls.map((url) => getItems(url, { signal: controller.signal })),
+        );
+        /* if we abort it mid promise all is happening, some of the spellsData items will be undefined and the SpellsFormData spell level breaks because the item doesnt have the level it needs to execute, so we're filtering the undefined stuff */
+        if (controller.signal.aborted) return;
+        const validSpells = spellsData.filter(Boolean);
+        setOptionsData((prev) => ({ ...prev, spellsData: validSpells }));
+
+        console.log(spellsData, "spells fetched");
+        console.log(spellsData, "spells url");
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error(err);
+        }
+      }
     };
 
-    /* execute only if the selected class is a spellcaster  */
-    if (SPELLCASTING_CLASSES.includes(optionsData.classSelected)) {
-      console.log("fetching spells data");
-      fetchSpellsData();
-    }
+    const timeout = setTimeout(() => {
+      /* execute only if the selected class is a spellcaster  */
+      if (SPELLCASTING_CLASSES.includes(optionsData.classSelected)) {
+        console.log("fetching spells data");
+        fetchSpellsData();
+      }
+    }, 1000);
+
+    return () => {
+      /* when we quickly update the levels for example, we do debounce with the timer, so that we don't fire the fetch every time, and also we call controller abort so that previous request cancels. this prevents too many requests happening  */
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, [optionsData.classSelected, optionsData.levelSelected]);
 
   useEffect(() => {
