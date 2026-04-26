@@ -12,17 +12,18 @@ export const AddCharacterToCampaignModal = ({
   children,
   showModal,
   setShowModal,
+  characters,
 }) => {
   const dispatch = useDispatch();
 
   const [selectedCharacter, setSelectedCharacter] = useState();
-  const { uid, characters } = useSelector((state) => state.userSlice.user);
+  const { uid } = useSelector((state) => state.userSlice.user);
   const { currentCampaign } = useSelector((state) => state.campaignSlice);
 
   const joinHandler = () => {
     console.log(uid, selectedCharacter, currentCampaign.id);
     dispatch(
-      addCharacterToCampaign(uid, selectedCharacter, currentCampaign.id)
+      addCharacterToCampaign(uid, selectedCharacter, currentCampaign.id),
     );
     setSelectedCharacter(null);
     setShowModal(false);
@@ -55,19 +56,19 @@ export const AddCharacterToCampaignModal = ({
         {characters && (
           <Radio.Group
             className={classes.charactersCheckboxGroup}
-            options={Object.keys(characters).map((cid) => ({
+            options={Object.values(characters).map((char) => ({
               label: (
                 <div
                   className={
-                    selectedCharacter === cid
+                    selectedCharacter === char.id
                       ? classes.selectedCharacter
                       : undefined
                   }
                 >
-                  <CharacterCard cid={cid} inModal="true" />
+                  <CharacterCard char={char} inModal="true" />
                 </div>
               ),
-              value: cid,
+              value: char.id,
             }))}
             onChange={setSelectedCharacterHandler}
             value={selectedCharacter}

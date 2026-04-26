@@ -1,4 +1,4 @@
-campaigns
+campaigns ##DONE
  └─ campaignId
      ├─ id: campaignId
      ├─ title: string
@@ -11,7 +11,7 @@ campaigns
              ├─ roles: { creator: true, dm: true, player: true }
              └─ character: characterId      
 
-users
+users ##DONE
  └─  userId
      ├─ email: string
      ├─ firstName: string
@@ -29,7 +29,7 @@ characters
      ├─ ownerId: userId
      ├─ name: string
      ├─ ...... all the info needed
-     └─ linkedCampaigns //to list where the character has joined
+     └─ linkedCampaigns //to list where the character has joined #TODO: 
          └─ campaignId: true
 
 publicNotes
@@ -51,7 +51,7 @@ privateNotes
              ├─ content: string
              └─ timestamp: number
 
-shops
+shops  ##DONE
     └─ campaignId
         └─ shopId
             ├─ title: string

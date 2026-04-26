@@ -40,7 +40,7 @@ const CharacterPage = () => {
   const characterId = params.characterId;
 
   const characterData = useSelector(
-    (state) => state.userSlice.user.characters[characterId]
+    (state) => state.charactersSlice.characters[characterId],
   );
 
   const uid = useSelector((state) => state.userSlice.user.uid);
@@ -101,14 +101,14 @@ const CharacterPage = () => {
       return savingThrows
         ? characterData["saving throws"] &&
           Object.values(characterData["saving throws"]).includes(
-            proficiencyName
+            proficiencyName,
           )
           ? proficiencyBonus
           : 0
         : characterData.skills &&
-          Object.values(characterData.skills).includes(proficiencyName)
-        ? proficiencyBonus
-        : 0;
+            Object.values(characterData.skills).includes(proficiencyName)
+          ? proficiencyBonus
+          : 0;
     };
 
     const calculateModifier = (ability, proficiencyName) => {
@@ -127,7 +127,7 @@ const CharacterPage = () => {
                 .map((word) => {
                   return word[0].toUpperCase() + word.slice(1);
                 })
-                .join(" ")
+                .join(" "),
             )
             .join(", ")
         : "";
@@ -241,7 +241,7 @@ const CharacterPage = () => {
     passivePerception = Math.floor(
       10 +
         calculateModifier(characterData.wisdom) +
-        checkIfProficient("skill-perception")
+        checkIfProficient("skill-perception"),
     );
   }
   const printCharacterHandler = () => {
@@ -266,7 +266,7 @@ const CharacterPage = () => {
     } else {
       if (preparedSpellsArray.includes(spellIndex)) {
         preparedSpellsArray = preparedSpellsArray.filter(
-          (preparedSpell) => preparedSpell !== spellIndex
+          (preparedSpell) => preparedSpell !== spellIndex,
         );
         dispatch(updatePreparedSpells(preparedSpellsArray, uid, characterId));
       } else {
@@ -289,10 +289,10 @@ const CharacterPage = () => {
             async (oneLevelSpells) =>
               await Promise.all(
                 oneLevelSpells.map(
-                  async (spell) => await getItems(`/api/spells/${spell}`)
-                )
-              )
-          )
+                  async (spell) => await getItems(`/api/spells/${spell}`),
+                ),
+              ),
+          ),
         );
 
         setSpellsData(allSpellsData);
@@ -301,7 +301,7 @@ const CharacterPage = () => {
 
       const getItemsData = async () => {
         const allEquipmentData = await Promise.all(
-          characterData.equipment.map((item) => getItems(item.url))
+          characterData.equipment.map((item) => getItems(item.url)),
         );
 
         setEquipmentData(allEquipmentData);
@@ -312,7 +312,7 @@ const CharacterPage = () => {
       const getFeatures = async () => {
         const featuresList = await getItems("/api/features");
         const allFeaturesData = await Promise.all(
-          featuresList.results.map(async (feature) => getItems(feature.url))
+          featuresList.results.map(async (feature) => getItems(feature.url)),
         );
         /* const classFeatures = allFeatures.filter(
           (feature) => feature.class.index === characterData.class
@@ -321,7 +321,7 @@ const CharacterPage = () => {
         const classFeatures = allFeaturesData.filter(
           (feature) =>
             feature.class.index === characterData.class &&
-            feature.level <= characterData.level
+            feature.level <= characterData.level,
         );
 
         setFeatures(classFeatures);
@@ -469,7 +469,7 @@ const CharacterPage = () => {
                           className={`${classes.spellLabel}
                             ${
                               characterData.preparedSpells?.includes(
-                                spell.index
+                                spell.index,
                               )
                                 ? classes.preparedSpellLabel
                                 : ""
@@ -605,16 +605,16 @@ const CharacterPage = () => {
     //SET EQUIPMENT TABLES sorted by category
     if (equipmentData) {
       const weapons = equipmentData.filter(
-        (item) => item["equipment_category"].index === "weapon"
+        (item) => item["equipment_category"].index === "weapon",
       );
 
       const armor = equipmentData.filter(
-        (item) => item["equipment_category"].index === "armor"
+        (item) => item["equipment_category"].index === "armor",
       );
       const otherItems = equipmentData.filter(
         (item) =>
           item["equipment_category"].index !== "armor" &&
-          item["equipment_category"].index !== "weapon"
+          item["equipment_category"].index !== "weapon",
       );
 
       //The basic attack bonus formula is: Ability Modifier + Proficiency + Enchanted Item Bonus + Class Features = Attack Bonus.
@@ -829,8 +829,8 @@ const CharacterPage = () => {
                               record,
                               uid,
                               characterId,
-                              "weapon"
-                            )
+                              "weapon",
+                            ),
                           );
                         } else {
                           dispatch(
@@ -838,8 +838,8 @@ const CharacterPage = () => {
                               null,
                               uid,
                               characterId,
-                              "weapon"
-                            )
+                              "weapon",
+                            ),
                           );
                         }
                       },
@@ -897,8 +897,8 @@ const CharacterPage = () => {
                                   record,
                                   uid,
                                   characterId,
-                                  "shield"
-                                )
+                                  "shield",
+                                ),
                               );
                             }
                           }
@@ -909,8 +909,8 @@ const CharacterPage = () => {
                                 null,
                                 uid,
                                 characterId,
-                                "shield"
-                              )
+                                "shield",
+                              ),
                             );
                           }
                         }
@@ -924,7 +924,7 @@ const CharacterPage = () => {
                             //check if proficient
                             !record["armor_category"] ||
                             armorProficiency.includes(
-                              record["armor_category"]
+                              record["armor_category"],
                             ) ||
                             armorProficiency.includes("All")
                           ) {
@@ -933,14 +933,19 @@ const CharacterPage = () => {
                                 record,
                                 uid,
                                 characterId,
-                                "armor"
-                              )
+                                "armor",
+                              ),
                             );
                           }
                         } else {
                           //if equipped, remove it
                           dispatch(
-                            updateEquippedItems(null, uid, characterId, "armor")
+                            updateEquippedItems(
+                              null,
+                              uid,
+                              characterId,
+                              "armor",
+                            ),
                           );
                         }
                       },
@@ -1265,7 +1270,7 @@ const CharacterPage = () => {
                           attack (+
                           {calculateAttackWeaponBonus(
                             characterData.equipped.weapon["weapon_range"],
-                            characterData.equipped.weapon
+                            characterData.equipped.weapon,
                           ) || 0}{" "}
                           vs. AC)
                         </span>
@@ -1274,7 +1279,7 @@ const CharacterPage = () => {
                           {characterData.equipped.weapon.damage["damage_dice"]}{" "}
                           +
                           {calculateDamageModifier(
-                            characterData.equipped.weapon
+                            characterData.equipped.weapon,
                           ) || 0}{" "}
                           {
                             characterData.equipped.weapon.damage["damage_type"]

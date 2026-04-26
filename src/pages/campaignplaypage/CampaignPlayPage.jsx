@@ -20,7 +20,8 @@ import { AddCharacterToCampaignModal } from "../../components/AddCharacterToCamp
 const CampaignPlayPage = () => {
   const params = useParams();
   const { currentCampaign } = useSelector((state) => state.campaignSlice);
-  const { characters, uid } = useSelector((state) => state.userSlice.user);
+  const { uid } = useSelector((state) => state.userSlice.user);
+  const characters = useSelector((state) => state.charactersSlice.characters);
 
   const [showModal, setShowModal] = useState(false);
   const addCharacterHandler = () => {
@@ -49,6 +50,7 @@ const CampaignPlayPage = () => {
           <AddCharacterToCampaignModal
             showModal={showModal}
             setShowModal={setShowModal}
+            characters={characters}
           >
             <div onClick={addCharacterHandler}>
               <PlayCampaignCard

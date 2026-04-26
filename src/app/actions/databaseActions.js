@@ -20,6 +20,7 @@ import { campaignSliceActions } from "../campaignSlice";
 import { shopsSliceActions } from "../shopsSlice";
 import { rolesSliceActions } from "../rolesSlice";
 import { notesSliceActions } from "../notesSlice";
+import { charactersSliceActions } from "../charactersSlice";
 //we need static shops to create a noew campaign with default shops
 import STATIC_SHOPS from "../STATIC_SHOPS";
 //create new user in collection (on sgin up)
@@ -39,14 +40,45 @@ export const getUserData = (uid) => {
     const userRef = ref(db, "users/" + uid);
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
-
       dispatch(userSliceActions.setUserData(data));
       dispatch(uiSliceActions.changeLoading(false));
     });
   };
 };
 
-export const getUserCampaigns = (uid) => {
+export const subscribeToCharacters = (uid) => {
+  return async (dispatch) => {
+    const charactersRef = ref(db, "characters/");
+    const queryRef = query(
+      charactersRef,
+      orderByChild("ownerId", equalTo(uid)),
+    );
+    const unsubscribe = onValue(queryRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log(data, "charactersData");
+      dispatch(charactersSliceActions.setCharactersData(data));
+    });
+
+    return () => unsubscribe();
+  };
+};
+
+export const getUserCharacters = (uid) => {
+  return async (dispatch) => {
+    const charactersRef = ref(db, "characters/");
+    const queryRef = query(
+      charactersRef,
+      orderByChild("ownerId", equalTo(uid)),
+    );
+    onValue(queryRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log(data, "charactersData");
+      dispatch(charactersSliceActions.setCharactersData(data));
+    });
+  };
+};
+
+/* export const getUserCampaigns = (uid) => {
   return async (dispatch) => {
     const userRef = ref(db, "users/" + uid + "/campaigns");
     onValue(userRef, (snapshot) => {
@@ -55,13 +87,13 @@ export const getUserCampaigns = (uid) => {
       dispatch(userSliceActions.updateUserCampaigns(data));
     });
   };
-};
+}; */
 
 export const getRoles = (uid, campaignId) => {
   return async (dispatch) => {
     const userRef = ref(
       db,
-      "campaigns/" + campaignId + "/members/" + uid + "/roles"
+      "campaigns/" + campaignId + "/members/" + uid + "/roles",
     );
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
@@ -81,7 +113,7 @@ export const createNewCampaign = (uid, newCampaignData) => {
       //store the id in the user who created it
       await set(
         ref(db, "users/" + uid + "/campaigns/created/" + newCampaignData.id),
-        true
+        true,
       );
       //store the initial shops
       await set(ref(db, "shops/" + newCampaignData.id), STATIC_SHOPS);
@@ -91,7 +123,7 @@ export const createNewCampaign = (uid, newCampaignData) => {
         uiSliceActions.showNotification({
           type: "success",
           code: "new campaign created",
-        })
+        }),
       );
     } catch (error) {
       console.error(error);
@@ -100,7 +132,7 @@ export const createNewCampaign = (uid, newCampaignData) => {
         uiSliceActions.showNotification({
           type: "error",
           code: "error",
-        })
+        }),
       );
     }
   };
@@ -138,7 +170,7 @@ export const subscribeToCampaigns = (campaignIds = [], type) => {
             console.log(
               "No campaign found in",
               type,
-              ", possibly deleted by creator."
+              ", possibly deleted by creator.",
             );
             delete campaignsDataList[id];
           }
@@ -157,9 +189,9 @@ export const subscribeToCampaigns = (campaignIds = [], type) => {
             uiSliceActions.showNotification({
               type: "error",
               code: error.code,
-            })
+            }),
           );
-        }
+        },
       );
 
       unsubscribers.push(unsubscribe);
@@ -270,7 +302,7 @@ export const deleteCampaign = (campaignId, uid) => {
       uiSliceActions.showNotification({
         type: "info",
         code: "campaign deleted",
-      })
+      }),
     );
   };
 };
@@ -285,7 +317,7 @@ export const joinCampaign = (joinCode, uid) => {
       const joinCodeQuery = query(
         campaignsRef,
         orderByChild("joinCode"),
-        equalTo(joinCode)
+        equalTo(joinCode),
       );
       const snapshot = await get(joinCodeQuery);
 
@@ -294,11 +326,11 @@ export const joinCampaign = (joinCode, uid) => {
         //add the campagin to the user joined campaigns
         const joinedCampaignsRef = ref(
           db,
-          "users/" + uid + "/campaigns/" + "joined/"
+          "users/" + uid + "/campaigns/" + "joined/",
         );
         const joinedMemberRef = ref(
           db,
-          "campaigns/" + campaignId + "/members/" + uid
+          "campaigns/" + campaignId + "/members/" + uid,
         );
         const roles = {
           player: true,
@@ -310,14 +342,14 @@ export const joinCampaign = (joinCode, uid) => {
           uiSliceActions.showNotification({
             type: "success",
             code: "campaign joined",
-          })
+          }),
         );
       } else {
         dispatch(
           uiSliceActions.showNotification({
             type: "error",
             code: "no join campaign",
-          })
+          }),
         );
       }
     } catch (error) {
@@ -326,7 +358,7 @@ export const joinCampaign = (joinCode, uid) => {
         uiSliceActions.showNotification({
           type: "error",
           code: "error",
-        })
+        }),
       );
     }
     /*  dispatch(getUserCampaigns(uid)); */
@@ -348,7 +380,7 @@ export const leaveCampaign = (campaignId, uid) => {
       uiSliceActions.showNotification({
         type: "info",
         code: "campaign left",
-      })
+      }),
     );
   };
 };
@@ -360,13 +392,13 @@ export const getMembers = (campaignId, role) => {
     try {
       const campaignMembersRef = ref(
         db,
-        "campaigns/" + campaignId + "/members"
+        "campaigns/" + campaignId + "/members",
       );
 
       const membersQuery = query(
         campaignMembersRef,
         orderByChild(`roles/${role}`),
-        equalTo(true)
+        equalTo(true),
       );
       const snapshot = await get(membersQuery);
 
@@ -403,7 +435,7 @@ export const createShopsData = (campaignId, shopData) => {
         uiSliceActions.showNotification({
           type: "success",
           code: "new shop created",
-        })
+        }),
       );
       //dispatch(getShopsData(campaignId));
     } catch (error) {
@@ -412,7 +444,7 @@ export const createShopsData = (campaignId, shopData) => {
         uiSliceActions.showNotification({
           type: "error",
           code: "error",
-        })
+        }),
       );
     }
 
@@ -461,9 +493,9 @@ export const getShopsData = (campaignId) => {
                 uiSliceActions.showNotification({
                   type: "error",
                   code: error.code,
-                })
+                }),
               );
-            }
+            },
           );
           unsubscribers.push(unsubscribe);
         });
@@ -476,7 +508,7 @@ export const getShopsData = (campaignId) => {
         uiSliceActions.showNotification({
           type: "error",
           code: error.code || "error",
-        })
+        }),
       );
       dispatch(shopsSliceActions.setLoading(false));
     }
@@ -525,7 +557,7 @@ export const updateShopItems = (newShopData, campaignId, shopId) => {
         uiSliceActions.showNotification({
           type: "success",
           code: "shop updated",
-        })
+        }),
       );
       //dispatch(getShopsData(campaignId));
     } catch (error) {
@@ -534,7 +566,7 @@ export const updateShopItems = (newShopData, campaignId, shopId) => {
         uiSliceActions.showNotification({
           type: "error",
           code: "error",
-        })
+        }),
       );
     }
     dispatch(uiSliceActions.changeLoading(false));
@@ -556,16 +588,15 @@ export const deleteShop = (campaignId, shopId) => {
         uiSliceActions.showNotification({
           type: "info",
           code: "shop deleted",
-        })
+        }),
       );
-
     } catch (error) {
       console.error(error);
       dispatch(
         uiSliceActions.showNotification({
           type: "error",
           code: "error",
-        })
+        }),
       );
     }
     dispatch(uiSliceActions.changeLoading(false));
@@ -579,7 +610,7 @@ export const createNotes = (campaignId, uid, notesData) => {
     try {
       const notesRef = ref(
         db,
-        "campaigns/" + campaignId + "/members/" + uid + "/notes"
+        "campaigns/" + campaignId + "/members/" + uid + "/notes",
       );
       await update(notesRef, { ...notesData });
     } catch (error) {
@@ -594,7 +625,7 @@ export const getNotes = (campaignId, uid) => {
     try {
       const notesRef = ref(
         db,
-        "campaigns/" + campaignId + "/members/" + uid + "/notes"
+        "campaigns/" + campaignId + "/members/" + uid + "/notes",
       );
       const snapshot = await get(notesRef);
       if (snapshot.exists()) {
@@ -614,7 +645,7 @@ export const deleteNotes = (campaignId, uid, noteId) => {
     try {
       const notesRef = ref(
         db,
-        "campaigns/" + campaignId + "/members/" + uid + "/notes"
+        "campaigns/" + campaignId + "/members/" + uid + "/notes",
       );
       await update(notesRef, { [noteId]: null });
     } catch (error) {
@@ -629,7 +660,7 @@ export const updateNotes = (campaignId, uid, noteId, newContent) => {
     try {
       const notesRef = ref(
         db,
-        "campaigns/" + campaignId + "/members/" + uid + "/notes/" + noteId
+        "campaigns/" + campaignId + "/members/" + uid + "/notes/" + noteId,
       );
       await update(notesRef, { content: newContent });
     } catch (error) {
@@ -645,7 +676,7 @@ export const createCharacter = (data, uid, cid) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
-      const charRef = ref(db, "users/" + uid + "/characters/" + cid);
+      const charRef = ref(db, "characters/" + cid);
       await update(charRef, { ...data });
     } catch (error) {
       console.error(error);
@@ -654,11 +685,11 @@ export const createCharacter = (data, uid, cid) => {
     dispatch(uiSliceActions.requestSuccessIsTrue());
   };
 };
-export const deleteCharacter = (uid, cid) => {
+export const deleteCharacter = (cid) => {
   return async (dispatch) => {
     dispatch(uiSliceActions.changeLoading(true));
     try {
-      const charRef = ref(db, "users/" + uid + "/characters/" + cid);
+      const charRef = ref(db, "characters/" + cid);
       await remove(charRef);
     } catch (error) {
       console.error(error);
@@ -675,7 +706,7 @@ export const addCharacterToCampaign = (uid, characterId, campaignId) => {
     try {
       const campaignRef = ref(
         db,
-        "campaigns/" + campaignId + "/members/" + uid
+        "campaigns/" + campaignId + "/members/" + uid,
       );
       await update(campaignRef, { character: characterId });
     } catch (error) {
@@ -687,7 +718,7 @@ export const addCharacterToCampaign = (uid, characterId, campaignId) => {
       uiSliceActions.showNotification({
         type: "success",
         code: "added character",
-      })
+      }),
     );
   };
 };
@@ -699,7 +730,7 @@ export const removeCharacterFromCampaign = (uid, campaignId) => {
     try {
       const characterRef = ref(
         db,
-        "campaigns/" + campaignId + "/members/" + uid + "/character/"
+        "campaigns/" + campaignId + "/members/" + uid + "/character/",
       );
       console.log(characterRef);
       await remove(characterRef);
@@ -712,7 +743,7 @@ export const removeCharacterFromCampaign = (uid, campaignId) => {
       uiSliceActions.showNotification({
         type: "success",
         code: "removed character",
-      })
+      }),
     );
   };
 };
@@ -723,7 +754,7 @@ export const updateEquippedItems = (data, uid, characterId, category) => {
     try {
       const charRef = ref(
         db,
-        "users/" + uid + "/characters/" + characterId + "/equipped/" + category
+        "users/" + uid + "/characters/" + characterId + "/equipped/" + category,
       );
       if (data) {
         await update(charRef, { ...data });
@@ -745,7 +776,7 @@ export const updatePreparedSpells = (data, uid, characterId) => {
     try {
       const preparedSpellsRef = ref(
         db,
-        "users/" + uid + "/characters/" + characterId + "/preparedSpells/"
+        "users/" + uid + "/characters/" + characterId + "/preparedSpells/",
       );
       if (!data.length === 0) {
         await remove(preparedSpellsRef);
@@ -768,7 +799,7 @@ export const addRolltoCombat = (
   character,
   content,
   uid,
-  details
+  details,
 ) => {
   return async (dispatch) => {
     try {
@@ -805,7 +836,7 @@ export const addToInitiative = (name, key, campaignId) => {
     try {
       const initiativeRef = ref(
         db,
-        "campaigns/" + campaignId + "/combat/initiative"
+        "campaigns/" + campaignId + "/combat/initiative",
       );
       /* const timestamp = Date.now().toString(); */
       await update(initiativeRef, { [key]: name });
@@ -820,7 +851,7 @@ export const removeFromInitiative = (key, campaignId) => {
     try {
       const initiativeRef = ref(
         db,
-        "campaigns/" + campaignId + "/combat/initiative/" + key
+        "campaigns/" + campaignId + "/combat/initiative/" + key,
       );
 
       await remove(initiativeRef);
@@ -836,7 +867,7 @@ export const reorderInitiative = (updatedInitiativeOrder, campaignId) => {
     try {
       const initiativeRef = ref(
         db,
-        "campaigns/" + campaignId + "/combat/initiative/"
+        "campaigns/" + campaignId + "/combat/initiative/",
       );
 
       await set(initiativeRef, updatedInitiativeOrder);

@@ -25,7 +25,7 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
 
   // Fetch campaigns data from userSlice
   const campaigns = useSelector(
-    (state) => state.userSlice.user.campaigns || {}
+    (state) => state.userSlice.user.campaigns || {},
   );
 
   const campaignsForDisplay = useSelector((state) => {

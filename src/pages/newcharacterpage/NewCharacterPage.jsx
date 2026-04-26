@@ -121,9 +121,9 @@ const NewCharacterPage = () => {
     //JSON parse so that undefined variables are removed (firebase does not accept undefined)
     values["gold"] = currencyToCopper(values["gold"]);
     const equipment = optionsData.equipment;
-    const data = { ...values, equipment };
-    const dataToSave = JSON.parse(JSON.stringify(data));
     const id = nanoid(13);
+    const data = { ...values, equipment, ownerId: uid, id };
+    const dataToSave = JSON.parse(JSON.stringify(data));
     dispatch(createCharacter(dataToSave, uid, id));
   };
 
