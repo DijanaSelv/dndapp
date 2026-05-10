@@ -16,7 +16,7 @@ import NotificationBox from "../../components/NotificationBox";
 
 import { nanoid } from "nanoid";
 
-import { Button, Form, Input, Select, Table, Tabs } from "antd";
+import { Button, Form, Input, Select, Table, Tabs, Tooltip } from "antd";
 import {
   DeleteOutlined,
   MinusCircleOutlined,
@@ -36,7 +36,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
 
   const { isLoading } = useSelector((state) => state.uiSlice);
   const { requestSuccess, requestFailed, notification } = useSelector(
-    (state) => state.uiSlice
+    (state) => state.uiSlice,
   );
 
   const [clickedItem, setClickedItem] = useState();
@@ -77,14 +77,14 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
 
   const memoizedCategories = useMemo(
     () => selectCategories,
-    [selectCategories]
+    [selectCategories],
   );
 
   // populate the items from dnd api
   const populateAddItemsTable = async () => {
     let displayshopItemsData = [];
     const displayData = await getItems(
-      `/api/equipment-categories/${selectedCategoryPath}`
+      `/api/equipment-categories/${selectedCategoryPath}`,
     );
     for (const element of displayData.equipment) {
       displayshopItemsData.push({
@@ -131,16 +131,16 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
                 ...item,
                 [field]: { [currency]: Math.sign(value) === 1 ? value : 0 },
               }
-            : item
-        )
+            : item,
+        ),
       );
     } else {
       setItemsList((prevItems) =>
         prevItems.map((item) =>
           item.id === itemId
             ? { ...item, [field]: Math.sign(value) === 1 ? value : 0 }
-            : item
-        )
+            : item,
+        ),
       );
     }
   };
@@ -157,7 +157,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
     setItemsList((prevState) =>
       prevState.filter((obj) => {
         return obj.id !== record.id;
-      })
+      }),
     );
   };
 
@@ -292,7 +292,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
       const priceToStore = currencyToCopper(
         item.price.gp,
         item.price.sp,
-        item.price.cp
+        item.price.cp,
       );
 
       itemsDataObject[item.id] = { ...item, price: priceToStore };
