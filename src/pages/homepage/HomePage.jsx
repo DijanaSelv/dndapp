@@ -10,6 +10,9 @@ import { useState } from "react";
 import JoinCampaignModal from "../../components/JoinCampaignModal";
 import { uiSliceActions } from "../../app/uiSlice";
 import CharacterCardsContainer from "../../components/CharacterCardsContainer";
+import TopMenu from "../../components/TopMenu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   //fetch state from store
@@ -27,6 +30,9 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
+      <TopMenu title="Home">
+        <FontAwesomeIcon icon={faBook} />
+      </TopMenu>
       {/* {notification && <NotificationBox />} */}
 
       <div className={classes.section}>

@@ -10,7 +10,7 @@
   height: 100%;
   background-color: var(--color-backgroundFA);
   padding: 12px;
-  border: 1px solid #efefef;
+  border: 1px solid var(--color-lightBorder);
   border-radius: 4px;
 }
 
@@ -51,11 +51,21 @@
 .sidebarButton {
   cursor: pointer;
   margin-left: auto;
-  font-size: 14px;
+  font-size: 10px;
   position: absolute;
-  right: -12px;
-  top: 0;
+  right: -4px;
+  top: 8px;
   z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  width: 10px;
+  height: 10px;
+  background: white;
+  padding: 2px;
+  border: 1px solid rgba(93, 103, 121, 0.3);
+  transition: all ease-in;
 }
 
 .collapsedSidebarButton {
@@ -186,4 +196,16 @@
 .campaignNavLink:hover {
   border-bottom: 2px solid #373d49;
   transition: all 0.3s;
+}
+
+.topMenuWrapper {
+  width: 100%;
+  border: 1px solid var(--color-lightBorder);
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-backgroundFA);
 }

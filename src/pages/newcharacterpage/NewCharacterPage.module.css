@@ -4,7 +4,7 @@
 }
 
 .characterForm * {
-  font-family: "Texturina";
+  /* font-family: "Texturina"; */
 }
 
 .characterForm h3 {
@@ -12,7 +12,7 @@
 }
 
 .title {
-  font-family: "Texturina";
+  /* font-family: "Texturina"; */
   padding-bottom: 10px;
   margin: 20px 0 20px 0;
   border-bottom: 1px solid #ccd1dad2;
@@ -70,11 +70,11 @@
 .levelForm :global(.ant-input-number-input-wrap) {
   width: 45px;
   font-size: large;
-  font-family: "Texturina";
+  /* font-family: "Texturina"; */
 }
 .abilityScoresContainer :global(.ant-input-number-input),
 .levelForm :global(.ant-input-number-input) {
-  font-family: "Texturina";
+  /* font-family: "Texturina"; */
   margin: auto;
 }
 .abilityScoresContainer :global(.ant-input-number-handler-wrap),
@@ -90,7 +90,7 @@
 
 .pageInfo {
   font-size: 20px;
-  font-family: "Texturina";
+  /* font-family: "Texturina"; */
   margin-top: 30px;
   text-align: center;
 }

@@ -5,7 +5,8 @@
   --color-hover: #3a9fd6;
   --color-highlight: #ce6400ff;
   --color-secondaryAlt: #373d49f9;
-  --color-lightStroke: #5d6779d2;
+  --color-lightStroke: rgba(93, 103, 121, 0.82);
+  --color-lightBorder: #efefef;
   --color-backgroundFA: #fafafa;
   --color-body: ;
   --color-headline: ;
