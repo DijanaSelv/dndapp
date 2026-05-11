@@ -65,7 +65,7 @@
   background: white;
   padding: 2px;
   border: 1px solid rgba(93, 103, 121, 0.3);
-  transition: all ease-in;
+  transition: var(--transition-global);
 }
 
 .collapsedSidebarButton {
@@ -74,7 +74,7 @@
 
 .sidebarButton:hover svg {
   color: var(--color-hover);
-  transition: color 100ms ease-in-out;
+  transition: var(--transition-global);
 }
 
 .collapse {
@@ -141,7 +141,7 @@
   display: flex;
   text-decoration: none;
   border-bottom: 2px solid transparent;
-  transition: all 0.3s;
+  transition: var(--transition-global);
   color: black;
 }
 .navLinkContent {
@@ -195,18 +195,45 @@
 
 .campaignNavLink:hover {
   border-bottom: 2px solid #373d49;
-  transition: all 0.3s;
+  transition: var(--transition-global);
 }
 
+/* Top Menu Styling */
 .topMenuWrapper {
   width: 100%;
   border: 1px solid var(--color-lightBorder);
   padding: 8px 12px;
   border-radius: 4px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   background: var(--color-backgroundFA);
   font-family: var(--text-decor);
+}
+
+.breadcrumbDiv {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumbLink {
+  color: black;
+  transition: var(--transition-global);
+}
+
+.lastBreadcrumb {
+  font-weight: 600;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-highlight);
+}
+
+.chevron {
+  font-size: 11px;
 }

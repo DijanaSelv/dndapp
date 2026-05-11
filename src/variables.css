@@ -12,6 +12,8 @@
   --color-headline: ;
   --color-whiteF: #f3f3f3;
 
+  --transition-global: all 0.07s ease-in-out;
+
   --text-serif: "EB Garamond", serif;
   --text-sans-serif: "Montserrat", sans-serif;
   --text-decor: "Scope One", serif;

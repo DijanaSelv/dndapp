@@ -79,3 +79,9 @@ button {
 a {
   text-decoration: none;
 }
+
+.borderedContainer {
+  border: 1px solid var(--color-lightBorder);
+  padding: 8px 12px;
+  border-radius: 4px;
+}

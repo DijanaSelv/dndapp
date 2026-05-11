@@ -30,7 +30,14 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
-      <TopMenu title="Home">
+      <TopMenu
+        title="Home"
+        breadcrumbs={[
+          { text: "home", url: "/" },
+          { text: "Shoppe", url: "/campaigns" },
+          { text: "New Campaign" },
+        ]}
+      >
         <FontAwesomeIcon icon={faBook} />
       </TopMenu>
       {/* {notification && <NotificationBox />} */}
