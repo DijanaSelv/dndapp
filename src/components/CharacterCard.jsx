@@ -19,7 +19,7 @@ const CharacterCard = ({ char, inModal }) => {
         cover={
           !inModal ? (
             <>
-              <Link to={`/Characters/${char.id}`}>
+              <Link to={`/characters/${char.id}`}>
                 <div className={classes.coverDiv}>
                   <img
                     alt="campaign image"

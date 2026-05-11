@@ -45,7 +45,7 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
   const addMoreCard =
     type === "created" ? (
       <div className={classes.addMoreWrapper}>
-        <Link to={`/NewCampaign`}>
+        <Link to={`/new-campaign`}>
           <Card
             className={classes.addMoreCard}
             cover={

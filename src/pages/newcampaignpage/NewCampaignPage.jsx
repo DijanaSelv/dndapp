@@ -74,7 +74,7 @@ const NewCampaignPage = () => {
     };
 
     await dispatch(createNewCampaign(uid, newCampaignData));
-    navigate(`/Campaigns/${newCampaignId}/info`);
+    navigate(`/campaigns/${newCampaignId}/info`);
   };
 
   const cancelPageHandler = () => {

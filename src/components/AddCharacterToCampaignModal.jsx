@@ -75,7 +75,7 @@ export const AddCharacterToCampaignModal = ({
           />
         )}
         <div className={classes.newCharacterOptionWrapper}>
-          <Link to="/NewCharacter">
+          <Link to="/new-character">
             <Button type="dashed">
               <FontAwesomeIcon icon={faPlus} /> Create a New Character
             </Button>

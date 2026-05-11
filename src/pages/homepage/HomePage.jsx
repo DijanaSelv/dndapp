@@ -41,7 +41,7 @@ const Home = () => {
             <h2> Created Campaigns {isLoading && <LoadingOutlined />}</h2>
           </div>
 
-          <Link className={classes.sectionLink} to="/NewCampaign">
+          <Link className={classes.sectionLink} to="/new-campaign">
             New Campaign <PlusCircleOutlined />
           </Link>
         </div>
@@ -72,7 +72,7 @@ const Home = () => {
       <div className={`${classes.section} ${classes.charactersSection}`}>
         <div className={classes.sectionHeader}>
           <h2>Characters {isLoading && <LoadingOutlined />}</h2>
-          <Link to="/NewCharacter" className={classes.sectionLink}>
+          <Link to="/new-character" className={classes.sectionLink}>
             New Character <PlusCircleOutlined />
           </Link>
         </div>

@@ -32,14 +32,14 @@ const CampaignPlayPage = () => {
     <div className={classes.playPageContainer}>
       <ul className={classes.cardsList}>
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.campaignId}/info`}
+          goTo={`/campaigns/${params.campaignId}/info`}
           cardFor="Info"
           image={<FontAwesomeIcon className={classes.icon} icon={faInfo} />}
           description="General campaign info"
         />
         {characters && characters[currentCampaign.members?.[uid]?.character] ? (
           <PlayCampaignCard
-            goTo={`/Campaigns/${params.campaignId}/play/character/${currentCampaign.members[uid].character}`}
+            goTo={`/campaigns/${params.campaignId}/play/character/${currentCampaign.members[uid].character}`}
             cardFor="Character"
             image={
               <FontAwesomeIcon className={classes.icon} icon={faUserLarge} />
@@ -70,25 +70,25 @@ const CampaignPlayPage = () => {
         )}
 
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.campaignId}/play/shops`}
+          goTo={`/campaigns/${params.campaignId}/play/shops`}
           cardFor="Shops"
           image={<FontAwesomeIcon className={classes.icon} icon={faShop} />}
           description="You can buy and sell items"
         />
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.campaignId}/play/${uid}/combat`}
+          goTo={`/campaigns/${params.campaignId}/play/${uid}/combat`}
           cardFor="Combat"
           image={<FontAwesomeIcon className={classes.icon} icon={faDiceD20} />}
           description="Fight!"
         />
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.campaignId}/play/log`}
+          goTo={`/campaigns/${params.campaignId}/play/log`}
           cardFor="Log"
           image={<FontAwesomeIcon className={classes.icon} icon={faBook} />}
           description="Campaign lore and progress"
         />
         <PlayCampaignCard
-          goTo={`/Campaigns/${params.campaignId}/play/notes`}
+          goTo={`/campaigns/${params.campaignId}/play/notes`}
           cardFor="Notes"
           image={<FontAwesomeIcon className={classes.icon} icon={faPencil} />}
           description="Your personal notes"
