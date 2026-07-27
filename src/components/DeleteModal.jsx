@@ -141,7 +141,7 @@ const DeleteModal = (props) => {
     );
   }
   if (props.type === "deleteCharacter") {
-    const { uid, characterId, showModal, setShowModal } = props;
+    const { characterId, showModal, setShowModal } = props;
 
     const handleOk = () => {
       dispatch(deleteCharacter(characterId));

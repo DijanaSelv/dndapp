@@ -42,10 +42,10 @@ const SpellsFormData = ({
       //filter them by whether they apply for the selected class.
 
       //console.log(spellsData, "spells data in form data");
-      const validSpellsArray = spellsData.filter((spell) => {
+      /* const validSpellsArray = spellsData.filter((spell) => {
         const classesList = spell.classes.map((cls) => cls.index);
         return classesList.includes(classInput);
-      });
+      }); */
 
       const classInstructions = SPELLS_INSTRUCTION[classInput];
       //get spell slots for that class
@@ -74,7 +74,7 @@ const SpellsFormData = ({
 
       const collapseItems = Object.keys(leveledArray).map((lvl) => ({
         key: `${lvl}`,
-        label: `${lvl == 0 ? `Cantrips` : `Level ${lvl}`}`,
+        label: `${lvl === 0 ? `Cantrips` : `Level ${lvl}`}`,
         children: leveledArray[lvl] && (
           <Form.Item name={`spells${lvl}`}>
             <Checkbox.Group
@@ -83,7 +83,7 @@ const SpellsFormData = ({
                 label: <SpellCard spell={spell} />,
                 value: spell.index,
                 disabled:
-                  lvl == 0
+                  lvl === 0
                     ? !selectedCantrips.includes(spell.index) &&
                       !canSelectMoreCantrips
                     : !selectedSpells.includes(spell.index) &&
@@ -113,33 +113,33 @@ const SpellsFormData = ({
             <div className={cssClasses.spellCountContent}>
               <div
                 className={`${
-                  selectedCantrips.length == cantripsAllowed &&
+                  selectedCantrips.length === cantripsAllowed &&
                   cssClasses.spellsFull
                 }`}
               >
-                {selectedCantrips.length == cantripsAllowed
+                {selectedCantrips.length === cantripsAllowed
                   ? "Cantrips full:"
                   : "Cantrips selected:"}
               </div>
               <div
                 className={`${cssClasses.countNumbers} ${
-                  selectedCantrips.length == cantripsAllowed &&
+                  selectedCantrips.length === cantripsAllowed &&
                   cssClasses.spellsFull
                 }`}
               >{`${selectedCantrips.length} / ${cantripsAllowed}`}</div>
               <div
                 className={` ${
-                  selectedSpells.length == spellsAllowed &&
+                  selectedSpells.length === spellsAllowed &&
                   cssClasses.spellsFull
                 }`}
               >
-                {selectedSpells.length == spellsAllowed
+                {selectedSpells.length === spellsAllowed
                   ? "Spells full:"
                   : "Spells selected:"}
               </div>
               <div
                 className={`${cssClasses.countNumbers} ${
-                  selectedSpells.length == spellsAllowed &&
+                  selectedSpells.length === spellsAllowed &&
                   cssClasses.spellsFull
                 }`}
               >{`${selectedSpells.length} / ${spellsAllowed}`}</div>
@@ -175,6 +175,8 @@ const SpellsFormData = ({
     selectedCantrips,
     canSelectMoreCantrips,
     spellsAllowed,
+    cantripsAllowed,
+    onVa,
   ]);
 
   useEffect(() => {
@@ -201,7 +203,7 @@ const SpellsFormData = ({
   //LIMIT number of spells that can be selected
   const onValuesChangeHandler = (values, lvl, leveledSpells) => {
     //leveled spells are passed because fetchedSpells are not updated here the first click (this function is technically asynch finction and uses previous render before fetched spells was updated i zato e ova problem.)
-    if (lvl == 0) {
+    if (lvl === 0) {
       setSelectedCantrips(values);
       setCanSelectMoreCantrips(values.length < cantripsAllowed);
     } else {

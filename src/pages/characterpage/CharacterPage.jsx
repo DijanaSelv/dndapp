@@ -309,14 +309,14 @@ const CharacterPage = () => {
       characterData.equipment && getItemsData();
 
       /* this is sending too many requests right now so i commented it out */
-      const getFeatures = async () => {
+      /* const getFeatures = async () => {
         const featuresList = await getItems("/api/features");
         const allFeaturesData = await Promise.all(
           featuresList.results.map(async (feature) => getItems(feature.url)),
         );
-        /* const classFeatures = allFeatures.filter(
+         const classFeatures = allFeatures.filter(
           (feature) => feature.class.index === characterData.class
-        ); */
+        ); 
         console.log(featuresList, "features list");
         const classFeatures = allFeaturesData.filter(
           (feature) =>
@@ -325,11 +325,11 @@ const CharacterPage = () => {
         );
 
         setFeatures(classFeatures);
-      };
+      }; */
 
       /* getFeatures(); */
     }
-  }, [isLoading]);
+  }, [isLoading, characterData, spellLevels]);
 
   useEffect(() => {
     if (
@@ -432,7 +432,7 @@ const CharacterPage = () => {
                 <div className={classes.spellLevelContainer} key={i}>
                   <div className={classes.spellTitleContainer}>
                     <h4 className={classes.spellTitle}>
-                      {oneLevelArray[0].level == 0
+                      {oneLevelArray[0].level === 0
                         ? "Cantrips"
                         : `Level ${oneLevelArray[0].level}`}
                     </h4>{" "}
@@ -501,7 +501,15 @@ const CharacterPage = () => {
       );
       setSpellsComponent(component);
     }
-  }, [spellsData, characterData]);
+  }, [
+    spellsData,
+    characterData,
+    abilitiesStatic,
+    proficiencyBonus,
+    spellSlots,
+    spellcastingAbilities,
+    spellsToPrepare,
+  ]);
 
   const calculateAttackWeaponBonus = (range, record) => {
     let modifier;
@@ -998,7 +1006,18 @@ const CharacterPage = () => {
       );
       setEquipmentComponent(component);
     }
-  }, [equipmentData, characterData]);
+  }, [
+    equipmentData,
+    characterData,
+    armorProficiency,
+    characterId,
+    constitutionModifier,
+    dexterityModifier,
+    dispatch,
+    uid,
+    weaponsProficiency,
+    wisdomModifier,
+  ]);
 
   console.log(characterData, "character data in page");
 
@@ -1022,13 +1041,14 @@ const CharacterPage = () => {
                 {coins.gp > 0 && `${coins.gp}gp`}
                 {coins.sp > 0 && `, ${coins.sp}sp`}
                 {coins.cp > 0 && `, ${coins.cp}cp`}
-                {coins.gp == 0 && coins.sp == 0 && coins.cp == 0 && "0gp"}
+                {coins.gp === 0 && coins.sp === 0 && coins.cp === 0 && "0gp"}
               </span>
             </h2>
             <div className={classes.charInfoContent}>
               <div className={classes.charProfile}>
                 {" "}
                 <img
+                  alt="class icon"
                   className={classes.charIcon}
                   src={characterData.image}
                 ></img>

@@ -14,7 +14,7 @@ const TopMenu = ({ title, children, breadcrumbs }) => {
               <React.Fragment key={`breadcrumb-lvl-${i + 1}`}>
                 <Link
                   to={br.url || ""}
-                  className={`${classes.breadcrumbLink} ${i == breadcrumbs.length - 1 ? classes.lastBreadcrumb : ""}`}
+                  className={`${classes.breadcrumbLink} ${i === breadcrumbs.length - 1 ? classes.lastBreadcrumb : ""}`}
                 >
                   {br.text}
                 </Link>

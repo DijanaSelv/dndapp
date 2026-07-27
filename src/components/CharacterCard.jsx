@@ -1,6 +1,6 @@
 import classes from "../pages/homepage/HomePage.module.css";
 import { motion } from "framer-motion";
-import { Card, Flex } from "antd";
+import { Card } from "antd";
 import Meta from "antd/es/card/Meta";
 import { Link } from "react-router-dom";
 
@@ -22,7 +22,7 @@ const CharacterCard = ({ char, inModal }) => {
               <Link to={`/characters/${char.id}`}>
                 <div className={classes.coverDiv}>
                   <img
-                    alt="campaign image"
+                    alt="campaign cover"
                     src={
                       char.image ||
                       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
@@ -34,7 +34,7 @@ const CharacterCard = ({ char, inModal }) => {
           ) : (
             <div className={classes.coverDiv}>
               <img
-                alt="campaign image"
+                alt="campaign cover"
                 src={
                   char.image ||
                   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"

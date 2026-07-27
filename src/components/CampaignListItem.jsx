@@ -6,7 +6,7 @@ import classes from "../pages/homepage/HomePage.module.css";
 
 import { Card } from "antd";
 import Meta from "antd/es/card/Meta";
-import { motion } from "framer-motion";
+//import { motion } from "framer-motion";
 import {
   ArrowRightOutlined,
   CloseOutlined,
@@ -62,7 +62,7 @@ const CampaignListItem = ({ campaign, type }) => {
         cover={
           <Link to={`/campaigns/${campaign.id}/play`}>
             <div className={classes.coverDiv}>
-              <img alt="campaign image" src={campaign.image} />
+              <img alt="campaign cover" src={campaign.image} />
             </div>
           </Link>
         }

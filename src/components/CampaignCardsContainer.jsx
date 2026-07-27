@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Meta from "antd/es/card/Meta";
-import { motion } from "framer-motion";
+//import { motion } from "framer-motion";
 
 const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
   const dispatch = useDispatch();
@@ -29,6 +29,7 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
   );
 
   const campaignsForDisplay = useSelector((state) => {
+    setLoadingCampaigns(false);
     return type === "created"
       ? state.campaignSlice.createdCampaigns
       : state.campaignSlice.joinedCampaigns;
@@ -38,7 +39,7 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
   const [loadingCampaigns, setLoadingCampaigns] = useState(true);
 
   let campaignsFromUser =
-    type == "created" ? campaigns.created : campaigns.joined;
+    type === "created" ? campaigns.created : campaigns.joined;
 
   /*  const [showJoinModal, setShowJoinModal] = useState(false); */
 

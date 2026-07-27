@@ -18,7 +18,7 @@ import { nanoid } from "nanoid";
 import cssClasses from "./NewCharacterPage.module.css";
 
 import { STARTING_GOLD } from "../../app/STATIC_STARTING_GOLD";
-import { SPELLCASTING_CLASSES } from "../../app/STATIC_SPELL_LEVELS";
+//import { SPELLCASTING_CLASSES } from "../../app/STATIC_SPELL_LEVELS";
 import { getItems } from "../../app/actions/dndApiActions";
 import { createCharacter } from "../../app/actions/databaseActions";
 import { currencyToCopper } from "../../app/actions/uitls";
@@ -105,7 +105,7 @@ const NewCharacterPage = () => {
   };
 
   //VALIDATION RULES
-  const abilityScoreRules = {
+  /* const abilityScoreRules = {
     required: true,
     type: "number",
     min: 1,
@@ -114,7 +114,7 @@ const NewCharacterPage = () => {
       return value ? Number(value) : undefined;
     },
     message: "must be between 1 and 20",
-  };
+  }; */
 
   //ON SUBMIT
   const createCharacterHandler = (values) => {
@@ -237,7 +237,7 @@ const NewCharacterPage = () => {
 
   useEffect(() => {
     getAllOptions();
-  }, []);
+  });
 
   useEffect(() => {
     console.log("fetching spells data");
@@ -273,11 +273,11 @@ const NewCharacterPage = () => {
       };
       fetchData();
     }
-  }, [optionsData.spells]);
+  }, [optionsData.spells, optionsData.classSelected]);
 
   useEffect(() => {
     requestSuccess && navigate("/");
-  }, [requestSuccess]);
+  }, [requestSuccess, navigate]);
 
   useEffect(() => {}, []);
 

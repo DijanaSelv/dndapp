@@ -18,7 +18,7 @@ const CharacterCardsContainer = (uid) => {
         if (typeof cleanup === "function") cleanup();
       };
     }
-  }, [dispatch, isLoading]);
+  }, [dispatch, isLoading, uid]);
 
   return (
     <>

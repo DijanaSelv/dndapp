@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import NotificationBox from "../../components/NotificationBox";
+//import NotificationBox from "../../components/NotificationBox";
 import { LoadingOutlined, PlusCircleOutlined } from "@ant-design/icons";
 
 import classes from "./HomePage.module.css";
@@ -17,7 +17,7 @@ import { faBook } from "@fortawesome/free-solid-svg-icons";
 const Home = () => {
   //fetch state from store
 
-  const { notification } = useSelector((state) => state.uiSlice);
+  //const { notification } = useSelector((state) => state.uiSlice);
   const { uid } = useSelector((state) => state.userSlice.user);
 
   const { isLoading } = useSelector((state) => state.uiSlice);

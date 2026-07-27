@@ -2,9 +2,9 @@ import {
   ref,
   onValue,
   set,
-  push,
+  //push,
   get,
-  child,
+  //child,
   update,
   orderByChild,
   equalTo,
@@ -109,14 +109,11 @@ export const createNewCampaign = (uid, newCampaignData) => {
     try {
       //new campaign info
       const id = newCampaignData.id;
-      await set(ref(db, "campaigns/" + newCampaignData.id), newCampaignData);
+      await set(ref(db, "campaigns/" + id), newCampaignData);
       //store the id in the user who created it
-      await set(
-        ref(db, "users/" + uid + "/campaigns/created/" + newCampaignData.id),
-        true,
-      );
+      await set(ref(db, "users/" + uid + "/campaigns/created/" + id), true);
       //store the initial shops
-      await set(ref(db, "shops/" + newCampaignData.id), STATIC_SHOPS);
+      await set(ref(db, "shops/" + id), STATIC_SHOPS);
 
       dispatch(uiSliceActions.requestSuccessIsTrue());
       dispatch(
@@ -291,7 +288,7 @@ export const getCurrentCampaign = (uid, campaignId) => {
 
 export const deleteCampaign = (campaignId, uid) => {
   return async (dispatch, getState) => {
-    const newPostKey = push(child(ref(db), "campaigns")).key; //do i need this? TODO:
+    //const newPostKey = push(child(ref(db), "campaigns")).key; //do i need this? TODO:
     const updates = {};
     updates["users/" + uid + "/campaigns/created/" + campaignId] = null;
     updates["campaigns/" + campaignId] = null;
@@ -326,7 +323,7 @@ export const joinCampaign = (joinCode, uid) => {
         //add the campagin to the user joined campaigns
         const joinedCampaignsRef = ref(
           db,
-          "users/" + uid + "/campaigns/" + "joined/",
+          "users/" + uid + "/campaigns/joined/",
         );
         const joinedMemberRef = ref(
           db,

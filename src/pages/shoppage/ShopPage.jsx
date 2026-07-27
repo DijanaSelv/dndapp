@@ -11,7 +11,7 @@ import { Button, Table, Spin } from "antd";
 import classes from "./ShopPage.module.css";
 import DeleteModal from "../../components/DeleteModal";
 import { currencyForShopDisplay } from "../../app/actions/uitls";
-import { set } from "firebase/database";
+//import { set } from "firebase/database";
 
 const ShopPage = () => {
   const params = useParams();
@@ -42,7 +42,7 @@ const ShopPage = () => {
   }; */
 
   const setShop = () => {
-    Object.keys(shop.items).map((itemKey) => {
+    Object.keys(shop.items).forEach((itemKey) => {
       const priceToDisplay = currencyForShopDisplay(shop.items[itemKey].price);
 
       itemsList.push({
@@ -80,7 +80,7 @@ const ShopPage = () => {
       console.log("shop found, populating items");
       shop.items ? setShop() : setItemsData([]);
     }
-  }, [shop, loading, finsishedLookingUpShop, navigate]);
+  }, [shop, loading, finsishedLookingUpShop, navigate, params.campaignId]);
 
   //show item specs on click
   const clickHandler = async (url, id) => {
@@ -185,7 +185,11 @@ const ShopPage = () => {
             <div className={classes.details}>
               <div className={classes.logoWrapper}>
                 <p>{shop.description}</p>
-                <img src={shop.image} style={{ width: "200px" }} />
+                <img
+                  src={shop.image}
+                  style={{ width: "200px" }}
+                  alt="shop cover"
+                />
               </div>
               {clickedItem ? (
                 <ItemDescriptionCard item={clickedItem} />

@@ -56,7 +56,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
     if (requestFailed) {
     }
     dispatch(uiSliceActions.resetRequestState());
-  }, [requestSuccess, requestFailed]);
+  }, [requestSuccess, requestFailed, campaignId, dispatch, navigate]);
 
   //ADD ITEMS TAB
   const setCategories = async () => {
@@ -73,7 +73,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
     if (!selectCategories) {
       setCategories();
     }
-  }, []);
+  });
 
   const memoizedCategories = useMemo(
     () => selectCategories,
@@ -104,7 +104,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
 
   const {
     inputValue: title,
-    isValid: titleIsValid,
+    //isValid: titleIsValid,
     isError: titleIsError,
     inputBlurHandler: titleBlurHandler,
     valueChangeHandler: titleChangeHandler,
@@ -171,7 +171,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
           url: item.url,
         })),
       }));
-  }, [itemsList]);
+  }, [itemsList, characterEquipment, setOptionsData]);
 
   let formIsValid = false;
   const chooseItem = {
@@ -250,9 +250,9 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
       title: "remove",
       dataIndex: "actions",
       render: (_, record) => (
-        <a onClick={() => removeItemFromShopHandler(record)}>
+        <button onClick={() => removeItemFromShopHandler(record)}>
           <MinusCircleOutlined className={classes.removeIcon} />
-        </a>
+        </button>
       ),
     },
   ].filter(Boolean);
@@ -273,13 +273,13 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
       dataIndex: "actions",
       render: (_, record) =>
         itemsList.some((e) => e.id === record.id) ? (
-          <a onClick={() => removeItemFromShopHandler(record)}>
+          <button onClick={() => removeItemFromShopHandler(record)}>
             <MinusCircleOutlined className={classes.removeIcon} />
-          </a>
+          </button>
         ) : (
-          <a onClick={() => addItemToShopHandler(record)}>
+          <button onClick={() => addItemToShopHandler(record)}>
             <PlusCircleOutlined className={classes.addIcon} />
-          </a>
+          </button>
         ),
     },
   ];
@@ -288,7 +288,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
   const saveChangesHandler = () => {
     const itemsDataObject = {};
 
-    itemsList.map((item) => {
+    itemsList.forEach((item) => {
       const priceToStore = currencyToCopper(
         item.price.gp,
         item.price.sp,
@@ -315,7 +315,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
   const addAllItemsHandler = async (shop) => {
     setAddingItemsLoading(true);
     let items = [];
-    let payload;
+    //let payload;
     for (const itemToAdd of displayItemsToAdd) {
       const itemData = await getItems(itemToAdd.url);
       const newItem = createItemObjectForShop(itemData);
@@ -473,7 +473,13 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
             onFocus={selectAllUrlHandler}
           />
         </div>
-        {<img src={imageUrl || null} style={{ width: "200px" }} />}
+        {
+          <img
+            alt="shop cover preview"
+            src={imageUrl || null}
+            style={{ width: "200px" }}
+          />
+        }
         {clickedItem ? (
           <ItemDescriptionCard item={clickedItem} />
         ) : (
