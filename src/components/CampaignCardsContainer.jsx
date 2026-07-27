@@ -28,15 +28,14 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
     (state) => state.userSlice.user.campaigns || {},
   );
 
+  const { isLoading } = useSelector((state) => state.uiSlice);
+  const [loadingCampaigns, setLoadingCampaigns] = useState(true);
+
   const campaignsForDisplay = useSelector((state) => {
-    setLoadingCampaigns(false);
     return type === "created"
       ? state.campaignSlice.createdCampaigns
       : state.campaignSlice.joinedCampaigns;
   });
-
-  const { isLoading } = useSelector((state) => state.uiSlice);
-  const [loadingCampaigns, setLoadingCampaigns] = useState(true);
 
   let campaignsFromUser =
     type === "created" ? campaigns.created : campaigns.joined;
