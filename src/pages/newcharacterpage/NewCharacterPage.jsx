@@ -18,6 +18,7 @@ import { nanoid } from "nanoid";
 import cssClasses from "./NewCharacterPage.module.css";
 
 import { STARTING_GOLD } from "../../app/STATIC_STARTING_GOLD";
+import { SPELLCASTING_CLASSES } from "../../app/STATIC_SPELL_LEVELS";
 import { getItems } from "../../app/actions/dndApiActions";
 import { createCharacter } from "../../app/actions/databaseActions";
 import { currencyToCopper } from "../../app/actions/uitls";
@@ -37,7 +38,7 @@ const NewCharacterPage = () => {
   const { requestSuccess } = useSelector((state) => state.uiSlice);
 
   const [goldValueTooltip, setGoldValueTooltip] = useState(
-    "Starting gold will be adjusted if you select your class"
+    "Starting gold will be adjusted if you select your class",
   );
 
   const [messageContent, setMessageContent] = useState("");
@@ -120,9 +121,9 @@ const NewCharacterPage = () => {
     //JSON parse so that undefined variables are removed (firebase does not accept undefined)
     values["gold"] = currencyToCopper(values["gold"]);
     const equipment = optionsData.equipment;
-    const data = { ...values, equipment };
-    const dataToSave = JSON.parse(JSON.stringify(data));
     const id = nanoid(13);
+    const data = { ...values, equipment, ownerId: uid, id };
+    const dataToSave = JSON.parse(JSON.stringify(data));
     dispatch(createCharacter(dataToSave, uid, id));
   };
 
@@ -131,9 +132,12 @@ const NewCharacterPage = () => {
   };
 
   //fetch from api
-  const getCategoryOptions = async (category) => {
+  const getCategoryOptions = async (category, options = {}) => {
     let data = [];
-    const apiData = await getItems(`/api/${category}`);
+    const apiData = await getItems(`/api/${category}`, options);
+
+    /* guard in case we abort the request so that error does not happen, because abort returns undefined */
+    if (!apiData || !apiData.results) return [];
 
     for (const element of apiData.results) {
       data.push({
@@ -145,6 +149,16 @@ const NewCharacterPage = () => {
 
     return data;
   };
+  /* const getSpellsOptions = async (category) => {
+    let data = [];
+    const apiData = await getItems(`/api/${category}`);
+
+    for (const element of apiData.results) {
+      data.push(element);
+    }
+
+    return data;
+  }; */
 
   const getAllOptions = async () => {
     try {
@@ -155,6 +169,7 @@ const NewCharacterPage = () => {
       const languages = await getCategoryOptions("languages");
       const magicSchools = await getCategoryOptions("magic-schools");
       const proficiencies = await getCategoryOptions("proficiencies");
+      /* const spells = await getCategoryOptions("spells"); */
       /* const spells = await getCategoryOptions("spells"); */
 
       setOptionsData((prev) => ({
@@ -228,7 +243,7 @@ const NewCharacterPage = () => {
     console.log("fetching spells data");
     const fetchSpellsData = async () => {
       const spells = await getCategoryOptions(
-        `classes/${optionsData.classSelected}/spells`
+        `classes/${optionsData.classSelected}/spells`,
       );
       setOptionsData((prev) => ({ ...prev, spells }));
       console.log(spells, "spells fetched");
@@ -242,7 +257,7 @@ const NewCharacterPage = () => {
     console.log("fetching spells data");
     const fetchSpellsData = async () => {
       const spellsData = await Promise.all(
-        optionsData.spells.map((spell) => getItems(spell.url))
+        optionsData.spells.map((spell) => getItems(spell.url)),
       );
       return spellsData;
     };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Checkbox, Progress, Collapse } from "antd";
 import cssClasses from "../pages/newcharacterpage/NewCharacterPage.module.css";
 import SpellCard from "./SpellCard";
@@ -6,6 +6,7 @@ import {
   SPELL_SLOTS,
   SPELLS_AVAILABLE,
   SPELLS_INSTRUCTION,
+  SPELLCASTING_CLASSES,
 } from "../app/STATIC_SPELL_LEVELS";
 
 const SpellsFormData = ({
@@ -26,20 +27,21 @@ const SpellsFormData = ({
   const [content, setContent] = useState(
     <p className={cssClasses.messageWrapper}>
       Please select a class for your character.
-    </p>
+    </p>,
   );
 
   /* ~~~~~~~~~~~~~~~~~~~~~~~~change content according to what has been selected */
   useEffect(() => {
+    console.log(spellsData, "spells in the spellsformdata");
     // 1. there is a selected class that is a spellcaster
     if (
       classInput &&
-      !["barbarian", "fighter", "monk", "rogue"].includes(classInput) &&
+      SPELLCASTING_CLASSES.includes(classInput) &&
       spellsData.length > 0
     ) {
       //filter them by whether they apply for the selected class.
 
-      console.log(spellsData, "spells data in form data");
+      //console.log(spellsData, "spells data in form data");
       const validSpellsArray = spellsData.filter((spell) => {
         const classesList = spell.classes.map((cls) => cls.index);
         return classesList.includes(classInput);
@@ -54,9 +56,10 @@ const SpellsFormData = ({
         classInput === "warlock"
           ? classSpellSlots[levelInput][3]
           : classSpellSlots[levelInput].length - 1;
+      console.log(spellLevelsAvailable, "spell level is available");
 
       //create 9 new arrays for each spell lvl
-      const leveledArray = validSpellsArray.reduce((acc, current) => {
+      const leveledArray = spellsData.reduce((acc, current) => {
         const spellLevel = current.level || 0;
         if (!acc[spellLevel] && spellLevel <= spellLevelsAvailable) {
           acc[spellLevel] = [];
@@ -146,7 +149,7 @@ const SpellsFormData = ({
             items={collapseItems}
             className={cssClasses.spellCollapseComponent}
           />
-        </>
+        </>,
       );
     }
 
@@ -158,7 +161,7 @@ const SpellsFormData = ({
       setContent(
         <p className={cssClasses.messageWrapper}>
           The class you selected is not a spellcaster.
-        </p>
+        </p>,
       );
     }
   }, [

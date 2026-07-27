@@ -29,19 +29,19 @@ const CampaignListItem = ({ campaign, type }) => {
   const actions =
     type === "created"
       ? [
-          <Link to={`/Campaigns/${campaign.id}/play`}>
+          <Link to={`/campaigns/${campaign.id}/play`}>
             <ArrowRightOutlined key="play" />
           </Link>,
-          <Link to={`/Campaigns/${campaign.id}/info`}>
+          <Link to={`/campaigns/${campaign.id}/info`}>
             <InfoCircleOutlined key="info" />
           </Link>,
           <CloseOutlined key="delete" onClick={deleteButtonHandler} />,
         ]
       : [
-          <Link to={`/Campaigns/${campaign.id}/play`}>
+          <Link to={`/campaigns/${campaign.id}/play`}>
             <ArrowRightOutlined key="play" />
           </Link>,
-          <Link to={`/Campaigns/${campaign.id}/info`}>
+          <Link to={`/campaigns/${campaign.id}/info`}>
             <InfoCircleOutlined key="info" />
           </Link>,
           <CloseOutlined key="leave" onClick={leaveCampaignButtonHandler} />,
@@ -60,7 +60,7 @@ const CampaignListItem = ({ campaign, type }) => {
       <Card
         bordered={false}
         cover={
-          <Link to={`/Campaigns/${campaign.id}/play`}>
+          <Link to={`/campaigns/${campaign.id}/play`}>
             <div className={classes.coverDiv}>
               <img alt="campaign image" src={campaign.image} />
             </div>

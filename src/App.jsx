@@ -27,6 +27,8 @@ import NotesPage from "./pages/notespage/NotesPage";
 import { uiSliceActions } from "./app/uiSlice";
 import CharacterPage from "./pages/characterpage/CharacterPage";
 import CombatPage from "./pages/combatpage/CombatPage";
+import CampaignsPage from "./pages/campaignspage/CampaignsPage";
+import CharactersPage from "./pages/characterspage/CharactersPage";
 
 //refresh state persistence
 /* import { PersistGate } from "redux-persist/integration/react";
@@ -47,7 +49,23 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Login",
+        path: "/campaigns",
+        element: (
+          <ProtectedRoute>
+            <CampaignsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/characters",
+        element: (
+          <ProtectedRoute>
+            <CharactersPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/login",
         element: (
           <LoggedInRoute>
             <LoginPage />
@@ -56,7 +74,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/NewCampaign",
+        path: "/new-campaign",
         element: (
           <ProtectedRoute>
             <NewCampaignPage />
@@ -64,7 +82,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/NewCharacter",
+        path: "/new-character",
         element: (
           <ProtectedRoute>
             <NewCharacterPage />
@@ -72,7 +90,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Campaigns/:campaignId/info",
+        path: "/campaigns/:campaignId/info",
         element: (
           <ProtectedRoute>
             <CampaignInfoPage />
@@ -80,31 +98,31 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Campaigns/:campaignId/play",
+        path: "/campaigns/:campaignId/play",
         element: <CampaignPlayPage />,
       },
       {
-        path: "/Campaigns/:campaignId/play/character/:characterId",
+        path: "/campaigns/:campaignId/play/character/:characterId",
         element: <CharacterPage />,
       },
       {
-        path: "/Campaigns/:campaignId/play/shops",
+        path: "/campaigns/:campaignId/play/shops",
         element: <CampaignShopsPage />,
       },
       {
-        path: "/Campaigns/:campaignId/play/:uid/combat",
+        path: "/campaigns/:campaignId/play/:uid/combat",
         element: <CombatPage />,
       },
       {
-        path: "/Campaigns/:campaignId/play/shops/:shopId",
+        path: "/campaigns/:campaignId/play/shops/:shopId",
         element: <ShopPage />,
       },
       {
-        path: "/Campaigns/:campaignId/play/notes",
+        path: "/campaigns/:campaignId/play/notes",
         element: <NotesPage />,
       },
       {
-        path: "/Campaigns/:campaignId/play/shops/:shopId/edit",
+        path: "/campaigns/:campaignId/play/shops/:shopId/edit",
         element: (
           <RoleProtectedRoute permittedRoles={["dm"]}>
             <EditShopPage />
@@ -112,7 +130,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Campaigns/:campaignId/play/shops/NewShop",
+        path: "/campaigns/:campaignId/play/shops/NewShop",
         element: (
           <RoleProtectedRoute permittedRoles={["dm"]}>
             <NewShopPage />
@@ -120,7 +138,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "Characters/:characterId",
+        path: "characters/:characterId",
         element: (
           <ProtectedRoute>
             <CharacterPage />

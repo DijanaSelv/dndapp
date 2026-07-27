@@ -8,6 +8,7 @@ import shopsSliceReducer from "./shopsSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import rolesSliceReducer from "./rolesSlice";
 import notesSliceReducer from "./notesSlice";
+import charactersSlice from "./charactersSlice";
 
 /* export const rootReducer = combineReducers({
   userSlice: userSliceReducer,
@@ -26,6 +27,7 @@ export const store = configureStore({
     shopsSlice: shopsSliceReducer,
     rolesSlice: rolesSliceReducer,
     notesSlice: notesSliceReducer,
+    charactersSlice: charactersSlice,
   },
   /*  middleware: getDefaultMiddleware({
     serializableCheck: {

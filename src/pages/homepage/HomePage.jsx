@@ -10,6 +10,9 @@ import { useState } from "react";
 import JoinCampaignModal from "../../components/JoinCampaignModal";
 import { uiSliceActions } from "../../app/uiSlice";
 import CharacterCardsContainer from "../../components/CharacterCardsContainer";
+import TopMenu from "../../components/TopMenu";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   //fetch state from store
@@ -27,6 +30,16 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
+      <TopMenu
+        title="Home"
+        breadcrumbs={[
+          { text: "home", url: "/" },
+          { text: "Shoppe", url: "/campaigns" },
+          { text: "New Campaign" },
+        ]}
+      >
+        <FontAwesomeIcon icon={faBook} />
+      </TopMenu>
       {/* {notification && <NotificationBox />} */}
 
       <div className={classes.section}>
@@ -35,7 +48,7 @@ const Home = () => {
             <h2> Created Campaigns {isLoading && <LoadingOutlined />}</h2>
           </div>
 
-          <Link className={classes.sectionLink} to="/NewCampaign">
+          <Link className={classes.sectionLink} to="/new-campaign">
             New Campaign <PlusCircleOutlined />
           </Link>
         </div>
@@ -66,7 +79,7 @@ const Home = () => {
       <div className={`${classes.section} ${classes.charactersSection}`}>
         <div className={classes.sectionHeader}>
           <h2>Characters {isLoading && <LoadingOutlined />}</h2>
-          <Link to="/NewCharacter" className={classes.sectionLink}>
+          <Link to="/new-character" className={classes.sectionLink}>
             New Character <PlusCircleOutlined />
           </Link>
         </div>

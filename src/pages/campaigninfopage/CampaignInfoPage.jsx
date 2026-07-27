@@ -18,7 +18,7 @@ const CampaignInfoPage = () => {
   const { isLoading } = useSelector((state) => state.uiSlice);
 
   const { dm, player, creator, loremaster } = useSelector(
-    (state) => state.rolesSlice
+    (state) => state.rolesSlice,
   );
 
   const [playerMembers, setPlayerMembers] = useState([]);
@@ -49,7 +49,7 @@ const CampaignInfoPage = () => {
 
   const showMembers = async () => {
     const playersData = await dispatch(
-      getMembers(currentCampaign.id, "player")
+      getMembers(currentCampaign.id, "player"),
     );
     const dmData = await dispatch(getMembers(currentCampaign.id, "dm"));
 
@@ -91,7 +91,7 @@ const CampaignInfoPage = () => {
             }}
           >
             <div className={classes.headerContent}>
-              <Link to={`/Campaigns/${currentCampaign.id}/play`}>
+              <Link to={`/campaigns/${currentCampaign.id}/play`}>
                 <h1 className={classes.title}>{currentCampaign.title}</h1>
               </Link>
             </div>

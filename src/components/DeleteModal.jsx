@@ -144,7 +144,7 @@ const DeleteModal = (props) => {
     const { uid, characterId, showModal, setShowModal } = props;
 
     const handleOk = () => {
-      dispatch(deleteCharacter(uid, characterId));
+      dispatch(deleteCharacter(characterId));
       setShowModal(false);
       navigate("/");
     };

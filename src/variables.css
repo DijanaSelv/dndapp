@@ -5,9 +5,16 @@
   --color-hover: #3a9fd6;
   --color-highlight: #ce6400ff;
   --color-secondaryAlt: #373d49f9;
-  --color-lightStroke: #5d6779d2;
+  --color-lightStroke: rgba(93, 103, 121, 0.82);
+  --color-lightBorder: #efefef;
   --color-backgroundFA: #fafafa;
   --color-body: ;
   --color-headline: ;
   --color-whiteF: #f3f3f3;
+
+  --transition-global: all 0.07s ease-in-out;
+
+  --text-serif: "EB Garamond", serif;
+  --text-sans-serif: "Montserrat", sans-serif;
+  --text-decor: "Scope One", serif;
 }

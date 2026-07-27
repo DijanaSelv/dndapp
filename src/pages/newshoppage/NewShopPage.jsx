@@ -51,7 +51,7 @@ const NewShopPage = ({ characterEquipment, setOptionsData }) => {
   //On save shop, handle the sucess of the request and redirect
   useEffect(() => {
     if (requestSuccess) {
-      navigate(`/Campaigns/${campaignId}/play/shops`);
+      navigate(`/campaigns/${campaignId}/play/shops`);
     }
     if (requestFailed) {
     }

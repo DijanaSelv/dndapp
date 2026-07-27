@@ -75,7 +75,7 @@ const ShopPage = () => {
   useEffect(() => {
     if (!loading && !shop && finsishedLookingUpShop) {
       console.log("no shop found, going back");
-      navigate(`/Campaigns/${params.campaignId}/play/shops`);
+      navigate(`/campaigns/${params.campaignId}/play/shops`);
     } else if (shop) {
       console.log("shop found, populating items");
       shop.items ? setShop() : setItemsData([]);
