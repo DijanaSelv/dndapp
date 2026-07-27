@@ -176,7 +176,6 @@ const SpellsFormData = ({
     canSelectMoreCantrips,
     spellsAllowed,
     cantripsAllowed,
-    onVa,
   ]);
 
   useEffect(() => {
