@@ -155,7 +155,7 @@ const NewCharacterPage = () => {
       const languages = await getCategoryOptions("languages");
       const magicSchools = await getCategoryOptions("magic-schools");
       const proficiencies = await getCategoryOptions("proficiencies");
-      const spells = await getCategoryOptions("spells");
+      /* const spells = await getCategoryOptions("spells"); */
 
       setOptionsData((prev) => ({
         ...prev,
@@ -166,7 +166,6 @@ const NewCharacterPage = () => {
         languages,
         magicSchools,
         proficiencies,
-        spells,
       }));
 
       const armor = [];
@@ -214,7 +213,6 @@ const NewCharacterPage = () => {
           other,
           weaponsInstruments,
           supplies,
-          spells,
         },
       }));
     } catch (error) {
@@ -227,13 +225,29 @@ const NewCharacterPage = () => {
   }, []);
 
   useEffect(() => {
+    console.log("fetching spells data");
+    const fetchSpellsData = async () => {
+      const spells = await getCategoryOptions(
+        `classes/${optionsData.classSelected}/spells`
+      );
+      setOptionsData((prev) => ({ ...prev, spells }));
+      console.log(spells, "spells fetched");
+    };
+    if (optionsData.classSelected) {
+      fetchSpellsData();
+    }
+  }, [optionsData.classSelected]);
+
+  useEffect(() => {
+    console.log("fetching spells data");
     const fetchSpellsData = async () => {
       const spellsData = await Promise.all(
         optionsData.spells.map((spell) => getItems(spell.url))
       );
       return spellsData;
     };
-    if (optionsData.spells.length !== 0) {
+
+    if (optionsData.spells.length !== 0 && optionsData.classSelected) {
       const fetchData = async () => {
         const spellsData = await fetchSpellsData();
 

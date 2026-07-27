@@ -278,7 +278,7 @@ const CharacterPage = () => {
     }
   };
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && characterData) {
       const allLeveledSpells = spellLevels
         .map((lvl) => characterData[lvl])
         .filter((level) => level !== undefined);
@@ -308,6 +308,7 @@ const CharacterPage = () => {
       };
       characterData.equipment && getItemsData();
 
+      /* this is sending too many requests right now so i commented it out */
       const getFeatures = async () => {
         const featuresList = await getItems("/api/features");
         const allFeaturesData = await Promise.all(
@@ -316,6 +317,7 @@ const CharacterPage = () => {
         /* const classFeatures = allFeatures.filter(
           (feature) => feature.class.index === characterData.class
         ); */
+        console.log(featuresList, "features list");
         const classFeatures = allFeaturesData.filter(
           (feature) =>
             feature.class.index === characterData.class &&
@@ -325,7 +327,7 @@ const CharacterPage = () => {
         setFeatures(classFeatures);
       };
 
-      getFeatures();
+      /* getFeatures(); */
     }
   }, [isLoading]);
 
@@ -992,6 +994,8 @@ const CharacterPage = () => {
       setEquipmentComponent(component);
     }
   }, [equipmentData, characterData]);
+
+  console.log(characterData, "character data in page");
 
   return (
     <>

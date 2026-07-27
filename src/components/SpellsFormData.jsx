@@ -39,6 +39,7 @@ const SpellsFormData = ({
     ) {
       //filter them by whether they apply for the selected class.
 
+      console.log(spellsData, "spells data in form data");
       const validSpellsArray = spellsData.filter((spell) => {
         const classesList = spell.classes.map((cls) => cls.index);
         return classesList.includes(classInput);

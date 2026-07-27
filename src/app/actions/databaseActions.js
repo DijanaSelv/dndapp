@@ -558,7 +558,7 @@ export const deleteShop = (campaignId, shopId) => {
           code: "shop deleted",
         })
       );
-      //dispatch(getShopsData(campaignId));
+
     } catch (error) {
       console.error(error);
       dispatch(
