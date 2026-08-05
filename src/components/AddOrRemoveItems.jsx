@@ -32,7 +32,7 @@ const AddOrRemoveItems = ({ itemToEdit, shop }) => {
       shopsSliceActions.removeItemFromShop({
         itemId: itemToEdit.id,
         shopId: shop.id,
-      })
+      }),
     );
   };
 
@@ -48,9 +48,9 @@ const AddOrRemoveItems = ({ itemToEdit, shop }) => {
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.2 }}
         >
-          <a onClick={removeItemHandler}>
+          <button onClick={removeItemHandler}>
             <MinusCircleOutlined className={classes.removeIcon} />
-          </a>
+          </button>
         </motion.div>
       ) : (
         <motion.div
@@ -61,9 +61,9 @@ const AddOrRemoveItems = ({ itemToEdit, shop }) => {
           transition={{ duration: 0.1 }}
           whileHover={{ scale: 1.2 }}
         >
-          <a onClick={addItemHandler}>
+          <button onClick={addItemHandler}>
             <PlusCircleOutlined className={classes.addIcon} />
-          </a>
+          </button>
         </motion.div>
       )}
     </AnimatePresence>

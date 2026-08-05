@@ -15,13 +15,13 @@ import {
 import { rolesSliceActions } from "../app/rolesSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBars,
-  faBook,
+  //faBars,
+  //faBook,
   faDiceD20,
-  faInfo,
-  faPencil,
-  faShop,
-  faUserLarge,
+  //faInfo,
+  //faPencil,
+  //faShop,
+  //faUserLarge,
   faHouse,
   faHatWizard,
   faDragon,
@@ -38,15 +38,15 @@ const MainNav = () => {
 
   const { uid, firstName } = useSelector((state) => state.userSlice.user);
   const { requestSuccess } = useSelector((state) => state.uiSlice);
-  const { currentCampaign } = useSelector((state) => state.campaignSlice);
+  //const { currentCampaign } = useSelector((state) => state.campaignSlice);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   //if a campaign is accessed, fetch roles. If not clear the roles.
   useEffect(() => {
     if (params.campaignId) {
-      dispatch(getRoles(uid, params.campaignId));
-      uid && dispatch(getCurrentCampaign(uid, params.campaignId));
+      dispatch(getRoles(uid, campaignId));
+      uid && dispatch(getCurrentCampaign(uid, campaignId));
     }
     if (!params.campaignId) {
       dispatch(rolesSliceActions.resetRoles());

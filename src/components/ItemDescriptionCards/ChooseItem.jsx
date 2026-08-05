@@ -1,4 +1,4 @@
-import { DashOutlined, SmallDashOutlined } from "@ant-design/icons";
+//import { DashOutlined, SmallDashOutlined } from "@ant-design/icons";
 import classes from "../../pages/shoppage/ShopPage.module.css";
 
 const ChooseItem = ({ item }) => {

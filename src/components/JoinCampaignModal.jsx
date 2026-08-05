@@ -11,7 +11,7 @@ const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
   const [invalidCode, setInvalidCode] = useState();
 
   const { joinedCampaigns, createdCampaigns } = useSelector(
-    (state) => state.campaignSlice
+    (state) => state.campaignSlice,
   );
 
   const handleOk = async () => {
@@ -21,10 +21,10 @@ const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
       const codeInput = codeRef.current.value;
 
       const joinedCampaignCodes = Object.values(joinedCampaigns).map(
-        (campaign) => campaign.joinCode
+        (campaign) => campaign.joinCode,
       );
       const createdCampaignCodes = Object.values(createdCampaigns).map(
-        (campaign) => campaign.joinCode
+        (campaign) => campaign.joinCode,
       );
       console.log(joinedCampaignCodes, createdCampaignCodes);
 
@@ -32,11 +32,11 @@ const JoinCampaignModal = ({ showModal, setShowModal, uid }) => {
         setInvalidCode("You're already a member of this campaign.");
       } else if (createdCampaignCodes.includes(codeInput)) {
         setInvalidCode(
-          "You created this campaign yourself. You can change/add roles in Campaign Settings."
+          "You created this campaign yourself. You can change/add roles in Campaign Settings.",
         );
       } else {
         try {
-          const campaignId = await dispatch(joinCampaign(codeInput, uid));
+          await dispatch(joinCampaign(codeInput, uid));
           codeRef.current.value = "";
           setInvalidCode("");
           setShowModal(false);

@@ -69,7 +69,7 @@ const WeaponDescription = ({ item }) => {
         {item.cost && (
           <>
             <span className={classes.categoryDesc}>Price: </span>
-            {item.cost?.quantity || "/"} {item.cost?.unit}
+            {cost?.quantity || "/"} {cost?.unit}
           </>
         )}
       </p>

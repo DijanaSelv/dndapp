@@ -54,7 +54,7 @@ const ShopListItem = ({ shop, type }) => {
         cover={
           <Link to={`${shop.id}`}>
             <div className={classes.coverDiv}>
-              <img alt="shop image" src={shop.image} />
+              <img alt="shop" src={shop.image} />
             </div>
           </Link>
         }

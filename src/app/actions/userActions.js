@@ -10,11 +10,11 @@ import {
   signInWithEmailAndPassword,
   //onAuthStateChanged,
   signOut,
-  browserLocalPersistence,
-  browserSessionPersistence,
-  setPersistence,
+  //browserLocalPersistence,
+  //browserSessionPersistence,
+  //setPersistence,
 } from "firebase/auth";
-import campaignSlice, { campaignSliceActions } from "../campaignSlice";
+import { campaignSliceActions } from "../campaignSlice";
 
 //TODO: what if when they sign up, the auth projdva a ova fialnuva. Posle kje nema data za toj user. Maybe on login, if they can log in but can't access the data, just to be safe, the data is created then?
 //try to get the home page data, and if it doesn't work create it.
@@ -45,7 +45,7 @@ export const signUpUserAction = (user, password) => {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         user.email,
-        password
+        password,
       );
       dispatch(signOutUser());
       uid = userCredential.user.uid;
@@ -54,7 +54,7 @@ export const signUpUserAction = (user, password) => {
         uiSliceActions.showNotification({
           type: "success",
           code: "sign up success",
-        })
+        }),
       );
       dispatch(uiSliceActions.requestSuccessIsTrue());
     } catch (error) {
@@ -65,7 +65,7 @@ export const signUpUserAction = (user, password) => {
         uiSliceActions.showNotification({
           type: "error",
           code: error.code,
-        })
+        }),
       );
     }
     dispatch(uiSliceActions.changeLoading(false));
@@ -82,15 +82,14 @@ export const loginUserAction = (email, password) => {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
       dispatch(uiSliceActions.requestSuccessIsTrue());
-      const user = userCredential.user;
       dispatch(
         uiSliceActions.showNotification({
           type: "success",
           code: "log in success",
-        })
+        }),
       );
       //dispatch(userSliceActions.setLoggedInUser(user.uid));
       //dispatch(getUserData(user.uid));
@@ -102,7 +101,7 @@ export const loginUserAction = (email, password) => {
         uiSliceActions.showNotification({
           type: "error",
           code: errorCode,
-        })
+        }),
       );
       dispatch(uiSliceActions.requestFailedIsTrue());
     }

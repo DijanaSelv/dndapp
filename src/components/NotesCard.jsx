@@ -1,7 +1,7 @@
 import { Button, Card } from "antd";
 import classes from "../pages/notespage/NotesPage.module.css";
 import { CloseOutlined, EditOutlined } from "@ant-design/icons";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
 import { useRef, useState } from "react";
 import Meta from "antd/es/card/Meta";

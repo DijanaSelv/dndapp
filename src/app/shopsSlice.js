@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { remove } from "firebase/database";
+//import { remove } from "firebase/database";
 
 const initialState = {
   shops: {},

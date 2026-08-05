@@ -5,14 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { signUpUserAction } from "../app/actions/userActions";
 import { useValidate } from "../app/hooks/useValidate";
 import { uiSliceActions } from "../app/uiSlice";
-import { Input, Select, Button } from "antd";
+import { Input, Button } from "antd";
 import classes from "../pages/loginpage/LoginPage.module.css";
 
 const SignupForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { notification, requestSuccess, requestFailed, isLoading } =
-    useSelector((state) => state.uiSlice);
+  const { requestSuccess, requestFailed, isLoading } = useSelector(
+    (state) => state.uiSlice,
+  );
   //on Signup redirect user to login page and reset notification and sign up state
   useEffect(() => {
     if (requestSuccess) {
@@ -33,7 +34,7 @@ const SignupForm = () => {
 
     isValid: firstNameIsValid,
     isError: firstNameIsError,
-    resetInput: firstNameResetInput,
+    //resetInput: firstNameResetInput,
     inputBlurHandler: firstNameInputBlurHandler,
     valueChangeHandler: firstNameValueChangeHandler,
   } = useValidate((value) => value.trim() !== "");
@@ -42,7 +43,7 @@ const SignupForm = () => {
 
     isValid: lastNameIsValid,
     isError: lastNameIsError,
-    resetInput: lastNameResetInput,
+    //resetInput: lastNameResetInput,
     inputBlurHandler: lastNameInputBlurHandler,
     valueChangeHandler: lastNameValueChangeHandler,
   } = useValidate((value) => value.trim !== "");
@@ -76,9 +77,9 @@ const SignupForm = () => {
 
   const experienceRef = useRef();
 
-  const handleChange = (value) => {
+  /* const handleChange = (value) => {
     experienceRef.current = value;
-  };
+  }; */
 
   let formIsValid = false;
   let passwordsNotSame = false;

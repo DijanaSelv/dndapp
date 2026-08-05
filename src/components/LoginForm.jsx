@@ -9,8 +9,8 @@ import classes from "../pages/loginpage/LoginPage.module.css";
 
 const LoginForm = () => {
   // **Redux hooks**
-  const { notification, requestSuccess, requestFailed } = useSelector(
-    (state) => state.uiSlice
+  const { requestSuccess, requestFailed } = useSelector(
+    (state) => state.uiSlice,
   );
   const dispatch = useDispatch();
 
@@ -45,7 +45,7 @@ const LoginForm = () => {
 
   const formIsValid = useMemo(
     () => emailIsValid && passwordIsValid,
-    [emailIsValid, passwordIsValid]
+    [emailIsValid, passwordIsValid],
   );
 
   const loginHandler = (e) => {

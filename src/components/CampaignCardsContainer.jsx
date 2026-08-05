@@ -29,7 +29,7 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
   );
 
   const { isLoading } = useSelector((state) => state.uiSlice);
-  const [loadingCampaigns, setLoadingCampaigns] = useState(true);
+  //const [loadingCampaigns, setLoadingCampaigns] = useState(true);
 
   const campaignsForDisplay = useSelector((state) => {
     return type === "created"
@@ -110,7 +110,7 @@ const CampaignCardsContainer = ({ type, uid, joinCampaignHandler }) => {
             ))}
         </>
       )}
-      {loadingCampaigns && !campaignsForDisplay && <LoadingCard />}
+      {/*   {loadingCampaigns && !campaignsForDisplay && <LoadingCard />} */}
     </ul>
   );
 

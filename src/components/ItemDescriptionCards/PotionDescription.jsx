@@ -15,13 +15,14 @@ const PotionDescription = ({ item }) => {
   return (
     <div className={classes.itemDescription}>
       <h3>{name}</h3>
+      <p>{rarity}</p>
       {showDescription()}
 
       <p>
         {item.cost && (
           <>
             <span className={classes.categoryDesc}>Price: </span>
-            {item.cost?.quantity || "/"} {item.cost?.unit}
+            {cost?.quantity || "/"} {cost?.unit}
           </>
         )}
       </p>
